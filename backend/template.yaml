@@ -1,0 +1,360 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: |
+  backend
+  Sample SAM Template for backend
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+Resources:
+  WorkspaceApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub
+        - ${ResourceName} From Stack ${AWS::StackName}
+        - ResourceName: WorkspaceApi
+      StageName: Prod
+      DefinitionBody:
+        openapi: '3.0'
+        info: {}
+        paths:
+          /workspace:
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${addWorkspace.Arn}/invocations
+              responses: {}
+          /workspace/{id}:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getWorkspace.Arn}/invocations
+              responses: {}
+            put:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${updateWorkspace.Arn}/invocations
+              responses: {}
+            delete:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${deleteWorkspace.Arn}/invocations
+              responses: {}
+      EndpointConfiguration: REGIONAL
+      TracingEnabled: true
+      Cors:
+        MaxAge: 5
+  getWorkspace:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: getWorkspace
+      CodeUri: src/getWorkspace
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          WORKSPACESTABLE_TABLE_NAME: !Ref WorkspacesTable
+          WORKSPACESTABLE_TABLE_ARN: !GetAtt WorkspacesTable.Arn
+          WORKSPACESBUCKET_BUCKET_NAME: !Ref WorkspacesBucket
+          WORKSPACESBUCKET_BUCKET_ARN: !GetAtt WorkspacesBucket.Arn
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:GetObjectAcl
+                - s3:GetObjectLegalHold
+                - s3:GetObjectRetention
+                - s3:GetObjectTorrent
+                - s3:GetObjectVersion
+                - s3:GetObjectVersionAcl
+                - s3:GetObjectVersionForReplication
+                - s3:GetObjectVersionTorrent
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListBucketVersions
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:DeleteObject
+                - s3:DeleteObjectVersion
+                - s3:PutObject
+                - s3:PutObjectLegalHold
+                - s3:PutObjectRetention
+                - s3:RestoreObject
+              Resource:
+                - !Sub arn:${AWS::Partition}:s3:::${WorkspacesBucket}
+                - !Sub arn:${AWS::Partition}:s3:::${WorkspacesBucket}/*
+        - DynamoDBCrudPolicy:
+            TableName: !Ref WorkspacesTable
+      Events:
+        WorkspaceApiGETworkspaceid:
+          Type: Api
+          Properties:
+            Path: /workspace/{id}
+            Method: GET
+            RestApiId: !Ref WorkspaceApi
+  getWorkspaceLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${getWorkspace}
+  addWorkspace:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: addWorkspace
+      CodeUri: src/addWorkspace
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        WorkspaceApiPOSTworkspace:
+          Type: Api
+          Properties:
+            Path: /workspace
+            Method: POST
+            RestApiId: !Ref WorkspaceApi
+      Environment:
+        Variables:
+          WORKSPACESTABLE_TABLE_NAME: !Ref WorkspacesTable
+          WORKSPACESTABLE_TABLE_ARN: !GetAtt WorkspacesTable.Arn
+          WORKSPACESBUCKET_BUCKET_NAME: !Ref WorkspacesBucket
+          WORKSPACESBUCKET_BUCKET_ARN: !GetAtt WorkspacesBucket.Arn
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:GetObjectAcl
+                - s3:GetObjectLegalHold
+                - s3:GetObjectRetention
+                - s3:GetObjectTorrent
+                - s3:GetObjectVersion
+                - s3:GetObjectVersionAcl
+                - s3:GetObjectVersionForReplication
+                - s3:GetObjectVersionTorrent
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListBucketVersions
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:DeleteObject
+                - s3:DeleteObjectVersion
+                - s3:PutObject
+                - s3:PutObjectLegalHold
+                - s3:PutObjectRetention
+                - s3:RestoreObject
+              Resource:
+                - !Sub arn:${AWS::Partition}:s3:::${WorkspacesBucket}
+                - !Sub arn:${AWS::Partition}:s3:::${WorkspacesBucket}/*
+        - DynamoDBCrudPolicy:
+            TableName: !Ref WorkspacesTable
+  addWorkspaceLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${addWorkspace}
+  updateWorkspace:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: updateWorkspace
+      CodeUri: src/updateWorkspace
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          WORKSPACESTABLE_TABLE_NAME: !Ref WorkspacesTable
+          WORKSPACESTABLE_TABLE_ARN: !GetAtt WorkspacesTable.Arn
+          WORKSPACESBUCKET_BUCKET_NAME: !Ref WorkspacesBucket
+          WORKSPACESBUCKET_BUCKET_ARN: !GetAtt WorkspacesBucket.Arn
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:GetObjectAcl
+                - s3:GetObjectLegalHold
+                - s3:GetObjectRetention
+                - s3:GetObjectTorrent
+                - s3:GetObjectVersion
+                - s3:GetObjectVersionAcl
+                - s3:GetObjectVersionForReplication
+                - s3:GetObjectVersionTorrent
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListBucketVersions
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:DeleteObject
+                - s3:DeleteObjectVersion
+                - s3:PutObject
+                - s3:PutObjectLegalHold
+                - s3:PutObjectRetention
+                - s3:RestoreObject
+              Resource:
+                - !Sub arn:${AWS::Partition}:s3:::${WorkspacesBucket}
+                - !Sub arn:${AWS::Partition}:s3:::${WorkspacesBucket}/*
+        - DynamoDBCrudPolicy:
+            TableName: !Ref WorkspacesTable
+      Events:
+        WorkspaceApiPUTworkspaceid:
+          Type: Api
+          Properties:
+            Path: /workspace/{id}
+            Method: PUT
+            RestApiId: !Ref WorkspaceApi
+  updateWorkspaceLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${updateWorkspace}
+  deleteWorkspace:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: deleteWorkspace
+      CodeUri: src/deleteWorkspace
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          WORKSPACESTABLE_TABLE_NAME: !Ref WorkspacesTable
+          WORKSPACESTABLE_TABLE_ARN: !GetAtt WorkspacesTable.Arn
+          WORKSPACESBUCKET_BUCKET_NAME: !Ref WorkspacesBucket
+          WORKSPACESBUCKET_BUCKET_ARN: !GetAtt WorkspacesBucket.Arn
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:GetObjectAcl
+                - s3:GetObjectLegalHold
+                - s3:GetObjectRetention
+                - s3:GetObjectTorrent
+                - s3:GetObjectVersion
+                - s3:GetObjectVersionAcl
+                - s3:GetObjectVersionForReplication
+                - s3:GetObjectVersionTorrent
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListBucketVersions
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:DeleteObject
+                - s3:DeleteObjectVersion
+                - s3:PutObject
+                - s3:PutObjectLegalHold
+                - s3:PutObjectRetention
+                - s3:RestoreObject
+              Resource:
+                - !Sub arn:${AWS::Partition}:s3:::${WorkspacesBucket}
+                - !Sub arn:${AWS::Partition}:s3:::${WorkspacesBucket}/*
+        - DynamoDBCrudPolicy:
+            TableName: !Ref WorkspacesTable
+      Events:
+        WorkspaceApiDELETEworkspaceid:
+          Type: Api
+          Properties:
+            Path: /workspace/{id}
+            Method: DELETE
+            RestApiId: !Ref WorkspaceApi
+  deleteWorkspaceLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${deleteWorkspace}
+  WorkspacesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+  WorkspacesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-workspace-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: alias/aws/s3
+      PublicAccessBlockConfiguration:
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  WorkspacesBucketBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WorkspacesBucket
+      PolicyDocument:
+        Id: RequireEncryptionInTransit
+        Version: '2012-10-17'
+        Statement:
+          - Principal: '*'
+            Action: '*'
+            Effect: Deny
+            Resource:
+              - !GetAtt WorkspacesBucket.Arn
+              - !Sub ${WorkspacesBucket.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+  WelcomeTemplate:
+    Type: AWS::Pinpoint::SmsTemplate
+    Properties:
+      TemplateName: WelcomeTemplate
+      Body: Hello, Ethan! - From Ethan
+  AutoSmsPinpointApp:
+    Type: AWS::Pinpoint::App
+    Properties:
+      Name: AutoSmsPinpointApp
+  AutoSmsChannel:
+    Type: AWS::Pinpoint::SMSChannel
+    Properties:
+      ApplicationId: !Ref AutoSmsPinpointApp
+Metadata:
+  AWS::Composer::Groups:
+    Group:
+      Label: Workspace Api
+      Members:
+        - getWorkspace
+        - addWorkspace
+        - updateWorkspace
+        - deleteWorkspace
+    Group2:
+      Label: Pinpoint SMS Service
+      Members:
+        - WelcomeTemplate
+        - AutoSmsChannel
+        - AutoSmsPinpointApp

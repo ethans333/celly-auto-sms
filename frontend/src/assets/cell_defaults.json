@@ -1,0 +1,14 @@
+{
+    "texting": {
+        "title": "Texting Cell",
+        "prompt": "Add a prompt here.",
+        "emoji": "💬"
+    },
+    "calendar": {
+        "title": "Calendar Event Cell",
+        "name": "Add an event name here.",
+        "date": "MM-DD-YYYY",
+        "time": "Time",
+        "emoji": "📅"
+    }
+}
