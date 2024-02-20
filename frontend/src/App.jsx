@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import TextingCell from "./Components/Cell/Cells/TextingCell.jsx";
 import CalendarCell from "./Components/Cell/Cells/CalendarCell.jsx";
 import { useState, createContext } from "react";
@@ -34,6 +35,7 @@ export default function App() {
     </WorkspaceContext.Provider>
   );
 
+  // Different views to render, shown based on the currentView state set in the left side bar.
   function renderViews(type) {
     switch (type) {
       case "cells":

@@ -10,6 +10,7 @@ export default {
       animation: {
         fadeIn: "fadeIn 250ms",
         shiftRL: "shiftRL .15s ease-in-out",
+        shiftLR: "shiftLR .15s ease-in-out",
       },
       keyframes: {
         fadeIn: {
@@ -18,6 +19,10 @@ export default {
         },
         shiftRL: {
           "0%": { transform: "translateX(80%)" },
+          "100%": { transform: "translate(0%)" },
+        },
+        shiftLR: {
+          "0%": { transform: "translateX(-80%)" },
           "100%": { transform: "translate(0%)" },
         },
       },

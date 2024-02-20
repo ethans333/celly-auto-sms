@@ -1,17 +1,22 @@
 import xmark from "../assets/xmark-solid.svg";
-import { useContext } from "react";
+import angles from "../assets/angles-right-solid.svg";
+import { useContext, useState } from "react";
 import { WorkspaceContext } from "../App";
 
 export default function () {
   const { setCurrentView } = useContext(WorkspaceContext);
+  const [showSideBar, setShowSideBar] = useState(true);
 
-  return (
-    <div className="absolute left-0 h-screen min-w-96 border-r-2 border-gray-100 bg-white px-5 pt-3 z-20">
+  return showSideBar ? (
+    <div
+      id="lsb"
+      className="absolute left-0 h-screen min-w-96 border-r-2 border-gray-100 bg-white px-5 pt-3 z-20 animate-shiftLR"
+    >
       <div>
         <img
           src={xmark}
           className="x-button"
-          //   onClick={() => setSideBarChildren(null)}
+          onClick={() => setShowSideBar(false)}
         />
         <p className="font-semibold text-gray-500 tracking-wide mt-8">
           This Project
@@ -47,6 +52,17 @@ export default function () {
           <ProjectLabel emoji="📣" name="Ullamco cillum laborum aliquip" />
         </div>
       </div>
+    </div>
+  ) : (
+    <div
+      id="lsb"
+      className="absolute left-0 h-screen flex flex-col justify-center items-center ml-3"
+    >
+      <img
+        src={angles}
+        className="w-6 cursor-pointer hover:opacity-50"
+        onClick={() => setShowSideBar(true)}
+      />
     </div>
   );
 }

@@ -11,11 +11,11 @@ export default function CellContainer({ children, id }) {
     <div id={id} className="absolute">
       <Draggable
         defaultPosition={workspace[id].position}
-        onDrag={() => {
+        onDrag={(event) => {
           setWorkspace((p) => {
             p[id].position = {
-              x: document.getElementById(id).getBoundingClientRect().x,
-              y: document.getElementById(id).getBoundingClientRect().y,
+              x: event.clientX,
+              y: event.clientY,
             };
             return { ...p };
           });
