@@ -24,6 +24,39 @@ Automated text messaging system.
 Saved into the S3 bucket under: `[user_id]/[workspace_id]`.
 Saved as raw file containing JSON data representing the state of workspace.
 
+**Workspace structure**:
+
+```ts
+{
+    [cell_id]: {
+        "type": "texting" || "calendar",
+        "title": String,
+        "prompt": String,
+        "emoji": String,
+        "tags": String[],
+        "position": {
+            "x": Int,
+            "y": Int
+        },
+        "nodes": {
+            [node_id]: {
+                "next": {
+                    [node_id]: String,
+                    ...
+                },
+                "prev": {
+                    [node_id]: String,
+                    ...
+                }
+            }
+            ...
+        }
+    },
+    ...
+}
+
+```
+
 ### Conversation Table ❌
 
 | id              | user_id            | workspace_id    | phone_number | date                             |
@@ -36,3 +69,16 @@ Saved into the S3 bucket under: `[workspace_id]/[conversation_id]`.
 Saved as raw file containing JSON data of the conversation had with the number.
 
 _Note: Pinpoint might save this information for you so keep that in mind._
+
+**Conversation structure**:
+
+```ts
+[
+  {
+    text: String,
+    date: String,
+    client: Bool,
+  },
+  ...
+];
+```

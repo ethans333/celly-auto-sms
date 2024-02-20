@@ -9,8 +9,8 @@
             "Eviction"
         ],
         "position": {
-            "x": 300,
-            "y": 30
+            "x": 800,
+            "y": 100
         },
         "nodes": {
             "123$top": {
@@ -43,8 +43,8 @@
             "Eviction"
         ],
         "position": {
-            "x": 100,
-            "y": 400
+            "x": 500,
+            "y": 500
         },
         "nodes": {
             "456$top": {
