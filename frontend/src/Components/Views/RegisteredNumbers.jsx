@@ -1,9 +1,11 @@
 import eye from "../../assets/eye-solid.svg";
 import square from "../../assets/square-regular.svg";
 import numbers from "../../assets/numbers.json";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { WorkspaceContext } from "../../App";
 export default function () {
   const [lsbWidth, setLsbWidth] = useState(0);
+  const [rsbWidth, setRsbWidth] = useState(0);
 
   useEffect(() => {
     const lsbElement = document.getElementById("lsb");
@@ -68,6 +70,8 @@ export default function () {
 }
 
 function Row({ phone, date_registered, date_last_contacted, location }) {
+  const { setSideBarChildren } = useContext(WorkspaceContext);
+
   return (
     <tr className="border-b border-gray-200">
       <td className="px-6 py-4">
@@ -89,8 +93,64 @@ function Row({ phone, date_registered, date_last_contacted, location }) {
         <img
           src={eye}
           className="w-4 h-4 mx-auto cursor-pointer hover:opacity-50"
+          onClick={() =>
+            setSideBarChildren(
+              <div className="max-w-96 space-y-5 mt-10 overflow-y-scroll pr-5 max-h-[90vh]">
+                <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
+                <BubbleClient text="Lsunt dolor proident cupidatat." />
+                <BubbleServer text="Exercitation ullamco laboris." />
+                <BubbleClient text="Laboris adipisicing sunt." />
+                <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
+                <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+                <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
+                <BubbleClient text="Lsunt dolor proident cupidatat." />
+                <BubbleServer text="Exercitation ullamco laboris." />
+                <BubbleClient text="Laboris adipisicing sunt." />
+                <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
+                <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+                <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
+                <BubbleClient text="Lsunt dolor proident cupidatat." />
+                <BubbleServer text="Exercitation ullamco laboris." />
+                <BubbleClient text="Laboris adipisicing sunt." />
+                <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
+                <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+                <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
+                <BubbleClient text="Lsunt dolor proident cupidatat." />
+                <BubbleServer text="Exercitation ullamco laboris." />
+                <BubbleClient text="Laboris adipisicing sunt." />
+                <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
+                <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+                <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
+                <BubbleClient text="Lsunt dolor proident cupidatat." />
+                <BubbleServer text="Exercitation ullamco laboris." />
+                <BubbleClient text="Laboris adipisicing sunt." />
+                <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
+                <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+              </div>
+            )
+          }
         />
       </td>
     </tr>
+  );
+}
+
+function BubbleServer({ text }) {
+  return (
+    <div className="mr-5">
+      <div className="text-sm bg-gray-100 px-5 py-2 mr-auto rounded-lg w-fit">
+        {text}
+      </div>
+    </div>
+  );
+}
+
+function BubbleClient({ text }) {
+  return (
+    <div className="ml-5">
+      <div className="text-sm bg-gray-900 text-white px-5 py-2 rounded-lg ml-auto w-fit">
+        {text}
+      </div>
+    </div>
   );
 }

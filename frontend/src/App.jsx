@@ -1,14 +1,12 @@
-import { useRef } from "react";
 import TextingCell from "./Components/Cell/Cells/TextingCell.jsx";
 import CalendarCell from "./Components/Cell/Cells/CalendarCell.jsx";
 import { useState, createContext } from "react";
 import data from "./assets/cells.json";
 import Curves from "./Components/Curves/Curves.jsx";
 import RightClickMenu from "./Components/RightClickMenu.jsx";
-import SideBarContainer from "./Components/Cell/SideBarContainer.jsx";
-import CellSelection from "./Components/Cell/CellSelection.jsx";
 import LeftSideBar from "./Components/LeftSideBar.jsx";
 import RegisteredNumbers from "./Components/Views/RegisteredNumbers.jsx";
+import RightSideBar from "./Components/RightSideBar.jsx";
 
 export const WorkspaceContext = createContext();
 
@@ -31,6 +29,7 @@ export default function App() {
       }}
     >
       <LeftSideBar />
+      <RightSideBar children={sideBarChildren} />
       {renderViews(currentView)}
     </WorkspaceContext.Provider>
   );
@@ -42,7 +41,6 @@ export default function App() {
         return (
           <>
             {Object.keys(workspace).map((id) => buildCell(id, workspace[id]))}
-            <SideBarContainer children={sideBarChildren} />
             <Curves />
             <RightClickMenu />
           </>
