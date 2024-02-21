@@ -343,6 +343,203 @@ Resources:
     Type: AWS::Pinpoint::SMSChannel
     Properties:
       ApplicationId: !Ref AutoSmsPinpointApp
+  ConversationBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-conversat-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: alias/aws/s3
+      PublicAccessBlockConfiguration:
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  ConversationBucketBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ConversationBucket
+      PolicyDocument:
+        Id: RequireEncryptionInTransit
+        Version: '2012-10-17'
+        Statement:
+          - Principal: '*'
+            Action: '*'
+            Effect: Deny
+            Resource:
+              - !GetAtt ConversationBucket.Arn
+              - !Sub ${ConversationBucket.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+  ConversationTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+  getConversation:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: getConversation
+      CodeUri: src/getConversation
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          CONVERSATIONTABLE_TABLE_NAME: !Ref ConversationTable
+          CONVERSATIONTABLE_TABLE_ARN: !GetAtt ConversationTable.Arn
+          CONVERSATIONBUCKET_BUCKET_NAME: !Ref ConversationBucket
+          CONVERSATIONBUCKET_BUCKET_ARN: !GetAtt ConversationBucket.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ConversationTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:GetObjectAcl
+                - s3:GetObjectLegalHold
+                - s3:GetObjectRetention
+                - s3:GetObjectTorrent
+                - s3:GetObjectVersion
+                - s3:GetObjectVersionAcl
+                - s3:GetObjectVersionForReplication
+                - s3:GetObjectVersionTorrent
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListBucketVersions
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:DeleteObject
+                - s3:DeleteObjectVersion
+                - s3:PutObject
+                - s3:PutObjectLegalHold
+                - s3:PutObjectRetention
+                - s3:RestoreObject
+              Resource:
+                - !Sub arn:${AWS::Partition}:s3:::${ConversationBucket}
+                - !Sub arn:${AWS::Partition}:s3:::${ConversationBucket}/*
+      Events:
+        ConversationApiGETconversationid:
+          Type: Api
+          Properties:
+            Path: /conversation/{id}
+            Method: GET
+            RestApiId: !Ref ConversationApi
+  getConversationLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${getConversation}
+  ConversationApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub
+        - ${ResourceName} From Stack ${AWS::StackName}
+        - ResourceName: ConversationApi
+      StageName: Prod
+      DefinitionBody:
+        openapi: '3.0'
+        info: {}
+        paths:
+          /conversation/{id}:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getConversation.Arn}/invocations
+              responses: {}
+          /conversation/{limit}:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getAllConversations.Arn}/invocations
+              responses: {}
+          /conversation:
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${addDummyConversationData.Arn}/invocations
+              responses: {}
+      EndpointConfiguration: REGIONAL
+      TracingEnabled: true
+      Cors:
+        MaxAge: 5
+  getAllConversations:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: getAllConversations
+      CodeUri: src/getAllConversations
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          CONVERSATIONTABLE_TABLE_NAME: !Ref ConversationTable
+          CONVERSATIONTABLE_TABLE_ARN: !GetAtt ConversationTable.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ConversationTable
+      Events:
+        ConversationApiGETconversationlimit:
+          Type: Api
+          Properties:
+            Path: /conversation/{limit}
+            Method: GET
+            RestApiId: !Ref ConversationApi
+  getAllConversationsLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${getAllConversations}
+  addDummyConversationData:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: addDummyConversationData
+      CodeUri: src/addDummyConversationData
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          CONVERSATIONTABLE_TABLE_NAME: !Ref ConversationTable
+          CONVERSATIONTABLE_TABLE_ARN: !GetAtt ConversationTable.Arn
+          CONVERSATIONBUCKET_BUCKET_NAME: !Ref ConversationBucket
+          CONVERSATIONBUCKET_BUCKET_ARN: !GetAtt ConversationBucket.Arn
+      Events:
+        ConversationApiPOSTconversation:
+          Type: Api
+          Properties:
+            Path: /conversation
+            Method: POST
+            RestApiId: !Ref ConversationApi
+  addDummyConversationDataLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${addDummyConversationData}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -358,3 +555,9 @@ Metadata:
         - WelcomeTemplate
         - AutoSmsChannel
         - AutoSmsPinpointApp
+    Group3:
+      Label: Conversation Api
+      Members:
+        - getAllConversations
+        - getConversation
+        - addDummyConversationData
