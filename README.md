@@ -59,9 +59,9 @@ Saved as raw file containing JSON data representing the state of workspace.
 
 ### Conversation Table ❌
 
-| id              | user_id            | workspace_id    | phone_number | date                             |
-| --------------- | ------------------ | --------------- | ------------ | -------------------------------- |
-| Conversation ID | User ID of creator | ID of Workspace | Phone number | Date conversation was first held |
+| id              | phone        | date_registered                            | last_contacted                 | city           | state           | workspace_id                            |
+| --------------- | ------------ | ------------------------------------------ | ------------------------------ | -------------- | --------------- | --------------------------------------- |
+| Conversation ID | Phone number | Date the number first registered for texts | Date the number last contacted | City of origin | State of origin | Workspace where conversation was based. |
 
 ### Conversation Bucket ❌
 
@@ -74,11 +74,11 @@ _Note: Pinpoint might save this information for you so keep that in mind._
 
 ```ts
 [
-  {
-    text: String,
-    date: String,
-    client: Bool,
-  },
+    {
+        "datetime": String,
+        "message": String,
+        "isClient": Boolean,
+    },
   ...
-];
+]
 ```
