@@ -46,8 +46,8 @@ def handler(event, context):
     dynamodb = boto3.resource("dynamodb")
     s3 = boto3.resource("s3")
 
-    bucket = s3.Bucket(os.environ["CONVERSATIONSBUCKET_BUCKET_NAME"])
-    table = dynamodb.Table(os.environ["CONVERSATIONSTABLE_TABLE_NAME"])
+    bucket = s3.Bucket(os.environ["CONVERSATIONBUCKET_BUCKET_NAME"])
+    table = dynamodb.Table(os.environ["CONVERSATIONTABLE_TABLE_NAME"])
 
     try:
         # Add meta data to table

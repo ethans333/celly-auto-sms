@@ -6,7 +6,7 @@ import boto3
 
 def handler(event, context):
     try:
-        limit = event["pathParameters"]["limit"]
+        limit = int(event["queryStringParameters"]["limit"])
 
         dynamodb = boto3.resource("dynamodb")
 

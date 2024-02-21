@@ -95,37 +95,43 @@ function Row({ phone, date_registered, date_last_contacted, location }) {
           className="w-4 h-4 mx-auto cursor-pointer hover:opacity-50"
           onClick={() =>
             setSideBarChildren(
-              <div className="max-w-96 space-y-5 mt-10 overflow-y-scroll pr-5 max-h-[90vh]">
-                <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
-                <BubbleClient text="Lsunt dolor proident cupidatat." />
-                <BubbleServer text="Exercitation ullamco laboris." />
-                <BubbleClient text="Laboris adipisicing sunt." />
-                <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
-                <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
-                <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
-                <BubbleClient text="Lsunt dolor proident cupidatat." />
-                <BubbleServer text="Exercitation ullamco laboris." />
-                <BubbleClient text="Laboris adipisicing sunt." />
-                <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
-                <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
-                <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
-                <BubbleClient text="Lsunt dolor proident cupidatat." />
-                <BubbleServer text="Exercitation ullamco laboris." />
-                <BubbleClient text="Laboris adipisicing sunt." />
-                <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
-                <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
-                <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
-                <BubbleClient text="Lsunt dolor proident cupidatat." />
-                <BubbleServer text="Exercitation ullamco laboris." />
-                <BubbleClient text="Laboris adipisicing sunt." />
-                <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
-                <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
-                <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
-                <BubbleClient text="Lsunt dolor proident cupidatat." />
-                <BubbleServer text="Exercitation ullamco laboris." />
-                <BubbleClient text="Laboris adipisicing sunt." />
-                <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
-                <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+              <div>
+                <div className="max-w-96 space-y-5 mt-10 overflow-y-scroll pr-5 max-h-[90vh]">
+                  <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
+                  <BubbleClient text="Lsunt dolor proident cupidatat." />
+                  <BubbleServer text="Exercitation ullamco laboris." />
+                  <BubbleClient text="Laboris adipisicing sunt." />
+                  <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
+                  <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+                  <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
+                  <BubbleClient text="Lsunt dolor proident cupidatat." />
+                  <BubbleServer text="Exercitation ullamco laboris." />
+                  <BubbleClient text="Laboris adipisicing sunt." />
+                  <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
+                  <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+                  <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
+                  <BubbleClient text="Lsunt dolor proident cupidatat." />
+                  <BubbleServer text="Exercitation ullamco laboris." />
+                  <BubbleClient text="Laboris adipisicing sunt." />
+                  <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
+                  <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+                  <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
+                  <BubbleClient text="Lsunt dolor proident cupidatat." />
+                  <BubbleServer text="Exercitation ullamco laboris." />
+                  <BubbleClient text="Laboris adipisicing sunt." />
+                  <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
+                  <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+                  <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
+                  <BubbleClient text="Lsunt dolor proident cupidatat." />
+                  <BubbleServer text="Exercitation ullamco laboris." />
+                  <BubbleClient text="Laboris adipisicing sunt." />
+                  <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
+                  <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
+                </div>
+                <div className="flex mt-4 space-x-3 justify-end mr-8">
+                  <LegendLabel text="Server" color="#d1d5db" />
+                  <LegendLabel text="Client" color="black" />
+                </div>
               </div>
             )
           }
@@ -148,9 +154,20 @@ function BubbleServer({ text }) {
 function BubbleClient({ text }) {
   return (
     <div className="ml-5">
-      <div className="text-sm bg-gray-900 text-white px-5 py-2 rounded-lg ml-auto w-fit">
+      <div className="text-sm bg-black text-white px-5 py-2 rounded-lg ml-auto w-fit">
         {text}
       </div>
+    </div>
+  );
+}
+
+function LegendLabel({ text, color }) {
+  return (
+    <div className="flex items-center">
+      <svg width="18" height="18">
+        <rect width="15" height="15" x="0" y="0" rx="3" ry="3" fill={color} />
+      </svg>
+      <div className="text-sm">{text}</div>
     </div>
   );
 }

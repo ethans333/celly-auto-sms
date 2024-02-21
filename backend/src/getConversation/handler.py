@@ -11,8 +11,8 @@ def handler(event, context):
         dynamodb = boto3.resource("dynamodb")
         s3 = boto3.resource("s3")
 
-        bucket = s3.Bucket(os.environ["CONVERSATIONSBUCKET_BUCKET_NAME"])
-        table = dynamodb.Table(os.environ["CONVERSATIONSTABLE_TABLE_NAME"])
+        bucket = s3.Bucket(os.environ["CONVERSATIONBUCKET_BUCKET_NAME"])
+        table = dynamodb.Table(os.environ["CONVERSATIONTABLE_TABLE_NAME"])
 
         # Get meta data from table
         conversation = table.get_item(Key={"id": conversation_id})["Item"]
@@ -30,7 +30,7 @@ def handler(event, context):
         "body": json.dumps(
             {
                 "message": f"Conversation fetched successfully",
-                "item": conversation["Item"],
+                "item": conversation,
                 "conversation_raw": conversation_raw,
             }
         ),
