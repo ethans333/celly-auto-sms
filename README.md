@@ -8,6 +8,11 @@ Automated text messaging system.
 - [ ] Toll free number acquired
 - [ ] Admin Area
 - [ ] Build out UI for the side bar of both cells.
+- [ ] /user/login
+- [ ] /user/resend_code
+- [ ] Attatch microsoft graph api to cognito
+- [ ] Build out UI for login and register
+- [ ] Build landing page
 
 | ✔️   | ❌       |
 | ---- | -------- |
@@ -57,13 +62,13 @@ Saved as raw file containing JSON data representing the state of workspace.
 
 ```
 
-### Conversation Table ❌
+### Conversation Table ✔️
 
 | id              | phone        | date_registered                            | last_contacted                 | city           | state           | workspace_id                            |
 | --------------- | ------------ | ------------------------------------------ | ------------------------------ | -------------- | --------------- | --------------------------------------- |
 | Conversation ID | Phone number | Date the number first registered for texts | Date the number last contacted | City of origin | State of origin | Workspace where conversation was based. |
 
-### Conversation Bucket ❌
+### Conversation Bucket ✔️
 
 Saved into the S3 bucket under: `[workspace_id]/[conversation_id]`.
 Saved as raw file containing JSON data of the conversation had with the number.

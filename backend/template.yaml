@@ -571,6 +571,170 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${addDummyConversationData}
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+      AliasAttributes:
+        - email
+        - preferred_username
+      UserPoolName: !Sub ${AWS::StackName}-UserPool
+      AutoVerifiedAttributes:
+        - email
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref UserPool
+  getUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: getUser
+      CodeUri: src/getUser
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          USERPOOLCLIENT_USER_POOL_CLIENT_ID: !Ref UserPoolClient
+      Events:
+        UserApiGETuser:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: GET
+            RestApiId: !Ref UserApi
+  getUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${getUser}
+  addUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: addUser
+      CodeUri: src/addUser
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          USERPOOLCLIENT_USER_POOL_CLIENT_ID: !Ref UserPoolClient
+      Events:
+        UserApiPOSTuser:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: POST
+            RestApiId: !Ref UserApi
+  addUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${addUser}
+  deleteUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: deleteUser
+      CodeUri: src/deleteUser
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          USERPOOLCLIENT_USER_POOL_CLIENT_ID: !Ref UserPoolClient
+      Events:
+        UserApiDELETEuser:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: DELETE
+            RestApiId: !Ref UserApi
+  deleteUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${deleteUser}
+  UserApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub
+        - ${ResourceName} From Stack ${AWS::StackName}
+        - ResourceName: UserApi
+      StageName: Prod
+      DefinitionBody:
+        openapi: '3.0'
+        info: {}
+        paths:
+          /user:
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${addUser.Arn}/invocations
+              responses: {}
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getUser.Arn}/invocations
+              responses: {}
+            delete:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${deleteUser.Arn}/invocations
+              responses: {}
+          /user/confirm:
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${confirmUser.Arn}/invocations
+              responses: {}
+      EndpointConfiguration: REGIONAL
+      TracingEnabled: true
+      Cors:
+        MaxAge: 5
+  confirmUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: confirmUser
+      CodeUri: src/confirmUser
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        UserApiPOSTuserconfirm:
+          Type: Api
+          Properties:
+            Path: /user/confirm
+            Method: POST
+            RestApiId: !Ref UserApi
+      Environment:
+        Variables:
+          USERPOOLCLIENT_USER_POOL_CLIENT_ID: !Ref UserPoolClient
+  confirmUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${confirmUser}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -592,3 +756,15 @@ Metadata:
         - getAllConversations
         - getConversation
         - addDummyConversationData
+    Group4:
+      Label: Users
+      Members:
+        - addUser
+        - deleteUser
+        - getUser
+        - confirmUser
+    Group5:
+      Label: Users Cognito
+      Members:
+        - UserPoolClient
+        - UserPool
