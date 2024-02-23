@@ -16,10 +16,22 @@ def handler(event, context):
             Username=body["email"],
             Password=body["password"],
         )
-        return response
+        return {
+            "statusCode": 200,
+            "body": json.dumps(response),
+        }
     except client.exceptions.UsernameExistsException:
-        return "User already exists"
+        return {
+            "statusCode": 400,
+            "body": "Email already exists",
+        }
     except client.exceptions.InvalidPasswordException:
-        return "Invalid password"
+        return {
+            "statusCode": 400,
+            "body": "Invalid password",
+        }
     except Exception as e:
-        return str(e)
+        return {
+            "statusCode": 500,
+            "body": str(e),
+        }

@@ -574,11 +574,20 @@ Resources:
   UserPool:
     Type: AWS::Cognito::UserPool
     Properties:
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
       AdminCreateUserConfig:
         AllowAdminCreateUserOnly: false
       AliasAttributes:
         - email
         - preferred_username
+      UsernameAttributes:
+        - email
       UserPoolName: !Sub ${AWS::StackName}-UserPool
       AutoVerifiedAttributes:
         - email
@@ -611,6 +620,7 @@ Resources:
   getUserLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${getUser}
   addUser:
@@ -638,6 +648,7 @@ Resources:
   addUserLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${addUser}
   deleteUser:
@@ -665,6 +676,7 @@ Resources:
   deleteUserLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${deleteUser}
   UserApi:
@@ -747,6 +759,7 @@ Resources:
   confirmUserLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${confirmUser}
   loginUser:
@@ -771,6 +784,7 @@ Resources:
   loginUserLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${loginUser}
   resendCodeUser:
@@ -795,6 +809,7 @@ Resources:
   resendCodeUserLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${resendCodeUser}
 Metadata:

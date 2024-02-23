@@ -64,4 +64,58 @@ manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
 packagetype = "Zip"
 functions = ["addDummyConversationData"]
 
+[function_build_definitions.5eb3e740-4b0b-4d03-9022-65d187ca8ba3]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\getUser"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["getUser"]
+
+[function_build_definitions.da6d291f-cbc7-4984-8fb2-b5c03158b48d]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\addUser"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["addUser"]
+
+[function_build_definitions.2ffda0f2-63c4-4937-9d88-1cacbb69a9e4]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\deleteUser"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["deleteUser"]
+
+[function_build_definitions.ce8abe31-bf8d-486c-8840-caf9a402edd6]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\confirmUser"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["confirmUser"]
+
+[function_build_definitions.7de34182-a044-443a-8a5e-7cb9639e2ecc]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\loginUser"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["loginUser"]
+
+[function_build_definitions.9067e73b-53a6-4f1d-ae6f-b47ef04b0a74]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\resendCodeUser"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["resendCodeUser"]
+
 [layer_build_definitions]
