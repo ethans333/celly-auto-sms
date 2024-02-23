@@ -583,9 +583,6 @@ Resources:
           RequireUppercase: true
       AdminCreateUserConfig:
         AllowAdminCreateUserOnly: false
-      AliasAttributes:
-        - email
-        - preferred_username
       UsernameAttributes:
         - email
       UserPoolName: !Sub ${AWS::StackName}-UserPool
@@ -595,6 +592,8 @@ Resources:
     Type: AWS::Cognito::UserPoolClient
     Properties:
       UserPoolId: !Ref UserPool
+      ExplicitAuthFlows:
+        - USER_PASSWORD_AUTH
   getUser:
     Type: AWS::Serverless::Function
     Properties:
@@ -781,6 +780,9 @@ Resources:
             Path: /user/login
             Method: POST
             RestApiId: !Ref UserApi
+      Environment:
+        Variables:
+          USERPOOLCLIENT_USER_POOL_CLIENT_ID: !Ref UserPoolClient
   loginUserLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
@@ -806,6 +808,9 @@ Resources:
             Path: /user/resend_code
             Method: POST
             RestApiId: !Ref UserApi
+      Environment:
+        Variables:
+          USERPOOLCLIENT_USER_POOL_CLIENT_ID: !Ref UserPoolClient
   resendCodeUserLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain

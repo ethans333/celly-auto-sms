@@ -7,10 +7,13 @@ def handler(event, context):
 
     try:
         client.delete_user(AccessToken=access_token)
-        return "User has been delete successfully"
+        return {"statusCode": 200, "body": "User deleted successfully"}
     except client.exceptions.NotAuthorizedException:
-        return "Invalid access token"
+        return {"statusCode": 401, "body": "Not authorized"}
     except client.exceptions.UserNotFoundException:
-        return "User not found"
+        return {"statusCode": 400, "body": "User not found"}
     except Exception as e:
-        return str(e)
+        return {
+            "statusCode": 500,
+            "body": str(e),
+        }

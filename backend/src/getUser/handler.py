@@ -7,10 +7,22 @@ def handler(event, context):
 
     try:
         response = client.get_user(AccessToken=access_token)
-        return response
+        return {
+            "statusCode": 200,
+            "body": response,
+        }
     except client.exceptions.NotAuthorizedException:
-        return "Invalid access token"
+        return {
+            "statusCode": 401,
+            "body": "Not authorized",
+        }
     except client.exceptions.UserNotFoundException:
-        return "User not found"
+        return {
+            "statusCode": 404,
+            "body": "User not found",
+        }
     except Exception as e:
-        return str(e)
+        return {
+            "statusCode": 500,
+            "body": str(e),
+        }

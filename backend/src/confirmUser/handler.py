@@ -11,17 +11,32 @@ def handler(event, context):
     client = boto3.client("cognito-idp")
 
     try:
-        client.sign_up(
+        client.confirm_sign_up(
             ClientId=user_pool_client_id,
             Username=body["email"],
             ConfirmationCode=body["code"],
         )
-        return "User confirmed successfully"
+        return {
+            "statusCode": 200,
+            "body": json.dumps({"message": "User confirmed"}),
+        }
     except client.exceptions.CodeMismatchException:
-        return "Invalid code"
+        return {
+            "statusCode": 400,
+            "body": "Invalid code",
+        }
     except client.exceptions.ExpiredCodeException:
-        return "Code expired"
+        return {
+            "statusCode": 400,
+            "body": "Code expired",
+        }
     except client.exceptions.UserNotFoundException:
-        return "User not found"
+        return {
+            "statusCode": 400,
+            "body": "User not found",
+        }
     except Exception as e:
-        return str(e)
+        return {
+            "statusCode": 500,
+            "body": str(e),
+        }
