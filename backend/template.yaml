@@ -704,6 +704,20 @@ Resources:
                 type: aws_proxy
                 uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${confirmUser.Arn}/invocations
               responses: {}
+          /user/resend_code:
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resendCodeUser.Arn}/invocations
+              responses: {}
+          /user/login:
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${loginUser.Arn}/invocations
+              responses: {}
       EndpointConfiguration: REGIONAL
       TracingEnabled: true
       Cors:
@@ -735,6 +749,54 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${confirmUser}
+  loginUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: loginUser
+      CodeUri: src/loginUser
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        UserApiPOSTuserlogin:
+          Type: Api
+          Properties:
+            Path: /user/login
+            Method: POST
+            RestApiId: !Ref UserApi
+  loginUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${loginUser}
+  resendCodeUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: resendCodeUser
+      CodeUri: src/resendCodeUser
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        UserApiPOSTuserresendcode:
+          Type: Api
+          Properties:
+            Path: /user/resend_code
+            Method: POST
+            RestApiId: !Ref UserApi
+  resendCodeUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${resendCodeUser}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -763,6 +825,8 @@ Metadata:
         - deleteUser
         - getUser
         - confirmUser
+        - resendCodeUser
+        - loginUser
     Group5:
       Label: Users Cognito
       Members:

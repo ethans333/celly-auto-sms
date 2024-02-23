@@ -8,11 +8,12 @@ Automated text messaging system.
 - [ ] Toll free number acquired
 - [ ] Admin Area
 - [ ] Build out UI for the side bar of both cells.
-- [ ] /user/login
-- [ ] /user/resend_code
+- [x] /user/login
+- [x] /user/resend_code
 - [ ] Attatch microsoft graph api to cognito
 - [ ] Build out UI for login and register
 - [ ] Build landing page
+- [ ] Tie backend to frontend
 
 | ✔️   | ❌       |
 | ---- | -------- |
