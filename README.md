@@ -19,6 +19,7 @@ Done:
 Doing:
 
 - [ ] Toll free number acquired
+- [ ] Add events to calendar using graph api.
 
 ---
 
