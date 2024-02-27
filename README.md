@@ -12,13 +12,13 @@ Done:
 - [x] /user/login
 - [x] /user/resend_code
 - [x] Fix sending Access Token, not working for getUser
+- [x] Attatch microsoft graph api to cognito
 
 ---
 
 Doing:
 
 - [ ] Toll free number acquired
-- [ ] Attatch microsoft graph api to cognito
 
 ---
 
