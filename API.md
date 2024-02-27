@@ -34,3 +34,13 @@ Logins in a user, returning relevant information for auth.
   "password": "string"
 }
 ```
+
+### GET `/user`
+
+Headers:
+
+```json
+{
+  "Authorization": "string"
+}
+```

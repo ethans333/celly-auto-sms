@@ -1,3 +1,5 @@
+import json
+
 import boto3
 
 
@@ -9,7 +11,7 @@ def handler(event, context):
         response = client.get_user(AccessToken=access_token)
         return {
             "statusCode": 200,
-            "body": response,
+            "body": json.dumps(response),
         }
     except client.exceptions.NotAuthorizedException:
         return {
@@ -20,6 +22,16 @@ def handler(event, context):
         return {
             "statusCode": 404,
             "body": "User not found",
+        }
+    except client.exceptions.InvalidParameterException:
+        return {
+            "statusCode": 400,
+            "body": "Invalid parameter",
+        }
+    except client.exceptions.TooManyRequestsException:
+        return {
+            "statusCode": 429,
+            "body": "Too many requests",
         }
     except Exception as e:
         return {

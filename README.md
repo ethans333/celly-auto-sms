@@ -6,15 +6,19 @@ Automated text messaging system.
 
 ## Todo Board
 
+Done:
+
 - [x] Register for Toll Free Number
 - [x] /user/login
 - [x] /user/resend_code
+- [x] Fix sending Access Token, not working for getUser
 
 ---
 
+Doing:
+
 - [ ] Toll free number acquired
 - [ ] Attatch microsoft graph api to cognito
-- [ ] Fix sending Access Token, not working for getUser
 
 ---
 
@@ -98,4 +102,10 @@ _Note: Pinpoint might save this information for you so keep that in mind._
     },
   ...
 ]
+```
+
+### Authorization URL For Azure AD Authentication
+
+```
+https://celly-microsoft-pool.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=cellymicrosoftpool&redirect_uri=http://localhost:5173&response_type=TOKEN&client_id=5dfi8s06l6ephu5e5c6vri4aqe&scope=email openid phone
 ```

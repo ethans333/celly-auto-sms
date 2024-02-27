@@ -733,6 +733,7 @@ Resources:
       TracingEnabled: true
       Cors:
         MaxAge: 5
+        AllowHeaders: '''Authorization'''
   confirmUser:
     Type: AWS::Serverless::Function
     Properties:
