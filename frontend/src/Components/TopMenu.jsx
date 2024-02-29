@@ -1,7 +1,7 @@
 import floppy from "../assets/floppy-disk-solid.svg";
 import gear from "../assets/gear-solid.svg";
 
-import { WorkspaceContext } from "../App";
+import { WorkspaceContext } from "../Pages/Home.jsx";
 import { useContext } from "react";
 
 export default function () {

@@ -1,6 +1,6 @@
 import Draggable from "react-draggable";
 import { useState, useContext, useEffect } from "react";
-import { WorkspaceContext } from "../../App";
+import { WorkspaceContext } from "../../Pages/Home.jsx";
 
 import circle from "../../assets/circle-solid.svg";
 

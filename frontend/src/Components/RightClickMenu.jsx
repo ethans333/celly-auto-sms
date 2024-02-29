@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { WorkspaceContext } from "../App";
+import { WorkspaceContext } from "../Pages/Home";
 import plus from "../assets/plus-solid.svg";
 import floppy from "../assets/floppy-disk-solid.svg";
 import gear from "../assets/gear-solid.svg";

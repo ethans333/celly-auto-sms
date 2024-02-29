@@ -1,7 +1,7 @@
 import xmark from "../assets/xmark-solid.svg";
 import angles from "../assets/angles-right-solid.svg";
 import { useContext, useState } from "react";
-import { WorkspaceContext } from "../App";
+import { WorkspaceContext } from "../Pages/Home.jsx";
 
 export default function () {
   const { setCurrentView } = useContext(WorkspaceContext);

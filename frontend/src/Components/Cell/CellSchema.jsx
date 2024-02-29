@@ -1,6 +1,6 @@
 import CellContainer from "./CellContainer";
 import ellipsis from "../../assets/ellipsis-vertical.svg";
-import { WorkspaceContext } from "../../App";
+import { WorkspaceContext } from "../../Pages/Home.jsx";
 import { useState, useContext, useEffect } from "react";
 import CellMenu from "./CellMenu";
 

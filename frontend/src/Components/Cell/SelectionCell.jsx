@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { WorkspaceContext } from "../../App";
+import { WorkspaceContext } from "../../Pages/Home";
 
 import cell_defaults from "../../assets/cell_defaults";
 import cellDefaultSchema from "./cellDefaultSchema";

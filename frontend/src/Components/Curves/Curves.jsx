@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Curve from "./Curve.jsx";
-import { WorkspaceContext } from "../../App.jsx";
+import { WorkspaceContext } from "../../Pages/Home.jsx";
 
 export default function () {
   const { workspace, setWorkspace } = useContext(WorkspaceContext);

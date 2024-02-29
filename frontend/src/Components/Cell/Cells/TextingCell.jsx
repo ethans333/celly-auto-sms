@@ -1,5 +1,5 @@
 import CellSchema from "../CellSchema";
-import { WorkspaceContext } from "../../../App";
+import { WorkspaceContext } from "../../../Pages/Home.jsx";
 import { useContext } from "react";
 import SelectionCell from "../SelectionCell";
 import createCellDataSchema from "../cellDefaultSchema";

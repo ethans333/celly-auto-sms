@@ -11,11 +11,18 @@ export default function () {
   const { instance, accounts } = useMsal();
 
   const handleLogin = () => {
+    const request = {
+      scopes: ["User.Read.All", "Calendars.ReadWrite"],
+    };
+
     instance
-      .loginRedirect({
-        scopes: ["User.Read"],
+      .loginRedirect(request)
+      .then((res) => {
+        console.log(res);
       })
-      .then((res) => console.log(res));
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -24,6 +31,7 @@ export default function () {
         <div className="text-lg font-bold mb-5">Welcome To Celly</div>
 
         <div className="border mb-12">
+          <div>Accounts: {JSON.stringify(accounts)}</div>
           <div>Authenticated: {JSON.stringify(isAuthenticated)}</div>
           <div
             onClick={handleLogin}

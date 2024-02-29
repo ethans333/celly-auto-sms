@@ -2,7 +2,7 @@ import eye from "../../assets/eye-solid.svg";
 import square from "../../assets/square-regular.svg";
 import numbers from "../../assets/numbers.json";
 import { useEffect, useState, useContext } from "react";
-import { WorkspaceContext } from "../../App";
+import { WorkspaceContext } from "../../Pages/Home.jsx";
 export default function () {
   const [lsbWidth, setLsbWidth] = useState(0);
   const [rsbWidth, setRsbWidth] = useState(0);
