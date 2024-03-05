@@ -19,6 +19,8 @@ export async function createUser(email, password) {
     }),
   });
 
+  // if success add token to cookies
+
   const text = await response.text();
   console.log(text);
 
