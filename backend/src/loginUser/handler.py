@@ -22,24 +22,54 @@ def handler(event, context):
         return {
             "statusCode": 200,
             "body": json.dumps(response),
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
         }
     except client.exceptions.UserNotFoundException:
         return {
             "statusCode": 404,
             "body": "User not found",
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
         }
     except client.exceptions.NotAuthorizedException:
         return {
             "statusCode": 401,
             "body": "Invalid password",
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
         }
     except client.exceptions.UserNotConfirmedException:
         return {
             "statusCode": 409,
             "body": "User not confirmed",
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
         }
     except Exception as e:
         return {
             "statusCode": 500,
             "body": str(e),
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
         }

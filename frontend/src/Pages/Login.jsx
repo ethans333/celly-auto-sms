@@ -1,6 +1,7 @@
 import microsoft from "../assets/microsoft.svg";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import * as api from "../api";
 
 export default function () {
   const [email, setEmail] = useState("");
@@ -11,8 +12,10 @@ export default function () {
       "https://celly-microsoft-pool.auth.us-east-1.amazoncognito.com/oauth2/authorize?identity_provider=cellymicrosoftpool&redirect_uri=http://localhost:5173&response_type=TOKEN&client_id=5dfi8s06l6ephu5e5c6vri4aqe&scope=celly-azuread-resource-server-users/User.Read email openid phone";
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     console.log(email, password);
+    const response = await api.createUser(email, password);
+    console.log(response);
   };
 
   const navigate = useNavigate();

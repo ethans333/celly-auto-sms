@@ -49,6 +49,8 @@ Resources:
       TracingEnabled: true
       Cors:
         MaxAge: 5
+        AllowOrigin: '''*'''
+        AllowMethods: '''POST, PUT, GET, DELETE'''
   getWorkspace:
     Type: AWS::Serverless::Function
     Properties:
@@ -479,6 +481,8 @@ Resources:
       TracingEnabled: true
       Cors:
         MaxAge: 5
+        AllowOrigin: '''*'''
+        AllowMethods: '''GET, POST'''
   getAllConversations:
     Type: AWS::Serverless::Function
     Properties:
@@ -733,7 +737,9 @@ Resources:
       TracingEnabled: true
       Cors:
         MaxAge: 5
-        AllowHeaders: '''Authorization'''
+        AllowHeaders: '''*'''
+        AllowOrigin: '''*'''
+        AllowMethods: '''POST, PUT, GET, DELETE'''
   confirmUser:
     Type: AWS::Serverless::Function
     Properties:

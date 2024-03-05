@@ -17,7 +17,7 @@ export default function () {
   const [workspace, setWorkspace] = useState(data);
   const [sideBarChildren, setSideBarChildren] = useState(null);
   const [currentNode, setCurrentNode] = useState(null);
-  const [currentView, setCurrentView] = useState("numbers");
+  const [currentView, setCurrentView] = useState("cells");
 
   const navigate = useNavigate();
 
@@ -44,8 +44,8 @@ export default function () {
     </WorkspaceContext.Provider>
   );
 
-  // Different views to render, shown based on the currentView state set in the left side bar.
   function renderViews(type) {
+    // Different views to render, shown based on the currentView state set in the left side bar.
     switch (type) {
       case "cells":
         return (
@@ -65,16 +65,20 @@ export default function () {
   }
 
   function parseToken() {
+    // If available, parse the token from the URL and set it as a cookie
     let url = new URL(window.location.href);
     let hash = url.hash.substring(1); // remove the #
     let params = new URLSearchParams(hash);
 
-    document.cookie = `access_token=${params.get(
-      "access_token"
-    )}; expires=${params.get("expires_in")}; path=/;SameSite=Strict;HttpOnly;`;
+    if (params.size === 0) return;
+
+    Cookies.set("access_token", params.get("access_token"), {
+      expires: parseInt(params.get("expires_in")),
+    });
   }
 
   function validateToken() {
+    // Check if token is expired or does not exist
     const token = Cookies.get("access_token");
 
     if (!token) {
@@ -84,12 +88,16 @@ export default function () {
     } else {
       // Token is expired
       const claims = jose.decodeJwt(token);
-      if (claims.exp > Date.now()) navigate("/login");
+      if (claims.exp > Date.now()) {
+        Cookies.remove("access_token");
+        navigate("/login");
+      }
     }
   }
 }
 
 function buildCell(id, cell) {
+  // function for mapping cell type to cell type's component
   switch (cell.type) {
     case "texting":
       return <TextingCell key={id} id={id} />;

@@ -26,7 +26,9 @@ export default function () {
   return (
     <div className="flex items-center justify-center mt-[10vw]">
       <div>
-        <div className="text-3xl font-black mb-5">Welcome To Celly 👋</div>
+        <div className="text-3xl font-black mb-5 text-center">
+          Welcome To Celly 🤙
+        </div>
 
         <div className="w-96 mt-16 space-y-4">
           <div

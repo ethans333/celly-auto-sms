@@ -9,14 +9,14 @@ import { msalConfig } from "../authConfig.jsx";
 import "./index.css";
 
 // Pages
-import App from "./App.jsx";
+import Home from "./Pages/Home.jsx";
 import Login from "./Pages/Login.jsx";
 import Register from "./Pages/Register.jsx";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
 const router = createBrowserRouter([
-  { path: "/", element: <App /> },
+  { path: "/", element: <Home /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
 ]);
