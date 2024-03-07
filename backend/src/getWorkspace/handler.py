@@ -21,7 +21,16 @@ def handler(event, context):
         bucket_object = bucket.Object(f"{workspace['user_id']}/{workspace_id}")
         workspace_raw = bucket_object.get()["Body"].read().decode("utf-8")
     except Exception as e:
-        return {"statusCode": 500, "body": str(e)}
+        return {
+            "statusCode": 500,
+            "body": str(e),
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
+        }
 
     return {
         "statusCode": 200,
@@ -31,6 +40,12 @@ def handler(event, context):
                 "workspace_name": workspace["workspace_name"],
                 "workspace_description": workspace["workspace_description"],
                 "workspace_raw": workspace_raw,
-            }
+            },
         ),
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Content-Type": "application/json",
+        },
     }

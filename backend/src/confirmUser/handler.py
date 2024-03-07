@@ -19,24 +19,54 @@ def handler(event, context):
         return {
             "statusCode": 200,
             "body": json.dumps({"message": "User confirmed"}),
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
         }
     except client.exceptions.CodeMismatchException:
         return {
             "statusCode": 400,
             "body": "Invalid code",
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
         }
     except client.exceptions.ExpiredCodeException:
         return {
             "statusCode": 400,
             "body": "Code expired",
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
         }
     except client.exceptions.UserNotFoundException:
         return {
             "statusCode": 400,
             "body": "User not found",
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
         }
     except Exception as e:
         return {
             "statusCode": 500,
             "body": str(e),
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
         }

@@ -49,6 +49,7 @@ Resources:
       TracingEnabled: true
       Cors:
         MaxAge: 5
+        AllowHeaders: '''*'''
         AllowOrigin: '''*'''
         AllowMethods: '''POST, PUT, GET, DELETE'''
   getWorkspace:
@@ -859,3 +860,10 @@ Metadata:
       Members:
         - UserPoolClient
         - UserPool
+  Outputs:
+    WokspaceApi:
+      Description: Workspace API
+      Value: !Ref WorkspaceApi
+    UserApi:
+      Description: User API
+      Value: !Ref UserApi

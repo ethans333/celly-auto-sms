@@ -3,14 +3,18 @@ import os
 import uuid
 
 import boto3
+import jwt
 
 
 def handler(event, context):
     body = json.loads(event["body"])
-    user_id = body["user_id"]
+
     workspace_name = body["workspace_name"]
     workspace_description = body["workspace_description"]
     workspace_raw = body["workspace_raw"]
+
+    access_token = event["headers"]["Authorization"]
+    user_id = jwt.decode(access_token, options={"verify_signature": False})["sub"]
 
     workspace_id = str(uuid.uuid4())
 
@@ -34,7 +38,16 @@ def handler(event, context):
         # Add workspace to bucket
         bucket.put_object(Key=f"{user_id}/{workspace_id}", Body=workspace_raw)
     except Exception as e:
-        return {"statusCode": 500, "body": str(e)}
+        return {
+            "statusCode": 500,
+            "body": str(e),
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*",
+                "Content-Type": "application/json",
+            },
+        }
 
     return {
         "statusCode": 200,
@@ -42,6 +55,12 @@ def handler(event, context):
             {
                 "message": f"{workspace_name} created successfully",
                 "workspace_id": workspace_id,
-            }
+            },
         ),
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Content-Type": "application/json",
+        },
     }

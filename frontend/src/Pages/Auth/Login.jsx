@@ -1,11 +1,13 @@
-import microsoft from "../assets/microsoft.svg";
+import microsoft from "../../assets/microsoft.svg";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import * as api from "../../api";
 
 export default function () {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLoginMsft = () => {
     window.location.href =
@@ -13,30 +15,26 @@ export default function () {
   };
 
   const handleLogin = () => {
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    console.log(email, password);
+    api.loginUser(email, password).then((res) => {
+      if (res.status === 200) {
+        navigate("/");
+      } else {
+        alert(res);
+      }
+    });
   };
-
-  const navigate = useNavigate();
 
   return (
     <div className="flex items-center justify-center mt-[10vw]">
       <div>
-        <div className="text-3xl font-black mb-5 text-center">
-          Welcome To Celly 🤙
-        </div>
-
+        <div className="text-3xl font-black mb-5">Welcome Back To Celly 👋</div>
         <div className="w-96 mt-16 space-y-4">
           <div
             onClick={handleLoginMsft}
             className="flex space-x-3 rounded-lg shadow w-full px-5 py-3 cursor-pointer hover:opacity-50"
           >
             <img src={microsoft} alt="microsoft-logo" className="w-5" />
-            <div className="font-[400]">Sign up with Microsoft</div>
+            <div className="font-[400]">Login with Microsoft</div>
           </div>
 
           <div className="flex items-center py-3">
@@ -52,22 +50,13 @@ export default function () {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <div className="w-full flex space-x-3">
-            <input
-              className="border px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-black rounded-lg"
-              placeholder="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <input
-              className="border px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-black rounded-lg"
-              placeholder="Confirm Password"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          </div>
+          <input
+            className="border px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-black rounded-lg"
+            placeholder="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
           <div className="flex justify-center">
             <button
@@ -79,12 +68,12 @@ export default function () {
           </div>
 
           <div className="text-center pt-7">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <a
+              onClick={() => navigate("/register")}
               className="font-semibold cursor-pointer hover:opacity-50"
-              onClick={() => navigate("/login")}
             >
-              Login
+              Sign Up
             </a>
           </div>
         </div>

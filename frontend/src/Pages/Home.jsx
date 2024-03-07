@@ -10,6 +10,7 @@ import RightSideBar from "../Components/RightSideBar.jsx";
 import * as jose from "jose";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import * as api from "../api.jsx";
 
 export const WorkspaceContext = createContext();
 
@@ -38,6 +39,36 @@ export default function () {
         setCurrentView,
       }}
     >
+      <div
+        onClick={() => {
+          api
+            .addWorkspace(
+              "My New Workspace",
+              "Ea duis ipsum minim cupidatat Lorem aute magna eiusmod ea sit anim laboris. Eiusmod consequat consequat deserunt duis aute occaecat. Nulla ex dolor officia incididunt occaecat quis ullamco proident fugiat. Qui enim voluptate quis veniam reprehenderit id nostrud excepteur ex. Duis veniam aliqua non nostrud.",
+              JSON.stringify(workspace)
+            )
+            .then(async (res) => {
+              if (res.status === 200) {
+                const json = await res.json();
+                console.log(json);
+              } else {
+                console.log(res);
+              }
+            });
+
+          // api.getWorkspace().then(async (res) => {
+          //   if (res.status === 200) {
+          //     const json = await res.json();
+          //     console.log(json);
+          //   } else {
+          //     console.log(res);
+          //   }
+          // });
+        }}
+        className="text-5xl font-black hover:text-red-500 cursor-pointer"
+      >
+        Click Me
+      </div>
       <LeftSideBar />
       <RightSideBar children={sideBarChildren} />
       {renderViews(currentView)}
