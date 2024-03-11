@@ -484,6 +484,10 @@ Resources:
         MaxAge: 5
         AllowOrigin: '''*'''
         AllowMethods: '''GET, POST'''
+      Auth:
+        Authorizers:
+          JWTAuthorizer:
+            UserPoolArn: !Sub arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/placeholder
   getAllConversations:
     Type: AWS::Serverless::Function
     Properties:
@@ -825,6 +829,18 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${resendCodeUser}
+  JWTAuthorizer:
+    Type: AWS::ApiGatewayV2::Authorizer
+    Properties:
+      AuthorizerType: JWT
+      ApiId: !Ref WorkspaceApi
+      Name: workspaces-jwt-authorizer
+      IdentitySource:
+        - $request.header.Authentication
+      JwtConfiguration:
+        Audience:
+          - !Ref UserPoolClient
+        Issuer: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}
 Metadata:
   AWS::Composer::Groups:
     Group:

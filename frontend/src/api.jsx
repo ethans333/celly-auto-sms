@@ -118,9 +118,9 @@ export async function addWorkspace(
   return await response.text(); // error
 }
 
-export async function getWorkspace() {
+export async function getWorkspace(id) {
   const response = await fetch(
-    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/123",
+    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + id,
     {
       method: "GET",
       // headers: {
