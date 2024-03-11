@@ -15,7 +15,7 @@ codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\addWorkspace"
 runtime = "python3.9"
 architecture = "x86_64"
 handler = "handler.handler"
-manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+manifest_hash = "b7583518ec701cb8d72af5f1019b6dab"
 packagetype = "Zip"
 functions = ["addWorkspace"]
 
