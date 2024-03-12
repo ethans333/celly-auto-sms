@@ -14,6 +14,19 @@ Resources:
       Name: !Sub
         - ${ResourceName} From Stack ${AWS::StackName}
         - ResourceName: WorkspaceApi
+      GatewayResponses:
+        DEFAULT_4XX:
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Origin: '''*'''
+              Access-Control-Allow-Headers: '''*'''
+              Access-Control-Allow-Methods: '''*'''
+        DEFAULT_5XX:
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Origin: '''*'''
+              Access-Control-Allow-Headers: '''*'''
+              Access-Control-Allow-Methods: '''*'''
       StageName: Prod
       DefinitionBody:
         openapi: '3.0'
@@ -52,6 +65,11 @@ Resources:
         AllowHeaders: '''*'''
         AllowOrigin: '''*'''
         AllowMethods: '''POST, PUT, GET, DELETE'''
+      Auth:
+        DefaultAuthorizer: JWTAuthorizer
+        Authorizers:
+          JWTAuthorizer:
+            FunctionArn: !GetAtt JWTAuthorizerFunction.Arn
   getWorkspace:
     Type: AWS::Serverless::Function
     Properties:
@@ -829,18 +847,24 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${resendCodeUser}
-  JWTAuthorizer:
-    Type: AWS::ApiGatewayV2::Authorizer
+  JWTAuthorizerFunction:
+    Type: AWS::Serverless::Function
     Properties:
-      AuthorizerType: JWT
-      ApiId: !Ref WorkspaceApi
-      Name: workspaces-jwt-authorizer
-      IdentitySource:
-        - $request.header.Authentication
-      JwtConfiguration:
-        Audience:
-          - !Ref UserPoolClient
-        Issuer: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: JWTAuthorizerFunction
+      CodeUri: src/jwtAuthFunction
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+  JWTAuthorizerFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${JWTAuthorizerFunction}
 Metadata:
   AWS::Composer::Groups:
     Group:

@@ -123,9 +123,9 @@ export async function getWorkspace(id) {
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + id,
     {
       method: "GET",
-      // headers: {
-      //   Authorization: Cookies.get("access_token"),
-      // },
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
     }
   );
 

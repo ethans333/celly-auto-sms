@@ -118,4 +118,13 @@ manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
 packagetype = "Zip"
 functions = ["resendCodeUser"]
 
+[function_build_definitions.1052c537-f643-4627-b16b-f954286512de]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\jwtAuthFunction"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["JWTAuthorizerFunction"]
+
 [layer_build_definitions]
