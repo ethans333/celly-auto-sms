@@ -20,13 +20,17 @@ Resources:
             Headers:
               Access-Control-Allow-Origin: '''*'''
               Access-Control-Allow-Headers: '''*'''
-              Access-Control-Allow-Methods: '''*'''
+              Access-Control-Allow-Methods: '''GET, POST, PATCH, PUT, DELETE, OPTIONS'''
+          ResponseTemplates:
+            application/json: '''{"message": "Unauthorized"}'''
         DEFAULT_5XX:
           ResponseParameters:
             Headers:
               Access-Control-Allow-Origin: '''*'''
               Access-Control-Allow-Headers: '''*'''
-              Access-Control-Allow-Methods: '''*'''
+              Access-Control-Allow-Methods: '''GET, POST, PATCH, PUT, DELETE, OPTIONS'''
+          ResponseTemplates:
+            application/json: '''{"message": "Internal Server Error"}'''
       StageName: Prod
       DefinitionBody:
         openapi: '3.0'
@@ -64,7 +68,7 @@ Resources:
         MaxAge: 5
         AllowHeaders: '''*'''
         AllowOrigin: '''*'''
-        AllowMethods: '''POST, PUT, GET, DELETE'''
+        AllowMethods: '''GET, POST, PATCH, PUT, DELETE, OPTIONS'''
       Auth:
         DefaultAuthorizer: JWTAuthorizer
         Authorizers:

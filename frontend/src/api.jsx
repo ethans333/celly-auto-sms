@@ -124,7 +124,7 @@ export async function getWorkspace(id) {
     {
       method: "GET",
       headers: {
-        Authorization: Cookies.get("access_token"),
+        Authorization: "allow", //Cookies.get("access_token"),
       },
     }
   );
