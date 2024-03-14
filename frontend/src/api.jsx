@@ -124,8 +124,34 @@ export async function getWorkspace(id) {
     {
       method: "GET",
       headers: {
-        Authorization: "allow", //Cookies.get("access_token"),
+        Authorization: Cookies.get("access_token"),
       },
+    }
+  );
+
+  if (response.status === 200) return response;
+
+  return await response.text(); // error
+}
+
+export async function updateWorkspace(
+  id,
+  workspace_name,
+  workspace_description,
+  workspace_raw
+) {
+  const response = await fetch(
+    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + id,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
+      body: JSON.stringify({
+        workspace_name: workspace_name,
+        workspace_description: workspace_description,
+        workspace_raw: workspace_raw,
+      }),
     }
   );
 

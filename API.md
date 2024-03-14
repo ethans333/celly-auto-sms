@@ -44,3 +44,28 @@ Headers:
   "Authorization": "string"
 }
 ```
+
+## Workspace
+
+## GET `/workspace/{id}`
+
+Gets workspace data.
+
+Headers:
+
+```json
+{
+  "Authorization": "string"
+}
+```
+
+Returns:
+
+```json
+{
+  "message": "string",
+  "workspace_description": "string",
+  "workspace_name": "string",
+  "workspace_raw": "string",
+}
+```

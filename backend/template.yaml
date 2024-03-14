@@ -71,6 +71,7 @@ Resources:
         AllowMethods: '''GET, POST, PATCH, PUT, DELETE, OPTIONS'''
       Auth:
         DefaultAuthorizer: JWTAuthorizer
+        AddDefaultAuthorizerToCorsPreflight: false
         Authorizers:
           JWTAuthorizer:
             FunctionArn: !GetAtt JWTAuthorizerFunction.Arn
@@ -863,6 +864,10 @@ Resources:
       MemorySize: 3008
       Timeout: 30
       Tracing: Active
+      Environment:
+        Variables:
+          USER_POOL_ID: !Ref UserPool
+          USER_POOL_REGION: !Ref AWS::Region
   JWTAuthorizerFunctionLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain

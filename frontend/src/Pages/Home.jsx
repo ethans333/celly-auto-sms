@@ -15,7 +15,8 @@ import * as api from "../api.jsx";
 export const WorkspaceContext = createContext();
 
 export default function () {
-  const [workspace, setWorkspace] = useState(data);
+  const [workspace, setWorkspace] = useState({});
+  const [workspaceMetaData, setWorkspaceMetaData] = useState({});
   const [sideBarChildren, setSideBarChildren] = useState(null);
   const [currentNode, setCurrentNode] = useState(null);
   const [currentView, setCurrentView] = useState("cells");
@@ -26,26 +27,14 @@ export default function () {
     parseToken();
     validateToken();
 
-    // api
-    //   .addWorkspace(
-    //     "My New Workspace",
-    //     "Ea duis ipsum minim cupidatat Lorem aute magna eiusmod ea sit anim laboris. Eiusmod consequat consequat deserunt duis aute occaecat. Nulla ex dolor officia incididunt occaecat quis ullamco proident fugiat. Qui enim voluptate quis veniam reprehenderit id nostrud excepteur ex. Duis veniam aliqua non nostrud.",
-    //     JSON.stringify(workspace)
-    //   )
-    //   .then(async (res) => {
-    //     if (res.status === 200) {
-    //       const json = await res.json();
-    //       console.log(json);
-    //     } else {
-    //       console.log(res);
-    //     }
-    //   });
-
     api
       .getWorkspace("cbb8f7ca-e4a3-45ea-9a22-00e40769a609")
       .then(async (res) => {
         if (res.status === 200) {
           const json = await res.json();
+          setWorkspace(JSON.parse(json.workspace_raw));
+          delete json.workspace_raw;
+          setWorkspaceMetaData(json);
           console.log(json);
         } else {
           console.log(res);
@@ -57,6 +46,7 @@ export default function () {
     <WorkspaceContext.Provider
       value={{
         workspace,
+        workspaceMetaData,
         currentNode,
         currentView,
         setCurrentNode,

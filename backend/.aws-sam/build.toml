@@ -123,7 +123,7 @@ codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\jwtAuthFunction"
 runtime = "python3.9"
 architecture = "x86_64"
 handler = "handler.handler"
-manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+manifest_hash = "fce15323b529da53fd8f246b6fd881d6"
 packagetype = "Zip"
 functions = ["JWTAuthorizerFunction"]
 
