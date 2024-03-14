@@ -13,21 +13,26 @@ Done:
 - [x] /user/resend_code
 - [x] Fix sending Access Token, not working for getUser
 - [x] Attatch microsoft graph api to cognito
+- [x] Toll free number acquired
+- [x] Build out UI for login and register
+
+
 
 ---
 
-Doing:
+In progress:
 
-- [ ] Toll free number acquired
-- [ ] Add events to calendar using graph api.
-
----
-
-- [ ] Build out UI for the side bar of both cells.
-- [ ] Build out UI for login and register
-- [ ] Build landing page
-- [ ] Tie backend to frontend
+- [ ] Tie backend to frontend.
 - [ ] Write out API docs for User & Other functions
+- [ ] Fix token only working for one action issue.
+
+---
+
+To Do:
+
+- [ ] Add events to calendar using graph api.
+- [ ] Build out UI for the side bar of both cells.
+- [ ] Build landing page
 
 ## Resources
 
