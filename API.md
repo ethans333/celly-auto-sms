@@ -45,6 +45,9 @@ Headers:
 }
 ```
 
+```body
+```
+
 ## Workspace
 
 ## GET `/workspace/{id}`
@@ -67,5 +70,67 @@ Returns:
   "workspace_description": "string",
   "workspace_name": "string",
   "workspace_raw": "string",
+}
+```
+
+## POST `/workspace`
+
+Adds a new workspace.
+
+Headers:
+
+```json
+{
+  "Authorization": "string"
+}
+```
+
+Body:
+
+```json
+{
+  "workspace_description": "string",
+  "workspace_name": "string",
+  "workspace_raw": "string",
+}
+```
+
+Returns:
+
+```json
+{
+  "message": "string",
+  "workspace_id": "string",
+}
+```
+
+## PUT `/workspace/{id}`
+
+Updates an existing workspace.
+
+Headers:
+
+```json
+{
+  "Authorization": "string"
+}
+```
+
+Body:
+
+```json
+{
+  "workspace_description": "string",
+  "workspace_name": "string",
+  "workspace_raw": "string",
+}
+```
+
+Returns:
+
+```json
+{
+  "message": "string",
+  "workspace_id": "string",
 }
 ```

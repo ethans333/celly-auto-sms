@@ -15,8 +15,7 @@ Done:
 - [x] Attatch microsoft graph api to cognito
 - [x] Toll free number acquired
 - [x] Build out UI for login and register
-
-
+- [x] Fix token only working for one action issue.
 
 ---
 
@@ -24,7 +23,6 @@ In progress:
 
 - [ ] Tie backend to frontend.
 - [ ] Write out API docs for User & Other functions
-- [ ] Fix token only working for one action issue.
 
 ---
 
@@ -33,6 +31,7 @@ To Do:
 - [ ] Add events to calendar using graph api.
 - [ ] Build out UI for the side bar of both cells.
 - [ ] Build landing page
+- [ ] Make workspace a class that the frontend and backend can both utilize.
 
 ## Resources
 

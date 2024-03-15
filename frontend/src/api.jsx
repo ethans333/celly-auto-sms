@@ -6,6 +6,13 @@ import Cookies from "js-cookie";
 
 */
 
+/**
+ * Creates a new user.
+ *
+ * @param {String} email Email of the user
+ * @param {String} password Password of the user
+ * @returns {Object}
+ * */
 export async function createUser(email, password) {
   const response = await fetch(import.meta.env.VITE_USER_API_URL + "/user", {
     method: "POST",
@@ -23,6 +30,13 @@ export async function createUser(email, password) {
   return await response.text(); // error
 }
 
+/**
+ * Logs in the user.
+ *
+ * @param {String} email Email of the user
+ * @param {String} password Password of the user
+ * @returns {Object}
+ * */
 export async function loginUser(email, password) {
   const response = await fetch(
     import.meta.env.VITE_USER_API_URL + "/user/login",
@@ -53,6 +67,13 @@ export async function loginUser(email, password) {
   return await response.text(); // error
 }
 
+/**
+ * Confirms the user.
+ *
+ * @param {String} email Email of the user
+ * @param {String} code Code to confirm the user
+ * @returns {Object}
+ */
 export async function confirmUser(email, code) {
   const response = await fetch(
     import.meta.env.VITE_USER_API_URL + "/user/confirm",
@@ -73,6 +94,11 @@ export async function confirmUser(email, code) {
   return await response.text(); // error
 }
 
+/**
+ * Gets the user. User must be authenticated.
+ *
+ * @returns {Object}
+ * */
 export async function getUser() {
   const response = await fetch(import.meta.env.VITE_USER_API_URL + "/user", {
     method: "GET",
@@ -92,6 +118,14 @@ export async function getUser() {
 
 */
 
+/**
+ * Adds a workspace
+ *
+ * @param {String} workspace_name Name of the workspace
+ * @param {String} workspace_description Description of the workspace
+ * @param {String} workspace_raw Raw data of the workspace
+ * @returns {Object} Message and workspace id
+ */
 export async function addWorkspace(
   workspace_name,
   workspace_description,
@@ -118,6 +152,12 @@ export async function addWorkspace(
   return await response.text(); // error
 }
 
+/**
+ * Gets a workspace
+ *
+ * @param {String} id Id of the workspace
+ * @returns {Object} Workspace
+ */
 export async function getWorkspace(id) {
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + id,
@@ -134,6 +174,14 @@ export async function getWorkspace(id) {
   return await response.text(); // error
 }
 
+/**
+ * Updates an existing workspace
+ *
+ * @param {String} id Id of the workspace
+ * @param {String} workspace_name Name of the workspace
+ * @param {String} workspace_description Description of the workspace
+ * @returns {Object} Message and workspace id
+ */
 export async function updateWorkspace(
   id,
   workspace_name,
