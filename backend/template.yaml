@@ -22,7 +22,7 @@ Resources:
               Access-Control-Allow-Headers: '''*'''
               Access-Control-Allow-Methods: '''GET, POST, PATCH, PUT, DELETE, OPTIONS'''
           ResponseTemplates:
-            application/json: '''{"message": "Unauthorized"}'''
+            application/json: '''Unauthorized'''
         DEFAULT_5XX:
           ResponseParameters:
             Headers:
@@ -30,7 +30,7 @@ Resources:
               Access-Control-Allow-Headers: '''*'''
               Access-Control-Allow-Methods: '''GET, POST, PATCH, PUT, DELETE, OPTIONS'''
           ResponseTemplates:
-            application/json: '''{"message": "Internal Server Error"}'''
+            application/json: '''Internal Server Error'''
       StageName: Prod
       DefinitionBody:
         openapi: '3.0'

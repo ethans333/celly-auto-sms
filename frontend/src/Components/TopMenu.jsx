@@ -16,13 +16,21 @@ export default function () {
         className="square-button w-8 mr-2.5"
         onClick={() => {
           // on save
-          api.updateWorkspace(
-            workspaceMetaData.workspace_id,
-            workspaceMetaData.workspace_name,
-            workspaceMetaData.workspace_description,
-            workspace
-          );
-          console.log(workspace);
+          api
+            .updateWorkspace(
+              workspaceMetaData.workspace_id,
+              workspaceMetaData.workspace_name,
+              workspaceMetaData.workspace_description,
+              JSON.stringify(workspace)
+            )
+            .then(async (res) => {
+              if (res.status === 200) {
+                const json = await res.json();
+                console.log(json);
+              } else {
+                console.log(res);
+              }
+            });
         }}
       />
       {/* Settings */}

@@ -22,27 +22,27 @@ def handler(event, context):
 
         if token_valid:
             # valid token
-            response = generatePolicy("user", "Allow", event["methodArn"])
+            response = generatePolicy("user", "Allow")
         else:
             # invalid token
-            response = generatePolicy("user", "Deny", event["methodArn"])
+            response = generatePolicy("user", "Deny")
     except BaseException:
         return "unauthorized"  # Return a 500 error
 
     return json.loads(response)
 
 
-def generatePolicy(principalId, effect, resource):
+def generatePolicy(principalId, effect):
     authResponse = {}
     authResponse["principalId"] = principalId
-    if effect and resource:
+    if effect:
         policyDocument = {}
         policyDocument["Version"] = "2012-10-17"
         policyDocument["Statement"] = []
         statementOne = {}
         statementOne["Action"] = "execute-api:Invoke"
         statementOne["Effect"] = effect
-        statementOne["Resource"] = resource
+        statementOne["Resource"] = "arn:aws:execute-api:us-east-1:*:*"
         policyDocument["Statement"] = [statementOne]
         authResponse["policyDocument"] = policyDocument
     authResponse["context"] = {

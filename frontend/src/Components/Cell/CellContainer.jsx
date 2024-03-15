@@ -1,5 +1,5 @@
 import Draggable from "react-draggable";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { WorkspaceContext } from "../../Pages/Home.jsx";
 
 import circle from "../../assets/circle-solid.svg";
@@ -7,9 +7,12 @@ import circle from "../../assets/circle-solid.svg";
 export default function CellContainer({ children, id }) {
   const { workspace, setWorkspace } = useContext(WorkspaceContext);
 
+  const cell = useRef(null);
+
   return (
     <div id={id} className="absolute">
       <Draggable
+        ref={cell}
         defaultPosition={workspace[id].position}
         onDrag={(event) => {
           setWorkspace((p) => {
@@ -21,7 +24,7 @@ export default function CellContainer({ children, id }) {
           });
         }}
       >
-        <div className="flex w-fit">
+        <div ref={cell} className="flex w-fit">
           {/* Left */}
           <Node id={`${id}$left`} />
           <div>

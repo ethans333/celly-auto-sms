@@ -32,7 +32,11 @@ export default function () {
             name="Registered Numbers"
             onClick={() => setCurrentView("numbers")}
           />
-          <ProjectLabel emoji="📈" name="Analytics" />
+          <ProjectLabel
+            emoji="📈"
+            name="Analytics"
+            onClick={() => setCurrentView("analytics")}
+          />
         </div>
 
         <p className="font-semibold text-gray-500 tracking-wide mt-8">

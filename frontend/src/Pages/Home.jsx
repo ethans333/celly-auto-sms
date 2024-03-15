@@ -75,7 +75,28 @@ export default function () {
       case "numbers":
         return <RegisteredNumbers />;
       case "analytics":
-        return <></>;
+        return (
+          <>
+            <div className="flex justify-center">
+              <button
+                onClick={() => {
+                  api
+                    .addWorkspace("test", "test", JSON.stringify(workspace))
+                    .then(async (res) => {
+                      if (res.status === 200) {
+                        const json = await res.json();
+                        console.log(json);
+                      } else {
+                        console.log(res);
+                      }
+                    });
+                }}
+              >
+                Click Me
+              </button>
+            </div>
+          </>
+        );
       default:
         return <></>;
     }
