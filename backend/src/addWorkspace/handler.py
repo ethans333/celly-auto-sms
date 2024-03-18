@@ -32,6 +32,7 @@ def handler(event, context):
                 "user_id": user_id,
                 "workspace_name": workspace_name,
                 "workspace_description": workspace_description,
+                "is_favorite": False,
             }
         )
 

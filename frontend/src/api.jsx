@@ -159,6 +159,8 @@ export async function addWorkspace(
  * @returns {Object} Workspace
  */
 export async function getWorkspace(id) {
+  if (!id) return "No id provided";
+
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + id,
     {
@@ -186,7 +188,8 @@ export async function updateWorkspace(
   id,
   workspace_name,
   workspace_description,
-  workspace_raw
+  workspace_raw,
+  is_favorite
 ) {
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + id,
@@ -199,7 +202,24 @@ export async function updateWorkspace(
         workspace_name: workspace_name,
         workspace_description: workspace_description,
         workspace_raw: workspace_raw,
+        is_favorite: is_favorite,
       }),
+    }
+  );
+
+  if (response.status === 200) return response;
+
+  return await response.text(); // error
+}
+
+export async function getAllUserWorkspaces() {
+  const response = await fetch(
+    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/all",
+    {
+      method: "GET",
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
     }
   );
 

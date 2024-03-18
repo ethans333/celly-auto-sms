@@ -70,6 +70,7 @@ Returns:
   "workspace_description": "string",
   "workspace_name": "string",
   "workspace_raw": "string",
+  "is_favorite": "bool"
 }
 ```
 
@@ -92,6 +93,7 @@ Body:
   "workspace_description": "string",
   "workspace_name": "string",
   "workspace_raw": "string",
+  "is_favorite": "bool"
 }
 ```
 
@@ -123,6 +125,7 @@ Body:
   "workspace_description": "string",
   "workspace_name": "string",
   "workspace_raw": "string",
+  "is_favorite": "bool"
 }
 ```
 
@@ -133,4 +136,29 @@ Returns:
   "message": "string",
   "workspace_id": "string",
 }
+```
+
+## GET `/workspace/all`
+
+Gets all user workspaces created by the user.
+
+Headers:
+
+```json
+{
+  "Authorization": "string"
+}
+```
+
+Returns:
+
+```json
+[
+  {
+    "workspace_description": "string",
+    "workspace_name": "string",
+    "is_favorite": "bool"
+  },
+  ...
+]
 ```

@@ -36,10 +36,11 @@ def handler(event, context):
         "statusCode": 200,
         "body": json.dumps(
             {
-                "workspace_id": workspace_id,
+                "id": workspace_id,
                 "workspace_name": workspace["workspace_name"],
                 "workspace_description": workspace["workspace_description"],
                 "workspace_raw": workspace_raw,
+                "is_favorite": workspace["is_favorite"],
             },
         ),
         "headers": {

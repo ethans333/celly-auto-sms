@@ -1,11 +1,26 @@
 import xmark from "../assets/xmark-solid.svg";
 import angles from "../assets/angles-right-solid.svg";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WorkspaceContext } from "../Pages/Home.jsx";
+import * as api from "../api.jsx";
 
 export default function () {
   const { setCurrentView } = useContext(WorkspaceContext);
   const [showSideBar, setShowSideBar] = useState(true);
+  const [workspaces, setWorkspaces] = useState([]);
+  const [favoriteWorkspaces, setFavoriteWorkspaces] = useState([]);
+
+  useEffect(() => {
+    api.getAllUserWorkspaces().then(async (res) => {
+      if (res.status === 200) {
+        const json = await res.json();
+        setWorkspaces(json.workspaces);
+        setFavoriteWorkspaces(json.workspaces.filter((ws) => ws.is_favorite));
+      } else {
+        console.log(res);
+      }
+    });
+  }, []);
 
   return showSideBar ? (
     <div
@@ -42,19 +57,15 @@ export default function () {
         <p className="font-semibold text-gray-500 tracking-wide mt-8">
           Favorites
         </p>
+        {/* Favorite Projects */}
         <div className="space-y-3 mt-3 ml-1">
-          <ProjectLabel emoji="🌲" name="Incididunt est" />
-          <ProjectLabel emoji="♻️" name="Anim irure dolor anim ipsum" />
+          {mapWorkspaces(favoriteWorkspaces)}
         </div>
         <p className="font-semibold text-gray-500 tracking-wide mt-8">
           Projects
         </p>
-        <div className="space-y-3 mt-3 ml-1">
-          <ProjectLabel emoji="🪧" name="Incididunt est" />
-          <ProjectLabel emoji="🏡" name="Anim irure dolor anim ipsum" />
-          <ProjectLabel emoji="📱" name="In non occaecat" />
-          <ProjectLabel emoji="📣" name="Ullamco cillum laborum aliquip" />
-        </div>
+        {/* All Projects */}
+        <div className="space-y-3 mt-3 ml-1">{mapWorkspaces(workspaces)}</div>
       </div>
     </div>
   ) : (
@@ -80,4 +91,46 @@ function ProjectLabel({ emoji, name, onClick }) {
       {emoji} {name}
     </p>
   );
+}
+
+function mapWorkspaces(w) {
+  const emojis = [
+    "🔬",
+    "📚",
+    "🎨",
+    "🔧",
+    "🚀",
+    "💻",
+    "🌐",
+    "📈",
+    "🔒",
+    "🎵",
+    "🎮",
+    "📷",
+    "🎥",
+    "🌳",
+    "🍔",
+    "🏠",
+    "🚗",
+    "👔",
+    "👟",
+    "👓",
+    "🎒",
+    "🌂",
+    "💄",
+    "💍",
+  ];
+
+  const { setWorkspaceMetaData } = useContext(WorkspaceContext);
+
+  return w.map((ws) => {
+    return (
+      <ProjectLabel
+        key={ws.id}
+        emoji={emojis[Math.floor(Math.random() * emojis.length)]}
+        name={ws.workspace_name}
+        onClick={() => setWorkspaceMetaData(ws)}
+      />
+    );
+  });
 }

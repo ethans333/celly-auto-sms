@@ -11,6 +11,7 @@ def handler(event, context):
     workspace_name = body["workspace_name"]
     workspace_description = body["workspace_description"]
     workspace_raw = body["workspace_raw"]
+    is_favorite = body["is_favorite"]
 
     dynamodb = boto3.resource("dynamodb")
     s3 = boto3.resource("s3")
@@ -24,10 +25,11 @@ def handler(event, context):
         # Put meta data in table
         table.update_item(
             Key={"id": workspace_id},
-            UpdateExpression="SET workspace_name = :n, workspace_description = :d",
+            UpdateExpression="SET workspace_name = :n, workspace_description = :d, is_favorite = :f",
             ExpressionAttributeValues={
                 ":n": workspace_name,
                 ":d": workspace_description,
+                ":f": is_favorite,
             },
         )
 

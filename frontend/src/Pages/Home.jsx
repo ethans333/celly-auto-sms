@@ -27,20 +27,33 @@ export default function () {
     parseToken();
     validateToken();
 
-    api
-      .getWorkspace("cbb8f7ca-e4a3-45ea-9a22-00e40769a609")
-      .then(async (res) => {
-        if (res.status === 200) {
-          const json = await res.json();
-          setWorkspace(JSON.parse(json.workspace_raw));
-          delete json.workspace_raw;
-          setWorkspaceMetaData(json);
-          console.log(json);
-        } else {
-          console.log(res);
-        }
-      });
+    // api
+    //   .getWorkspace("cbb8f7ca-e4a3-45ea-9a22-00e40769a609")
+    //   .then(async (res) => {
+    //     if (res.status === 200) {
+    //       const json = await res.json();
+    //       setWorkspace(JSON.parse(json.workspace_raw));
+    //       delete json.workspace_raw;
+    //       setWorkspaceMetaData(json);
+    //       console.log(json);
+    //     } else {
+    //       console.log(res);
+    //     }
+    //   });
   }, []);
+
+  useEffect(() => {
+    api.getWorkspace(workspaceMetaData.id).then(async (res) => {
+      if (res.status === 200) {
+        const json = await res.json();
+        setWorkspace(JSON.parse(json.workspace_raw));
+        delete json.workspace_raw;
+        console.log(json);
+      } else {
+        console.log(res);
+      }
+    });
+  }, [workspaceMetaData]);
 
   return (
     <WorkspaceContext.Provider
@@ -53,6 +66,7 @@ export default function () {
         setWorkspace,
         setSideBarChildren,
         setCurrentView,
+        setWorkspaceMetaData,
       }}
     >
       <LeftSideBar />
@@ -80,16 +94,14 @@ export default function () {
             <div className="flex justify-center">
               <button
                 onClick={() => {
-                  api
-                    .addWorkspace("test", "test", JSON.stringify(workspace))
-                    .then(async (res) => {
-                      if (res.status === 200) {
-                        const json = await res.json();
-                        console.log(json);
-                      } else {
-                        console.log(res);
-                      }
-                    });
+                  // api.getAllUserWorkspaces().then(async (res) => {
+                  //   if (res.status === 200) {
+                  //     const json = await res.json();
+                  //     console.log(json);
+                  //   } else {
+                  //     console.log(res);
+                  //   }
+                  // });
                 }}
               >
                 Click Me

@@ -62,6 +62,13 @@ Resources:
                 type: aws_proxy
                 uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${deleteWorkspace.Arn}/invocations
               responses: {}
+          /workspace/all:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getAllUserWorkspaces.Arn}/invocations
+              responses: {}
       EndpointConfiguration: REGIONAL
       TracingEnabled: true
       Cors:
@@ -874,6 +881,38 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${JWTAuthorizerFunction}
+  getAllUserWorkspaces:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: getAllUserWorkspaces
+      CodeUri: src/getAllUserWorkspaces
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        WorkspaceApiGETworkspaceall:
+          Type: Api
+          Properties:
+            Path: /workspace/all
+            Method: GET
+            RestApiId: !Ref WorkspaceApi
+      Environment:
+        Variables:
+          WORKSPACESTABLE_TABLE_NAME: !Ref WorkspacesTable
+          WORKSPACESTABLE_TABLE_ARN: !GetAtt WorkspacesTable.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref WorkspacesTable
+  getAllUserWorkspacesLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${getAllUserWorkspaces}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -883,6 +922,7 @@ Metadata:
         - addWorkspace
         - updateWorkspace
         - deleteWorkspace
+        - getAllUserWorkspaces
     Group2:
       Label: Pinpoint SMS Service
       Members:

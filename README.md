@@ -28,9 +28,10 @@ In progress:
 
 To Do:
 
+- [ ] Expiration check for JWT Authorizer.
 - [ ] Add events to calendar using graph api.
 - [ ] Build out UI for the side bar of both cells.
-- [ ] Build landing page
+- [ ] Build landing page.
 - [ ] Make workspace a class that the frontend and backend can both utilize.
 
 ## Resources

@@ -127,4 +127,13 @@ manifest_hash = "fce15323b529da53fd8f246b6fd881d6"
 packagetype = "Zip"
 functions = ["JWTAuthorizerFunction"]
 
+[function_build_definitions.2daa6639-dfcd-4dbc-81bb-1c5b66c7b6c1]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\getAllUserWorkspaces"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "fad975d2f7b12f7080d9cf20a516c695"
+packagetype = "Zip"
+functions = ["getAllUserWorkspaces"]
+
 [layer_build_definitions]
