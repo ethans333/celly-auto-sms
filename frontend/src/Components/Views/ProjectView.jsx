@@ -1,5 +1,5 @@
 import { WorkspaceContext } from "../../Pages/Home";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import Curves from "../Curves/Curves";
 import Popup from "../Popup";
 import RightClickMenu from "../RightClickMenu";

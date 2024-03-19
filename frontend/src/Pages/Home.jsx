@@ -124,7 +124,7 @@ export default function () {
     } else {
       // Token is expired
       const claims = jose.decodeJwt(token);
-      if (claims.exp > Date.now()) {
+      if (Date.now() > claims.exp * 1000) {
         Cookies.remove("access_token");
         navigate("/login");
       }
