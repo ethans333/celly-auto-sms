@@ -1,5 +1,6 @@
 import xmark from "../assets/xmark-solid.svg";
 import TopMenu from "./TopMenu.jsx";
+import BottomMenu from "./BottomMenu.jsx";
 import { WorkspaceContext } from "../Pages/Home.jsx";
 import { useContext } from "react";
 
@@ -9,7 +10,11 @@ export default function ({ children, topChildren }) {
   return children != null ? (
     <div className="absolute right-0 z-20 animate-shiftRL">
       <div className="flex h-screen">
-        {currentView == "cells" && <TopMenu />}
+        <div>
+          {currentView == "project" && <TopMenu />}
+          {currentView == "project" && <BottomMenu />}
+        </div>
+
         <div className="min-w-96 border-l-2 border-gray-100 bg-white px-5 pt-3">
           <div className="w-full mb-3 flex">
             {topChildren}
@@ -24,8 +29,9 @@ export default function ({ children, topChildren }) {
       </div>
     </div>
   ) : (
-    <div className="absolute right-0">
-      {currentView == "cells" && <TopMenu />}
+    <div className="absolute right-0 h-screen">
+      {currentView == "project" && <TopMenu />}
+      {currentView == "project" && <BottomMenu />}
     </div>
   );
 }

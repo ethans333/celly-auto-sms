@@ -33,6 +33,7 @@ To Do:
 - [ ] Build out UI for the side bar of both cells.
 - [ ] Build landing page.
 - [ ] Make workspace a class that the frontend and backend can both utilize.
+- [ ] Fix checking if token expired.
 
 ## Resources
 

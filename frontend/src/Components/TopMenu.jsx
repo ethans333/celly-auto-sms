@@ -6,9 +6,11 @@ import star_filled from "../assets/star-solid.svg";
 import { WorkspaceContext } from "../Pages/Home.jsx";
 import { useContext, useState, useEffect } from "react";
 import * as api from "../api.jsx";
+import Settings from "./Popups/Settings.jsx";
 
 export default function () {
-  const { workspace, workspaceMetaData } = useContext(WorkspaceContext);
+  const { workspace, workspaceMetaData, setPopupChildren } =
+    useContext(WorkspaceContext);
   const [favorited, setFavorited] = useState(false);
 
   useEffect(() => {
@@ -66,7 +68,11 @@ export default function () {
         }}
       />
       {/* Settings */}
-      <img src={gear} className="square-button w-8" />
+      <img
+        onClick={() => setPopupChildren(<Settings />)}
+        src={gear}
+        className="square-button w-8"
+      />
     </div>
   );
 }

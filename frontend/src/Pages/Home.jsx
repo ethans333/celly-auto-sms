@@ -1,16 +1,19 @@
-import TextingCell from "../Components/Cell/Cells/TextingCell.jsx";
-import CalendarCell from "../Components/Cell/Cells/CalendarCell.jsx";
 import { useState, createContext, useEffect } from "react";
-import data from "../assets/cells.json";
-import Curves from "../Components/Curves/Curves.jsx";
-import RightClickMenu from "../Components/RightClickMenu.jsx";
-import LeftSideBar from "../Components/LeftSideBar.jsx";
-import RegisteredNumbers from "../Components/Views/RegisteredNumbers.jsx";
-import RightSideBar from "../Components/RightSideBar.jsx";
-import * as jose from "jose";
 import { useNavigate } from "react-router-dom";
+
+// Helpers
+import * as jose from "jose";
 import Cookies from "js-cookie";
 import * as api from "../api.jsx";
+
+// Components
+import LeftSideBar from "../Components/LeftSideBar.jsx";
+import RightSideBar from "../Components/RightSideBar.jsx";
+
+// Views
+import RegisteredNumbers from "../Components/Views/RegisteredNumbers.jsx";
+import ProjectView from "../Components/Views/ProjectView.jsx";
+import Analytics from "../Components/Views/Analytics.jsx";
 
 export const WorkspaceContext = createContext();
 
@@ -19,7 +22,8 @@ export default function () {
   const [workspaceMetaData, setWorkspaceMetaData] = useState({});
   const [sideBarChildren, setSideBarChildren] = useState(null);
   const [currentNode, setCurrentNode] = useState(null);
-  const [currentView, setCurrentView] = useState("cells");
+  const [currentView, setCurrentView] = useState("project");
+  const [popupChildren, setPopupChildren] = useState(null);
 
   const navigate = useNavigate();
 
@@ -55,6 +59,11 @@ export default function () {
     });
   }, [workspaceMetaData]);
 
+  useEffect(() => {
+    // Force re-render of project view when...
+    setCurrentView("project");
+  }, [popupChildren]); // these variables change
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -62,11 +71,13 @@ export default function () {
         workspaceMetaData,
         currentNode,
         currentView,
+        popupChildren,
         setCurrentNode,
         setWorkspace,
         setSideBarChildren,
         setCurrentView,
         setWorkspaceMetaData,
+        setPopupChildren,
       }}
     >
       <LeftSideBar />
@@ -78,37 +89,12 @@ export default function () {
   function renderViews(type) {
     // Different views to render, shown based on the currentView state set in the left side bar.
     switch (type) {
-      case "cells":
-        return (
-          <>
-            {Object.keys(workspace).map((id) => buildCell(id, workspace[id]))}
-            <Curves />
-            <RightClickMenu />
-          </>
-        );
+      case "project":
+        return <ProjectView />;
       case "numbers":
         return <RegisteredNumbers />;
       case "analytics":
-        return (
-          <>
-            <div className="flex justify-center">
-              <button
-                onClick={() => {
-                  // api.getAllUserWorkspaces().then(async (res) => {
-                  //   if (res.status === 200) {
-                  //     const json = await res.json();
-                  //     console.log(json);
-                  //   } else {
-                  //     console.log(res);
-                  //   }
-                  // });
-                }}
-              >
-                Click Me
-              </button>
-            </div>
-          </>
-        );
+        return <Analytics />;
       default:
         return <></>;
     }
@@ -143,17 +129,5 @@ export default function () {
         navigate("/login");
       }
     }
-  }
-}
-
-function buildCell(id, cell) {
-  // function for mapping cell type to cell type's component
-  switch (cell.type) {
-    case "texting":
-      return <TextingCell key={id} id={id} />;
-    case "calendar":
-      return <CalendarCell key={id} id={id} />;
-    default:
-      return <></>;
   }
 }
