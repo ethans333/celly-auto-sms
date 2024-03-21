@@ -124,12 +124,14 @@ export async function getUser() {
  * @param {String} workspace_name Name of the workspace
  * @param {String} workspace_description Description of the workspace
  * @param {String} workspace_raw Raw data of the workspace
+ * @param {String} workspace_emoji Emoji of the workspace
  * @returns {Object} Message and workspace id
  */
 export async function addWorkspace(
   workspace_name,
   workspace_description,
-  workspace_raw
+  workspace_raw,
+  workspace_emoji
 ) {
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace",
@@ -142,7 +144,8 @@ export async function addWorkspace(
       body: JSON.stringify({
         workspace_name: workspace_name,
         workspace_description: workspace_description,
-        workspace_raw: workspace_raw,
+        workspace_raw: JSON.stringify(workspace_raw),
+        workspace_emoji: workspace_emoji,
       }),
     }
   );
@@ -182,6 +185,9 @@ export async function getWorkspace(id) {
  * @param {String} id Id of the workspace
  * @param {String} workspace_name Name of the workspace
  * @param {String} workspace_description Description of the workspace
+ * @param {String} workspace_raw Raw data of the workspace
+ * @param {Boolean} is_favorite Whether the workspace is favorited
+ * @param {String} workspace_emoji Emoji of the workspace
  * @returns {Object} Message and workspace id
  */
 export async function updateWorkspace(
@@ -189,7 +195,8 @@ export async function updateWorkspace(
   workspace_name,
   workspace_description,
   workspace_raw,
-  is_favorite
+  is_favorite,
+  workspace_emoji
 ) {
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + id,
@@ -201,8 +208,9 @@ export async function updateWorkspace(
       body: JSON.stringify({
         workspace_name: workspace_name,
         workspace_description: workspace_description,
-        workspace_raw: workspace_raw,
+        workspace_raw: JSON.stringify(workspace_raw),
         is_favorite: is_favorite,
+        workspace_emoji: workspace_emoji,
       }),
     }
   );
@@ -212,6 +220,10 @@ export async function updateWorkspace(
   return await response.text(); // error
 }
 
+/**
+ * Gets all of user's workspaces
+ *
+ * @returns {Array<Object>} */
 export async function getAllUserWorkspaces() {
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/all",

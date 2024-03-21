@@ -17,6 +17,8 @@ Done:
 - [x] Build out UI for login and register
 - [x] Fix token only working for one action issue.
 - [x] Fix checking if token expired.
+- [x] Expiration check for JWT Authorizer.
+
 
 
 ---
@@ -30,11 +32,10 @@ In progress:
 
 To Do:
 
-- [ ] Expiration check for JWT Authorizer.
 - [ ] Add events to calendar using graph api.
 - [ ] Build out UI for the side bar of both cells.
 - [ ] Build landing page.
-- [ ] Make workspace a class that the frontend and backend can both utilize.
+- [ ] Remove workspace description, not needed.
 
 ## Resources
 

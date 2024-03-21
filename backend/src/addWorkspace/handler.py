@@ -12,6 +12,7 @@ def handler(event, context):
     workspace_name = body["workspace_name"]
     workspace_description = body["workspace_description"]
     workspace_raw = body["workspace_raw"]
+    workspace_emoji = body["workspace_emoji"]
 
     access_token = event["headers"]["Authorization"]
     user_id = jwt.decode(access_token, options={"verify_signature": False})["sub"]
@@ -33,6 +34,7 @@ def handler(event, context):
                 "workspace_name": workspace_name,
                 "workspace_description": workspace_description,
                 "is_favorite": False,
+                "workspace_emoji": workspace_emoji,
             }
         )
 

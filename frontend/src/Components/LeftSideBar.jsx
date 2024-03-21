@@ -3,6 +3,8 @@ import angles from "../assets/angles-right-solid.svg";
 import { useContext, useEffect, useState } from "react";
 import { WorkspaceContext } from "../Pages/Home.jsx";
 import * as api from "../api.jsx";
+import TopLeftMenu from "./TopLeftMenu.jsx";
+import BottomLeftMenu from "./BottomLeftMenu.jsx";
 
 export default function () {
   const { setCurrentView } = useContext(WorkspaceContext);
@@ -23,61 +25,73 @@ export default function () {
   }, []);
 
   return showSideBar ? (
-    <div
-      id="lsb"
-      className="absolute left-0 h-screen min-w-96 border-r-2 border-gray-100 bg-white px-5 pt-3 z-20 animate-shiftLR"
-    >
-      <div>
-        <img
-          src={xmark}
-          className="x-button"
-          onClick={() => setShowSideBar(false)}
-        />
-        <p className="font-semibold text-gray-500 tracking-wide mt-8">
-          This Project
-        </p>
-        <div className="space-y-3 mt-3 ml-1">
-          <ProjectLabel
-            emoji="🔎"
-            name="Project View"
-            onClick={() => setCurrentView("cells")}
+    <div className="flex absolute left-0">
+      <div
+        id="lsb"
+        className="h-screen min-w-96 border-r-2 border-gray-100 bg-white px-5 pt-3 z-20 animate-shiftLR mr-6"
+      >
+        <div>
+          <img
+            src={xmark}
+            className="x-button"
+            onClick={() => setShowSideBar(false)}
           />
-          <ProjectLabel
-            emoji="📞"
-            name="Registered Numbers"
-            onClick={() => setCurrentView("numbers")}
-          />
-          <ProjectLabel
-            emoji="📈"
-            name="Analytics"
-            onClick={() => setCurrentView("analytics")}
-          />
-        </div>
+          <p className="font-semibold text-gray-500 tracking-wide mt-7">
+            This Project
+          </p>
+          <div className="space-y-3 mt-3 ml-1">
+            <ProjectLabel
+              emoji="🔎"
+              name="Project View"
+              onClick={() => setCurrentView("cells")}
+            />
+            <ProjectLabel
+              emoji="📞"
+              name="Registered Numbers"
+              onClick={() => setCurrentView("numbers")}
+            />
+            <ProjectLabel
+              emoji="📈"
+              name="Analytics"
+              onClick={() => setCurrentView("analytics")}
+            />
+          </div>
 
-        <p className="font-semibold text-gray-500 tracking-wide mt-8">
-          Favorites
-        </p>
-        {/* Favorite Projects */}
-        <div className="space-y-3 mt-3 ml-1">
-          {mapWorkspaces(favoriteWorkspaces)}
+          <p className="font-semibold text-gray-500 tracking-wide mt-8">
+            Favorites
+          </p>
+          {/* Favorite Projects */}
+          <div className="space-y-3 mt-3 ml-1">
+            {mapWorkspaces(favoriteWorkspaces)}
+          </div>
+          <p className="font-semibold text-gray-500 tracking-wide mt-8">
+            Projects
+          </p>
+          {/* All Projects */}
+          <div className="space-y-3 mt-3 ml-1">{mapWorkspaces(workspaces)}</div>
         </div>
-        <p className="font-semibold text-gray-500 tracking-wide mt-8">
-          Projects
-        </p>
-        {/* All Projects */}
-        <div className="space-y-3 mt-3 ml-1">{mapWorkspaces(workspaces)}</div>
+      </div>
+      <div>
+        <TopLeftMenu />
+        <BottomLeftMenu />
       </div>
     </div>
   ) : (
-    <div
-      id="lsb"
-      className="absolute left-0 h-screen flex flex-col justify-center items-center ml-3"
-    >
-      <img
-        src={angles}
-        className="w-6 cursor-pointer hover:opacity-50"
-        onClick={() => setShowSideBar(true)}
-      />
+    <div className="flex absolute left-0">
+      <div
+        id="lsb"
+        className="h-screen flex flex-col justify-center items-center ml-3"
+      >
+        <img
+          src={angles}
+          className="w-4 cursor-pointer hover:opacity-50"
+          onClick={() => setShowSideBar(true)}
+        />
+      </div>
+      <div>
+        <TopLeftMenu />
+        <BottomLeftMenu />
+      </div>
     </div>
   );
 }
@@ -94,40 +108,13 @@ function ProjectLabel({ emoji, name, onClick }) {
 }
 
 function mapWorkspaces(w) {
-  const emojis = [
-    "🔬",
-    "📚",
-    "🎨",
-    "🔧",
-    "🚀",
-    "💻",
-    "🌐",
-    "📈",
-    "🔒",
-    "🎵",
-    "🎮",
-    "📷",
-    "🎥",
-    "🌳",
-    "🍔",
-    "🏠",
-    "🚗",
-    "👔",
-    "👟",
-    "👓",
-    "🎒",
-    "🌂",
-    "💄",
-    "💍",
-  ];
-
   const { setWorkspaceMetaData } = useContext(WorkspaceContext);
 
   return w.map((ws) => {
     return (
       <ProjectLabel
         key={ws.id}
-        emoji={emojis[Math.floor(Math.random() * emojis.length)]}
+        emoji={ws.workspace_emoji}
         name={ws.workspace_name}
         onClick={() => setWorkspaceMetaData(ws)}
       />

@@ -5,73 +5,39 @@ import star_filled from "../assets/star-solid.svg";
 
 import { WorkspaceContext } from "../Pages/Home.jsx";
 import { useContext, useState, useEffect } from "react";
-import * as api from "../api.jsx";
 import Settings from "./Popups/Settings.jsx";
 
 export default function () {
-  const { workspace, workspaceMetaData, setPopupChildren } =
-    useContext(WorkspaceContext);
-  const [favorited, setFavorited] = useState(false);
-
-  useEffect(() => {
-    setFavorited(workspaceMetaData.is_favorite);
-  }, [workspaceMetaData]);
+  const {
+    workspaceMetaData,
+    setWorkspaceMetaData,
+    setPopupChildren,
+    saveWorkspace,
+  } = useContext(WorkspaceContext);
 
   return (
     <div className="flex pr-5 mt-3 h-fit">
       {/* Save */}
       <img
         src={floppy}
-        className="square-button w-8 mr-2.5"
-        onClick={() => {
-          // on save
-          api
-            .updateWorkspace(
-              workspaceMetaData.id,
-              workspaceMetaData.workspace_name,
-              workspaceMetaData.workspace_description,
-              JSON.stringify(workspace)
-            )
-            .then(async (res) => {
-              if (res.status === 200) {
-                const json = await res.json();
-                console.log(json);
-              } else {
-                console.log(res);
-              }
-            });
-        }}
+        className="square-button w-8 mr-2.5 z-50 bg-white"
+        onClick={saveWorkspace}
       />
       {/* Favorite */}
       <img
-        src={favorited ? star_filled : star_regular}
-        className="square-button w-8 mr-2.5"
+        src={workspaceMetaData.is_favorite ? star_filled : star_regular}
+        className="square-button w-8 mr-2.5 z-50 bg-white"
         onClick={() => {
           // on favorite
-          setFavorited(!favorited);
-          api
-            .updateWorkspace(
-              workspaceMetaData.id,
-              workspaceMetaData.workspace_name,
-              workspaceMetaData.workspace_description,
-              JSON.stringify(workspace),
-              !favorited
-            )
-            .then(async (res) => {
-              if (res.status === 200) {
-                const json = await res.json();
-                console.log(json);
-              } else {
-                console.log(res);
-              }
-            });
+          setWorkspaceMetaData((p) => ({ ...p, is_favorite: !p.is_favorite }));
+          saveWorkspace({ is_favorite: !workspaceMetaData.is_favorite });
         }}
       />
       {/* Settings */}
       <img
         onClick={() => setPopupChildren(<Settings />)}
         src={gear}
-        className="square-button w-8"
+        className="square-button w-8 z-50 bg-white"
       />
     </div>
   );

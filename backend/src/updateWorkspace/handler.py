@@ -12,6 +12,7 @@ def handler(event, context):
     workspace_description = body["workspace_description"]
     workspace_raw = body["workspace_raw"]
     is_favorite = body["is_favorite"]
+    workspace_emoji = body["workspace_emoji"]
 
     dynamodb = boto3.resource("dynamodb")
     s3 = boto3.resource("s3")
@@ -25,11 +26,12 @@ def handler(event, context):
         # Put meta data in table
         table.update_item(
             Key={"id": workspace_id},
-            UpdateExpression="SET workspace_name = :n, workspace_description = :d, is_favorite = :f",
+            UpdateExpression="SET workspace_name = :n, workspace_description = :d, is_favorite = :f, workspace_emoji = :e",
             ExpressionAttributeValues={
                 ":n": workspace_name,
                 ":d": workspace_description,
                 ":f": is_favorite,
+                ":e": workspace_emoji,
             },
         )
 

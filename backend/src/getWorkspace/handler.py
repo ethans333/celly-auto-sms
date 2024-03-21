@@ -41,6 +41,7 @@ def handler(event, context):
                 "workspace_description": workspace["workspace_description"],
                 "workspace_raw": workspace_raw,
                 "is_favorite": workspace["is_favorite"],
+                "workspace_emoji": workspace["workspace_emoji"],
             },
         ),
         "headers": {

@@ -24,6 +24,7 @@ export default function () {
   const [currentNode, setCurrentNode] = useState(null);
   const [currentView, setCurrentView] = useState("project");
   const [popupChildren, setPopupChildren] = useState(null);
+  const [messageStack, setMessageStack] = useState([]);
 
   const navigate = useNavigate();
 
@@ -72,16 +73,19 @@ export default function () {
         currentNode,
         currentView,
         popupChildren,
+        messageStack,
         setCurrentNode,
         setWorkspace,
         setSideBarChildren,
         setCurrentView,
         setWorkspaceMetaData,
         setPopupChildren,
+        saveWorkspace,
+        setMessageStack,
       }}
     >
       <LeftSideBar />
-      <RightSideBar children={sideBarChildren} />
+      <RightSideBar>{sideBarChildren}</RightSideBar>
       {renderViews(currentView)}
     </WorkspaceContext.Provider>
   );
@@ -129,5 +133,50 @@ export default function () {
         navigate("/login");
       }
     }
+  }
+
+  /**
+   * Save workspace to database
+   * @param {object} override - Override what gets passed as an updated value to the server. Useful for when calling saveWorkspace directly after setting to workspaceMetaData.
+   * @returns {Promise<void>} - Promise that resolves when the workspace is saved.
+   */
+  function saveWorkspace(override) {
+    api
+      .updateWorkspace(
+        override.id || workspaceMetaData.id,
+        override.workspace_name || workspaceMetaData.workspace_name,
+        override.workspace_description ||
+          workspaceMetaData.workspace_description,
+        override.workspace || workspace,
+        override.is_favorite || workspaceMetaData.is_favorite,
+        override.workspace_emoji || workspaceMetaData.workspace_emoji
+      )
+      .then(async (res) => {
+        if (res.status === 200) {
+          const json = await res.json();
+          setMessageStack((p) => [
+            { message: json.message, type: "success" },
+            ...p,
+          ]);
+
+          setTimeout(() => {
+            setMessageStack((p) => {
+              p.pop();
+              return [...p];
+            });
+          }, 3000);
+          console.log(json);
+        } else {
+          setMessageStack((p) => [{ message: res, type: "error" }, ...p]);
+
+          setTimeout(() => {
+            setMessageStack((p) => {
+              p.pop();
+              return [...p];
+            });
+          }, 3000);
+          console.log(res);
+        }
+      });
   }
 }
