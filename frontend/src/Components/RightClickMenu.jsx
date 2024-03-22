@@ -11,7 +11,8 @@ export default function () {
   const [showMenu, setShowMenu] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const { setPopupChildren, saveWorkspace } = useContext(WorkspaceContext);
+  const { setPopupChildren, saveWorkspace, setSideBarChildren } =
+    useContext(WorkspaceContext);
 
   const menuRef = useRef();
 

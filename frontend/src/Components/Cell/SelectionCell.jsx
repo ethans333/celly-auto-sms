@@ -4,7 +4,7 @@ import { WorkspaceContext } from "../../Pages/Home";
 import cell_defaults from "../../assets/cell_defaults";
 import cellDefaultSchema from "./cellDefaultSchema";
 
-export default function ({ emoji, title, description, type }) {
+export default function ({ icon, title, description, type }) {
   const { setWorkspace, setShowCellSelection } = useContext(WorkspaceContext);
   const cardRef = useRef();
   const [dragImage, setDragImage] = useState(null);
@@ -64,7 +64,7 @@ export default function ({ emoji, title, description, type }) {
       onDragEnd={handleDragEnd}
     >
       <div className="selection-cell-header flex">
-        <span className="card-emoji mr-1.5">{emoji}</span>
+        <img src={icon} className="w-3 mr-2" />
         <h3>{title}</h3>
       </div>
       <div className="selection-cell-description">{description}</div>

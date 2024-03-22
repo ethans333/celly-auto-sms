@@ -20,8 +20,8 @@ export default function ({ id, start, end }) {
   };
 
   const offset = {
-    x: (a.x - b.x) * 0.2,
-    y: (a.y - b.y) * 0.2,
+    x: (a.x - b.x) * 0.3,
+    y: (a.y - b.y) * 0.3,
   };
 
   const c1 = {
@@ -51,10 +51,11 @@ export default function ({ id, start, end }) {
         strokeWidth={5}
         className="absolute -z-50"
         style={{
-          width: Math.abs(start.x - end.x),
+          width: Math.max(Math.abs(start.x - end.x)),
           height: Math.abs(start.y - end.y),
           top: Math.min(start.y, end.y) + start.width / 2,
           left: Math.min(start.x, end.x) + start.width / 2,
+          overflow: "visible",
         }}
       >
         <path

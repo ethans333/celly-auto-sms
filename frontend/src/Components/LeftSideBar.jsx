@@ -36,14 +36,12 @@ export default function () {
             className="x-button"
             onClick={() => setShowSideBar(false)}
           />
-          <p className="font-semibold text-gray-500 tracking-wide mt-7">
-            This Project
-          </p>
+          <p className="font-extrabold mt-7">This Project</p>
           <div className="space-y-3 mt-3 ml-1">
             <ProjectLabel
               emoji="🔎"
               name="Project View"
-              onClick={() => setCurrentView("cells")}
+              onClick={() => setCurrentView("project")}
             />
             <ProjectLabel
               emoji="📞"
@@ -57,16 +55,12 @@ export default function () {
             />
           </div>
 
-          <p className="font-semibold text-gray-500 tracking-wide mt-8">
-            Favorites
-          </p>
+          <p className="font-extrabold mt-8">Favorites</p>
           {/* Favorite Projects */}
           <div className="space-y-3 mt-3 ml-1">
             {mapWorkspaces(favoriteWorkspaces)}
           </div>
-          <p className="font-semibold text-gray-500 tracking-wide mt-8">
-            Projects
-          </p>
+          <p className="font-extrabold mt-8">Projects</p>
           {/* All Projects */}
           <div className="space-y-3 mt-3 ml-1">{mapWorkspaces(workspaces)}</div>
         </div>

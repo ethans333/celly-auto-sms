@@ -37,7 +37,7 @@ export default function () {
                 }));
             }}
             type="text"
-            className="outline-none text-lg font-extrabold bg-purple-200"
+            className="outline-none text-lg font-black bg-purple-200"
             placeholder="Project Title"
           />
         ) : (
@@ -46,7 +46,7 @@ export default function () {
               setIsEditingTitle((p) => !p);
               setTitleTemp(workspaceMetaData.workspace_name);
             }}
-            className="text-lg font-extrabold hover:bg-purple-200 p-1"
+            className="text-lg font-black hover:bg-purple-200 p-1"
           >
             {workspaceMetaData.workspace_name}
           </h1>
