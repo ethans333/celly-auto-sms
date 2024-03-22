@@ -239,3 +239,27 @@ export async function getAllUserWorkspaces() {
 
   return await response.text(); // error
 }
+
+/**
+ * Deletes a workspace
+ *
+ * @param {String} id Id of the workspace
+ * @returns {Object} Status
+ */
+export async function deleteWorkspace(id) {
+  if (!id) return "No id provided";
+
+  const response = await fetch(
+    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + id,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
+    }
+  );
+
+  if (response.status === 200) return response;
+
+  return await response.text(); // error
+}

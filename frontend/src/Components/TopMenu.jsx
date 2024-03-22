@@ -1,5 +1,6 @@
 import floppy from "../assets/floppy-disk-solid.svg";
 import gear from "../assets/gear-solid.svg";
+import sliders from "../assets/sliders-solid.svg";
 import star_regular from "../assets/star-regular.svg";
 import star_filled from "../assets/star-solid.svg";
 
@@ -13,6 +14,7 @@ export default function () {
     setWorkspaceMetaData,
     setPopupChildren,
     saveWorkspace,
+    settingsConfig,
   } = useContext(WorkspaceContext);
 
   return (
@@ -36,7 +38,7 @@ export default function () {
       {/* Settings */}
       <img
         onClick={() => setPopupChildren(<Settings />)}
-        src={gear}
+        src={sliders}
         className="square-button w-8 z-50 bg-white"
       />
     </div>

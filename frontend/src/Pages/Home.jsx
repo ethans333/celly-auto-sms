@@ -14,7 +14,6 @@ import RightSideBar from "../Components/RightSideBar.jsx";
 import RegisteredNumbers from "../Components/Views/RegisteredNumbers.jsx";
 import ProjectView from "../Components/Views/ProjectView.jsx";
 import Analytics from "../Components/Views/Analytics.jsx";
-
 export const WorkspaceContext = createContext();
 
 export default function () {
@@ -23,8 +22,13 @@ export default function () {
   const [sideBarChildren, setSideBarChildren] = useState(null);
   const [currentNode, setCurrentNode] = useState(null);
   const [currentView, setCurrentView] = useState("project");
-  const [popupChildren, setPopupChildren] = useState(null);
+  const [popupChildren, setPopupChildren] = useState();
   const [messageStack, setMessageStack] = useState([]);
+  const [config, setConfig] = useState({
+    placeholder_1: true,
+    placeholder_2: false,
+    auto_save: true,
+  });
 
   const navigate = useNavigate();
 
@@ -74,6 +78,7 @@ export default function () {
         currentView,
         popupChildren,
         messageStack,
+        config,
         setCurrentNode,
         setWorkspace,
         setSideBarChildren,
@@ -82,6 +87,7 @@ export default function () {
         setPopupChildren,
         saveWorkspace,
         setMessageStack,
+        setConfig,
       }}
     >
       <LeftSideBar />

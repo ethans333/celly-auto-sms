@@ -4,13 +4,14 @@ import plus from "../assets/plus-solid.svg";
 import floppy from "../assets/floppy-disk-solid.svg";
 import gear from "../assets/gear-solid.svg";
 import CellSelection from "./Cell/CellSelection";
-import Settings from "./Settings";
+import Settings from "./Popups/Settings";
+import sliders from "../assets/sliders-solid.svg";
 
 export default function () {
   const [showMenu, setShowMenu] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const { setSideBarChildren } = useContext(WorkspaceContext);
+  const { setPopupChildren, saveWorkspace } = useContext(WorkspaceContext);
 
   const menuRef = useRef();
 
@@ -46,7 +47,7 @@ export default function () {
   }, []);
 
   return (
-    <div>
+    <div className="text-sm">
       {showMenu && (
         <div
           ref={menuRef}
@@ -65,26 +66,27 @@ export default function () {
             }}
             className="cursor-pointer hover:opacity-50 flex"
           >
-            <img src={plus} alt="plus" className="w-4 mr-2" />
+            <img src={plus} alt="plus" className="w-3 mr-2" />
             <p>Create Cell</p>
           </div>
           <div
             onClick={() => {
               setShowMenu(false);
+              saveWorkspace();
             }}
             className="cursor-pointer hover:opacity-50 flex"
           >
-            <img src={floppy} alt="floppy" className="w-4 mr-2" />
+            <img src={floppy} alt="floppy" className="w-3 mr-2" />
             <p>Save</p>
           </div>
           <div
             onClick={() => {
               setShowMenu(false);
-              setSideBarChildren(<Settings />);
+              setPopupChildren(<Settings />);
             }}
             className="cursor-pointer hover:opacity-50 flex"
           >
-            <img src={gear} alt="gear" className="w-4 mr-2" />
+            <img src={sliders} alt="gear" className="w-3 mr-2" />
             <p>Settings</p>
           </div>
         </div>
