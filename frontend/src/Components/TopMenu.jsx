@@ -19,7 +19,7 @@ export default function () {
   } = useContext(WorkspaceContext);
 
   return (
-    <div className="flex pr-5 mt-3 h-fit space-x-2.5">
+    <div className="flex pr-5 mt-3.5 h-fit space-x-2.5">
       {/* Save */}
       <LabeledSquareButton icon={floppy} label="Save" onClick={saveWorkspace} />
       {/* Favorite */}

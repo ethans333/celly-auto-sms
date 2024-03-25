@@ -42,6 +42,7 @@ def handler(event, context):
                 "workspace_raw": workspace_raw,
                 "is_favorite": workspace["is_favorite"],
                 "workspace_emoji": workspace["workspace_emoji"],
+                "is_deployed": workspace["is_deployed"],
             },
         ),
         "headers": {

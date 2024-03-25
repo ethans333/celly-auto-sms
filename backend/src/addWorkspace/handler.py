@@ -35,6 +35,7 @@ def handler(event, context):
                 "workspace_description": workspace_description,
                 "is_favorite": False,
                 "workspace_emoji": workspace_emoji,
+                "is_deployed": False,
             }
         )
 

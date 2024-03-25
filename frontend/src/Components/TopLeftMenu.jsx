@@ -57,17 +57,19 @@ export default function () {
           </div>
         )}
         {/* Live Signal */}
-        <div className="relative">
-          <div className="text-sm text-red-500 font-black transform translate-y-2 tracking-wide">
-            LIVE
+        {workspaceMetaData.is_deployed && (
+          <div className="relative">
+            <div className="text-sm text-red-500 font-black transform translate-y-2 tracking-wide">
+              LIVE
+            </div>
+            <div className="absolute right-0 top-0 transform translate-x-3 translate-y-2.5">
+              <span class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+              </span>
+            </div>
           </div>
-          <div className="absolute right-0 top-0 transform translate-x-3 translate-y-2.5">
-            <span class="relative flex h-2.5 w-2.5">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-            </span>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
