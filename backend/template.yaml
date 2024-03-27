@@ -913,6 +913,79 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${getAllUserWorkspaces}
+  CellyBot:
+    Type: AWS::Lex::Bot
+    Properties:
+      IdleSessionTTLInSeconds: 300
+      RoleArn: arn:aws:iam::905418223874:role/aws-service-role/lexv2.amazonaws.com/AWSServiceRoleForLexV2Bots_34K6AS1XY81
+      Name: CellyBot
+      DataPrivacy:
+        ChildDirected: false
+  PinpointLexFunctionIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: PinpointLexFunctionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: Logs
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: arn:aws:logs:*:*:*
+        - PolicyName: Pinpoint
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - mobiletargeting:SendMessages
+                Resource: !Sub arn:aws:mobiletargeting:${AWS::Region}:${AWS::AccountId}:apps/${AutoSmsPinpointApp}/endpoints/*
+        - PolicyName: Lex
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lex:PostContent
+                  - lex:PostText
+                  - lex:RecognizeUtterance
+                Resource: !Sub arn:aws:lex:${AWS::Region}:${AWS::AccountId}:bot-alias/STPJGYCE7A/L2XMJ3KLRZ
+  PinpointLexFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: PinpointLexFunction
+      CodeUri: src/PinpointLexFunction
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Role: !GetAtt PinpointLexFunctionIamRole.Arn
+      Events:
+        SNS1:
+          Type: SNS
+          Properties:
+            Topic: !Ref SNSTopic1
+  SNSTopic1:
+    Type: AWS::SNS::Topic
+  PinpointLexFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${PinpointLexFunction}
 Metadata:
   AWS::Composer::Groups:
     Group:
