@@ -1,47 +1,42 @@
 import json
+import os
+
 import boto3
-import base64
-import gzip 
-import json
+
 
 def handler(event, context):
-    lex = boto3.client('lexv2-runtime')
+    lex = boto3.client("lexv2-runtime")
+    pinpoint = boto3.client("pinpoint-sms-voice-v2")
 
-    message = json.loads(event['Records'][0]['Sns']['Message'])
-    origination_number = message['originationNumber']
+    message = json.loads(event["Records"][0]["Sns"]["Message"])
+    origination_number = message["originationNumber"]
     user_id = origination_number.replace("+1", "")
-    message_body = message['messageBody']
+    message_body = message["messageBody"]
 
     try:
-        response = lex.recognize_utterance(
-            botId='STPJGYCE7A',
-            botAliasId='L2XMJ3KLRZ',
-            localeId='en_US',
+        response = lex.recognize_text(
+            botId="STPJGYCE7A",
+            botAliasId="L2XMJ3KLRZ",
+            localeId="en_US",
             sessionId=user_id,
-            requestContentType='text/plain; charset=utf-8',
-            inputStream=message_body,
+            text=message_body,
         )
-        
-        # Extract interpretations 
-        interpretations = response["interpretations"] 
 
-        # Decode from base64
-        decoded = base64.b64decode(interpretations)
+        # Extract interpretations
+        lex_response_message = response["messages"][0]["content"]
 
-        # Decompress gzip 
-        decompressed = gzip.decompress(decoded)
+        # send message
+        pinpoint.send_text_message(
+            DestinationPhoneNumber=origination_number,
+            OriginationIdentity=os.environ["ORIGINATION_NUMBER"],
+            MessageBody=lex_response_message,
+            MessageType="TRANSACTIONAL",
+        )
 
-        # Parse JSON  
-        data = json.loads(decompressed)
-        
-        print(response)
-        
         return {
-            "result": str(data)
+            "message": response["messages"][0]["content"],
         }
-        
+
     except Exception as e:
         print(e)
-        return {
-            "error": str(e)
-        }
+        return {"error": str(e)}

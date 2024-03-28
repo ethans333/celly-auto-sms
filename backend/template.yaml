@@ -7,6 +7,9 @@ Globals:
   Function:
     Timeout: 3
     MemorySize: 128
+    Environment:
+      Variables:
+        ORIGINATION_NUMBER: '+18339471759'
 Resources:
   WorkspaceApi:
     Type: AWS::Serverless::Api
@@ -68,6 +71,13 @@ Resources:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getAllUserWorkspaces.Arn}/invocations
+              responses: {}
+          /workspace/deploy/{id}:
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${deployWorkspace.Arn}/invocations
               responses: {}
       EndpointConfiguration: REGIONAL
       TracingEnabled: true
@@ -917,7 +927,7 @@ Resources:
     Type: AWS::Lex::Bot
     Properties:
       IdleSessionTTLInSeconds: 300
-      RoleArn: arn:aws:iam::905418223874:role/aws-service-role/lexv2.amazonaws.com/AWSServiceRoleForLexV2Bots_34K6AS1XY81
+      RoleArn: !Sub arn:aws:iam::${AWS::AccountId}:role/aws-service-role/lexv2.amazonaws.com/AWSServiceRoleForLexV2Bots_34K6AS1XY81
       Name: CellyBot
       DataPrivacy:
         ChildDirected: false
@@ -949,8 +959,8 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - mobiletargeting:SendMessages
-                Resource: !Sub arn:aws:mobiletargeting:${AWS::Region}:${AWS::AccountId}:apps/${AutoSmsPinpointApp}/endpoints/*
+                  - sms-voice:SendTextMessage
+                Resource: '*'
         - PolicyName: Lex
           PolicyDocument:
             Statement:
@@ -958,7 +968,7 @@ Resources:
                 Action:
                   - lex:PostContent
                   - lex:PostText
-                  - lex:RecognizeUtterance
+                  - lex:RecognizeText
                 Resource: !Sub arn:aws:lex:${AWS::Region}:${AWS::AccountId}:bot-alias/STPJGYCE7A/L2XMJ3KLRZ
   PinpointLexFunction:
     Type: AWS::Serverless::Function
@@ -986,6 +996,38 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${PinpointLexFunction}
+  deployWorkspace:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: deployWorkspace
+      CodeUri: src/deployWorkspace
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          WORKSPACESTABLE_TABLE_NAME: !Ref WorkspacesTable
+          WORKSPACESTABLE_TABLE_ARN: !GetAtt WorkspacesTable.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref WorkspacesTable
+      Events:
+        WorkspaceApiPOSTworkspacedeployid:
+          Type: Api
+          Properties:
+            Path: /workspace/deploy/{id}
+            Method: POST
+            RestApiId: !Ref WorkspaceApi
+  deployWorkspaceLogGroup:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${deployWorkspace}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -996,6 +1038,7 @@ Metadata:
         - updateWorkspace
         - deleteWorkspace
         - getAllUserWorkspaces
+        - deployWorkspace
     Group2:
       Label: Pinpoint SMS Service
       Members:
