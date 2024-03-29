@@ -16,7 +16,7 @@ def handler(event, context):
     try:
         response = lex.recognize_text(
             botId="STPJGYCE7A",
-            botAliasId="L2XMJ3KLRZ",
+            botAliasId="3VMZOZI7RH",
             localeId="en_US",
             sessionId=user_id,
             text=message_body,

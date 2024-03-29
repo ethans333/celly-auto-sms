@@ -969,7 +969,7 @@ Resources:
                   - lex:PostContent
                   - lex:PostText
                   - lex:RecognizeText
-                Resource: !Sub arn:aws:lex:${AWS::Region}:${AWS::AccountId}:bot-alias/STPJGYCE7A/L2XMJ3KLRZ
+                Resource: !Sub arn:aws:lex:${AWS::Region}:${AWS::AccountId}:bot-alias/STPJGYCE7A/3VMZOZI7RH
   PinpointLexFunction:
     Type: AWS::Serverless::Function
     Properties:
