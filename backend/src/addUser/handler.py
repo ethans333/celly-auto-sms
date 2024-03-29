@@ -9,7 +9,7 @@ def handler(event, context):
     body = json.loads(event["body"])
 
     client = boto3.client("cognito-idp")
-    lex = boto3.client("lexv2-models")
+    # lex = boto3.client("lexv2-models")
 
     try:
         # create user in cognito
@@ -21,11 +21,11 @@ def handler(event, context):
 
         user_id = response["UserSub"]
 
-        # create user's lex bot alias
-        lex.create_bot_alias(
-            botId=os.environ["BOT_ID"],
-            botAliasId=user_id,
-        )
+        # # create user's lex bot alias
+        # lex.create_bot_alias(
+        #     botId=os.environ["BOT_ID"],
+        #     botAliasId=user_id,
+        # )
 
         return {
             "statusCode": 200,

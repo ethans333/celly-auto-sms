@@ -13,6 +13,7 @@ import Home from "./Pages/Home.jsx";
 import Login from "./Pages/Auth/Login.jsx";
 import Register from "./Pages/Auth/Register.jsx";
 import ConfirmCode from "./Pages/Auth/ConfirmCode.jsx";
+import Scheduling from "./Pages/Scheduling.jsx";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/confirm-code", element: <ConfirmCode /> },
+  { path: "/scheduling/:id", element: <Scheduling /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
