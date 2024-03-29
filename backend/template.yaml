@@ -686,6 +686,7 @@ Resources:
       Environment:
         Variables:
           USERPOOLCLIENT_USER_POOL_CLIENT_ID: !Ref UserPoolClient
+          BOT_ID: !Ref CellyBot
       Events:
         UserApiPOSTuser:
           Type: Api
@@ -1012,6 +1013,7 @@ Resources:
         Variables:
           WORKSPACESTABLE_TABLE_NAME: !Ref WorkspacesTable
           WORKSPACESTABLE_TABLE_ARN: !GetAtt WorkspacesTable.Arn
+          BOT_ID: !Ref CellyBot
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref WorkspacesTable

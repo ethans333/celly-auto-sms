@@ -10,12 +10,13 @@ import jwt
 def handler(event, context):
     workspace_id = event["pathParameters"]["id"]
 
-    # access_token = event["headers"]["Authorization"]
-    # user_id = jwt.decode(access_token, options={"verify_signature": False})["sub"]
+    access_token = event["headers"]["Authorization"]
+    user_id = jwt.decode(access_token, options={"verify_signature": False})["sub"]
 
     dynamodb = boto3.resource("dynamodb")
     # s3 = boto3.resource("s3")
     # pinpoint = boto3.client("pinpoint-sms-voice-v2")
+    lex = boto3.client("lexv2-models")
 
     # bucket = s3.Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
     table = dynamodb.Table(os.environ["WORKSPACESTABLE_TABLE_NAME"])
@@ -34,13 +35,12 @@ def handler(event, context):
         # bucket_object = bucket.Object(f"{user_id}/{workspace_id}")
         # workspace_raw = bucket_object.get()["Body"].read().decode("utf-8")
 
-        # # Deploy workspace to bucket using pinpoint
-        # pinpoint.send_text_message(
-        #     DestinationPhoneNumber="+14079237031",
-        #     OrginatorIdentity=originator_id,
-        #     MessageBody="Hello there this is your friend Ethan!",
-        #     MessageType="PROMOTIONAL",
-        # )
+        # create new version within user alias
+        lex.create_bot_version(
+            botId=os.environ["BOT_ID"],
+            botVersionLocaleId="en_US",
+            botVersionName=workspace_id,
+        )
 
     except Exception as e:
         return {
