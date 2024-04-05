@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import arrow from "../../assets/chevron-solid.svg";
 
 export default function () {
   let { id } = useParams();
@@ -9,12 +10,50 @@ export default function () {
 
   const [weekShift, setWeekShift] = useState(0);
   const [currentWeek, setCurrentWeek] = useState(getWeek(weekShift));
-  const [selectedDates, setSelectedDates] = useState([]);
+  const [selectedDateTimes, setSelectedDateTimes] = useState([]);
 
   return (
-    <div className="w-full shadow-lg rounded-lg p-10">
+    <div className="w-full border-b xl:border-none xl:shadow-lg rounded-lg px-10 pb-10">
       <div className="w-[90%] xl:w-full mx-auto">
-        <div className="flex w-full">
+        <div className="w-full">
+          <div className="flex justify-between pt-5 pb-8">
+            <div className="font-extrabold text-xl">Lorem Ipsum Dolor</div>
+            <div className="flex space-x-2">
+              <div
+                onClick={() => {
+                  setWeekShift((p) => {
+                    setCurrentWeek(getWeek(p - 1));
+                    return p - 1;
+                  });
+                }}
+                className="bg-gray-200 flex items-center justify-center w-7 rounded-lg py-1 cursor-pointer hover:opacity-50"
+              >
+                <img src={arrow} className="w-3 h-3 rotate-180" />
+              </div>
+
+              <div
+                onClick={() => {
+                  setWeekShift(0);
+                  setCurrentWeek(getWeek(0));
+                }}
+                className="font-extrabold text-sm bg-gray-200 flex items-center justify-center py-1.5 px-4 rounded-lg cursor-pointer hover:opacity-50"
+              >
+                Today
+              </div>
+              <div
+                onClick={() => {
+                  setWeekShift((p) => {
+                    setCurrentWeek(getWeek(p + 1));
+                    return p + 1;
+                  });
+                }}
+                className="bg-gray-200 flex items-center justify-center w-7 rounded-lg py-1 cursor-pointer hover:opacity-50"
+              >
+                <img src={arrow} className="w-3 h-3" />
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-8 grid-rows-40 grid-rows w-full h-fit space-x-2">
             <div className="">
               <div className="invisible">
@@ -22,28 +61,10 @@ export default function () {
               </div>
               {...TimeLabelColumn()}
             </div>
-            {...currentWeek.map((d) => (
-              <div key={d}>
-                <DateHeader
-                  DayofTheMonth={new Date(d).getDate()}
-                  DayofTheWeek={
-                    {
-                      0: "Sunday",
-                      1: "Monday",
-                      2: "Tuesday",
-                      3: "Wednesay",
-                      4: "Thursday",
-                      5: "Friday",
-                      6: "Saturday",
-                    }[new Date(d).getDay()]
-                  }
-                />
-                {...TimeColumn(d)}
-              </div>
-            ))}
+            {...currentWeek.map((d) => <TimeColumn day={d} />)}
           </div>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center tracking-wide">
           <div className="w-3 h-3 bg-gray-50 border"></div>
           <div className="text-sm ml-2">Available</div>
           <div className="w-3 h-3 ml-5 bg-green-200 border"></div>
@@ -82,7 +103,10 @@ export default function () {
   }
 
   function TimeCell({ Time, Available = true }) {
-    const [isSelected, setIsSelected] = useState(false);
+    const [isSelected, setIsSelected] = useState(
+      selectedDateTimes.includes(Time.toString())
+    );
+
     const h = Time.getHours();
     const m = Time.getMinutes();
 
@@ -91,14 +115,20 @@ export default function () {
         onClick={() => {
           if (Available) {
             setIsSelected(!isSelected);
-            // setSelectedDates((prev) => [...prev, Time]);
+            setSelectedDateTimes((p) => {
+              if (isSelected) {
+                return p.filter((t) => t.toString() != Time);
+              } else {
+                return [...p, Time.toString()];
+              }
+            });
           }
         }}
         className={`w-full ${isSelected ? "bg-green-200" : "bg-gray-50"} ${
           !Available && "bg-gray-950"
         }`}
       >
-        <p className="cursor-pointer opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm">
+        <p className="cursor-pointer opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm font-[550]">
           {`${h > 12 ? h % 12 : h}:${!m ? "00" : m} ${h >= 12 ? "PM" : "AM"}`}
         </p>
       </div>
@@ -127,23 +157,29 @@ export default function () {
     return groups;
   }
 
-  function TimeColumn(day) {
-    let times = [];
-
-    let hour = startHour;
-    let minute = 0;
-
-    for (let i = 0; i < (endHour - startHour) * 4 - 3; i++) {
-      if (minute == 60) {
-        hour++;
-        minute = 0;
-      }
-      times.push(
-        <TimeCell Time={new Date(day.setHours(hour, minute, 0, 0))} />
-      );
-      minute += 15;
-    }
-
-    return times;
+  function TimeColumn({ day }) {
+    return (
+      <div key={day}>
+        <DateHeader
+          DayofTheMonth={new Date(day).getDate()}
+          DayofTheWeek={
+            {
+              0: "Sunday",
+              1: "Monday",
+              2: "Tuesday",
+              3: "Wednesay",
+              4: "Thursday",
+              5: "Friday",
+              6: "Saturday",
+            }[new Date(day).getDay()]
+          }
+        />
+        {...Array.from({ length: (endHour - startHour) * 4 - 3 }, (_, i) => {
+          const time = new Date(day);
+          time.setHours(9 + Math.floor(i / 4), (i % 4) * 15, 0, 0);
+          return <TimeCell Time={time} />;
+        })}
+      </div>
+    );
   }
 }
