@@ -1,16 +1,39 @@
-import requests
+from urllib.parse import parse_qs, urlparse
 
-# Replace with the actual access token
-access_token = "eyJraWQiOiJ3dkxMRzFsb2dcL1B6TVVYTk5jMVlWYWhyTUtcL0ZxVnE1XC8xOWo4OW1qUTVvPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5NDc4MTQzOC1kMDAxLTcwYTYtYzA4ZS00YzM2MWRiNzJlM2UiLCJjb2duaXRvOmdyb3VwcyI6WyJ1cy1lYXN0LTFfRjVIZ0Z1ZHRPX2NlbGx5bWljcm9zb2Z0cG9vbCJdLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9GNUhnRnVkdE8iLCJ2ZXJzaW9uIjoyLCJjbGllbnRfaWQiOiI1ZGZpOHMwNmw2ZXBodTVlNWM2dnJpNGFxZSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoicGhvbmUgb3BlbmlkIGNlbGx5LWF6dXJlYWQtcmVzb3VyY2Utc2VydmVyLXVzZXJzXC9Vc2VyLlJlYWQgZW1haWwiLCJhdXRoX3RpbWUiOjE3MDkxMjcyNTAsImV4cCI6MTcwOTEzMDg1MCwiaWF0IjoxNzA5MTI3MjUwLCJqdGkiOiIzYjgwMmU1Yi1kMGEyLTRkZjAtOTdhMy00NGJkOWEwYjJmNjMiLCJ1c2VybmFtZSI6ImNlbGx5bWljcm9zb2Z0cG9vbF9ldGhhbi5zdGVpbkB0ZWNodGhpbmt0YW5rLmNvbSJ9.NgvZyocq6DdIkiiViB8RzWDQJBS_5hyBiZ0Ub33CyJh2NxfItlUtfKtcSA83PVcFI6cZELH0KuGqSKchZcsBTKmlN6PpN4HTwn12rLVtiabWGNoU4qkqWQtviTJUdzAwO3uqOEmnWw2eVUFIYQDeXgzo29Jl658uHOfiw7UVB-km_LGM_8UdolfKTnQ8AlLT36d5NOiP_0Hkyvg3GTZHzH5ATGFsOJhuZAtZ4qmqILXl6jGoSWLS-13-GIUON-YkS80AEseGZK7z_H06lsu7fSae0OeGsSLFItCubBKPepuCSbDSXQ-Afz7EikoqclNbVPeMZ5XhNEn8B6kHKe-isg&id_token=eyJraWQiOiJxeFR5SngyXC9HeWxJU05OVjFmNHY3RmxnTm9aczdLNWg4N09qbzNlSXFSVT0iLCJhbGciOiJSUzI1NiJ9.eyJhdF9oYXNoIjoiX0tTLWtsXzQxSEYwR1hmc05GSFdSQSIsInN1YiI6Ijk0NzgxNDM4LWQwMDEtNzBhNi1jMDhlLTRjMzYxZGI3MmUzZSIsImNvZ25pdG86Z3JvdXBzIjpbInVzLWVhc3QtMV9GNUhnRnVkdE9fY2VsbHltaWNyb3NvZnRwb29sIl0sImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfRjVIZ0Z1ZHRPIiwiY29nbml0bzp1c2VybmFtZSI6ImNlbGx5bWljcm9zb2Z0cG9vbF9ldGhhbi5zdGVpbkB0ZWNodGhpbmt0YW5rLmNvbSIsIm5vbmNlIjoieFB6Q1ZsYUp4bGZiYk9IdWJ6bVM5Z215d0J3V3NwRVI1U2R2MkFialdNcGNYbHhMX0VWdHRtQnFteDhGemRJcnoyUDViS2ZiRmRfOGcySllIaTV1M1hvSGdpYXZTM0g3MWlyM1daUUZfaFlxSnY2My02MXlpT3RSbDVuY29aTkFiUlMyZnBlUWRMMGp6R2NaQTNJZ2pSZUNteVdXVUF1Sl96UHJDX2xWcF9rIiwiYXVkIjoiNWRmaThzMDZsNmVwaHU1ZTVjNnZyaTRhcWUiLCJpZGVudGl0aWVzIjpbeyJkYXRlQ3JlYXRlZCI6IjE3MDkwNTMwMzUwODIiLCJ1c2VySWQiOiJldGhhbi5zdGVpbkB0ZWNodGhpbmt0YW5rLmNvbSIsInByb3ZpZGVyTmFtZSI6ImNlbGx5bWljcm9zb2Z0cG9vbCIsInByb3ZpZGVyVHlwZSI6IlNBTUwiLCJpc3N1ZXIiOiJodHRwczpcL1wvc3RzLndpbmRvd3MubmV0XC8zYWQzNjZkNi04MmY0LTRkOWEtYTk1YS05NWJlZGU5YWZkYTNcLyIsInByaW1hcnkiOiJ0cnVlIn1dLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcwOTEyNzI1MCwiZXhwIjoxNzA5MTMwODUwLCJpYXQiOjE3MDkxMjcyNTAsImp0aSI6IjRiNmNlODljLWQwMjktNGEwOC1iODk1LWJlY2U2Yjg1N2JjYSIsImVtYWlsIjoiZXRoYW4uc3RlaW5AdGVjaHRoaW5rdGFuay5jb20ifQ.GJrkb3D0SJJK_tVozDf1OPtPfvOTornfykxHYwj3atEi6gObcp9GHzcN5RXzdJFCwW9o1NVyz8vJmTkoe5eBTKGrrcQ_--kv_j2ulxOoXl0_kOd2oR1LZDWGXOOttmcMhLl7OkM6SuNA4dVAl1MTKlNd_NcnIIP0lIV6bzOvuU8YtIUfI3K1IlUsM4swlu1GdO0mzkTrRxWg6XKSb3AJ4wfIth8feuC_7kwIbXfb5Ib1TL5XEOaX0WHHPqnomhHEQ_QnixaxLogpBm_iOQBFsg6L676WBTRdDe4U7F9GBBO1IGl85ehxVjLJ3oahTfBPYCSN1f55gS9DoGdYgZ-ORw"
-# Base URL for Microsoft Graph API
-graph_url = "https://graph.microsoft.com/User.Read"
+from msal import PublicClientApplication
 
-headers = {"Authorization": f"{access_token}"}
+# Replace with your tenant ID and client ID
+authority = "https://login.microsoftonline.com/common"
+client_id = "746d9d45-cad6-43ee-8677-a3942d0e3573"
 
-response = requests.get(graph_url, headers=headers)
+# Define the scopes (permissions) your server needs
+scopes = ["User.Read.All", "Calendars.ReadWrite"]  # Replace with your desired scopes
 
-if response.status_code == 200:
-    data = response.json()
-    print(data)
-else:
-    print("Error:", response.status_code, response.text)
+# Create a PublicClientApplication instance
+app = PublicClientApplication(client_id=client_id, authority=authority)
+
+code_challenge = "Nj9Youq443xUOCe_HsmBXJy5dKC8YsqlUdn1sga3CR0"
+
+# Initiate the authentication flow to acquire a token
+flow = app.initiate_auth_code_flow(scopes=scopes, claims_challenge=code_challenge)
+
+# Redirect the user to the Azure AD login page
+url = flow["auth_uri"]
+
+print("Navigate to this URL and login:")
+print(url)
+
+# Obtain the redirect URL from the user input
+redirect_url = input("Enter the redirect URL from your browser: ")
+
+# Parse the 'code' value from the redirect URL query string parameters
+parsed_url = urlparse(redirect_url)
+query_params = parse_qs(parsed_url.query)
+code = query_params.get("code", [""])[0]  # Get the first 'code' parameter value
+
+print("\n\nCode:", code)
+
+response = app.acquire_token_by_authorization_code(
+    code, scopes=scopes, claims_challenge=code_challenge
+)
+print("Token response:", str(response))
