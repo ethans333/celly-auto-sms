@@ -1,39 +1,54 @@
 from urllib.parse import parse_qs, urlparse
 
-from msal import PublicClientApplication
+import msal
+import requests
 
-# Replace with your tenant ID and client ID
-authority = "https://login.microsoftonline.com/common"
-client_id = "746d9d45-cad6-43ee-8677-a3942d0e3573"
+CLIENT_ID = "746d9d45-cad6-43ee-8677-a3942d0e3573"
+AUTHORITY = "https://login.microsoftonline.com/common"
+REDIRECT_PATH = "http://localhost:5173"  # Your app's redirect URI
+SCOPES = ["User.Read.All", "Calendars.ReadWrite"]
 
-# Define the scopes (permissions) your server needs
-scopes = ["User.Read.All", "Calendars.ReadWrite"]  # Replace with your desired scopes
+# Initialize MSAL app
+app = msal.PublicClientApplication(client_id=CLIENT_ID, authority=AUTHORITY)
 
-# Create a PublicClientApplication instance
-app = PublicClientApplication(client_id=client_id, authority=authority)
+# Initiate auth code flow
+session = requests.Session()
+session.flow = app.initiate_auth_code_flow(scopes=SCOPES, redirect_uri=REDIRECT_PATH)
 
-code_challenge = "Nj9Youq443xUOCe_HsmBXJy5dKC8YsqlUdn1sga3CR0"
+print("\n\n" + session.flow["auth_uri"] + "\n\n")
 
-# Initiate the authentication flow to acquire a token
-flow = app.initiate_auth_code_flow(scopes=scopes, claims_challenge=code_challenge)
+# Simulate user interaction (in a real app, this would be done via UI)
+# Paste the URL containing the authorization code
+auth_url = input("Paste the authorization URL: ")
 
-# Redirect the user to the Azure AD login page
-url = flow["auth_uri"]
-
-print("Navigate to this URL and login:")
-print(url)
-
-# Obtain the redirect URL from the user input
-redirect_url = input("Enter the redirect URL from your browser: ")
-
-# Parse the 'code' value from the redirect URL query string parameters
-parsed_url = urlparse(redirect_url)
+# Extract auth code from the query string (auth_response)
+parsed_url = urlparse(auth_url)
 query_params = parse_qs(parsed_url.query)
-code = query_params.get("code", [""])[0]  # Get the first 'code' parameter value
+auth_response = {
+    "code": query_params.get("code")[0],
+    "state": query_params.get("state")[0],
+}
 
-print("\n\nCode:", code)
+print("\n\n" + str(auth_response) + "\n\n")
 
-response = app.acquire_token_by_authorization_code(
-    code, scopes=scopes, claims_challenge=code_challenge
+# Acquire token using auth code flow
+result = app.acquire_token_by_auth_code_flow(
+    auth_code_flow=session.flow, auth_response=auth_response
 )
-print("Token response:", str(response))
+
+# Use the access token (e.g., call Microsoft Graph API)
+if "access_token" in result:
+    print("Token acquisition successful.\n\n" + str(result))
+    access_token = result["access_token"]
+
+    print("\n\n" + access_token + "\n\n")
+
+    # Make API requests using the access token
+    # Example: Get user profile from Microsoft Graph
+    user_profile_response = requests.get(
+        "https://graph.microsoft.com/v1.0/me",
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
+    print(user_profile_response.json())
+else:
+    print("Token acquisition failed.")
