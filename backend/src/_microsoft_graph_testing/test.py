@@ -40,8 +40,10 @@ result = app.acquire_token_by_auth_code_flow(
 if "access_token" in result:
     print("Token acquisition successful.\n\n" + str(result))
     access_token = result["access_token"]
+    refresh_token = result["refresh_token"]
 
     print("\n\n" + access_token + "\n\n")
+    print("\n\n" + refresh_token + "\n\n")
 
     # Make API requests using the access token
     # Example: Get user profile from Microsoft Graph

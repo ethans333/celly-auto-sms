@@ -1030,6 +1030,167 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${deployWorkspace}
+  SchedulingApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub
+        - ${ResourceName} From Stack ${AWS::StackName}
+        - ResourceName: SchedulingApi
+      StageName: Prod
+      DefinitionBody:
+        openapi: '3.0'
+        info: {}
+        paths:
+          /scheduling/{id}:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getAvailability.Arn}/invocations
+              responses: {}
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${addCalendarEvent.Arn}/invocations
+              responses: {}
+      EndpointConfiguration: REGIONAL
+      TracingEnabled: true
+      Cors:
+        MaxAge: 5
+        AllowOrigin: '''*'''
+        AllowMethods: '''*'''
+        AllowHeaders: '''*'''
+  getAvailability:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: getAvailability
+      CodeUri: src/getAvailability
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        SchedulingApiGETschedulingid:
+          Type: Api
+          Properties:
+            Path: /scheduling/{id}
+            Method: GET
+            RestApiId: !Ref SchedulingApi
+  getAvailabilityLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${getAvailability}
+  addCalendarEvent:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: addCalendarEvent
+      CodeUri: src/addCalendarEvent
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        SchedulingApiPOSTschedulingid:
+          Type: Api
+          Properties:
+            Path: /scheduling/{id}
+            Method: POST
+            RestApiId: !Ref SchedulingApi
+  addCalendarEventLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${addCalendarEvent}
+  ExternalServiceLinkApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub
+        - ${ResourceName} From Stack ${AWS::StackName}
+        - ResourceName: ExternalServiceLinkApi
+      StageName: Prod
+      DefinitionBody:
+        openapi: '3.0'
+        info: {}
+        paths:
+          /esl/microsoft:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${initializeMicrosoftESL.Arn}/invocations
+              responses: {}
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${storeTokenMicrosoftESL.Arn}/invocations
+              responses: {}
+      EndpointConfiguration: REGIONAL
+      TracingEnabled: true
+      Auth:
+        Authorizers:
+          JWTAuthorizer:
+            FunctionArn: !GetAtt JWTAuthorizerFunction.Arn
+      Cors:
+        MaxAge: 5
+        AllowOrigin: '''*'''
+        AllowHeaders: '''*'''
+  initializeMicrosoftESL:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: initializeMicrosoftESL
+      CodeUri: src/initializeMicrosoftESL
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        ExternalServiceLinkApiGETeslmicrosoft:
+          Type: Api
+          Properties:
+            Path: /esl/microsoft
+            Method: GET
+            RestApiId: !Ref ExternalServiceLinkApi
+  initializeMicrosoftESLLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${initializeMicrosoftESL}
+  storeTokenMicrosoftESL:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: storeTokenMicrosoftESL
+      CodeUri: src/storeTokenMicrosoftESL
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        ExternalServiceLinkApiPOSTeslmicrosoft:
+          Type: Api
+          Properties:
+            Path: /esl/microsoft
+            Method: POST
+            RestApiId: !Ref ExternalServiceLinkApi
+  storeTokenMicrosoftESLLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${storeTokenMicrosoftESL}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -1067,6 +1228,16 @@ Metadata:
       Members:
         - UserPoolClient
         - UserPool
+    Group6:
+      Label: Scheduling
+      Members:
+        - getAvailability
+        - addCalendarEvent
+    Group7:
+      Label: External Service Link
+      Members:
+        - initializeMicrosoftESL
+        - storeTokenMicrosoftESL
   Outputs:
     WokspaceApi:
       Description: Workspace API
