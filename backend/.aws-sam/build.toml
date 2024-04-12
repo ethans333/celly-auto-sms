@@ -154,4 +154,40 @@ manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
 packagetype = "Zip"
 functions = ["deployWorkspace"]
 
+[function_build_definitions.96862b78-8bda-4e3e-9cd0-4d300239b585]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\getAvailability"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["getAvailability"]
+
+[function_build_definitions.bf931534-edfe-4dfc-ad44-4c569a55a4d0]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\addCalendarEvent"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["addCalendarEvent"]
+
+[function_build_definitions.536302f0-5380-4498-a8e5-eb5da5e62424]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\initializeMicrosoftESL"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "582f1d7b7f7f40ef8db5a460575b2e4a"
+packagetype = "Zip"
+functions = ["initializeMicrosoftESL"]
+
+[function_build_definitions.f715f960-2a00-4ed5-9d28-714b3e9e5f1e]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\storeTokenMicrosoftESL"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "582f1d7b7f7f40ef8db5a460575b2e4a"
+packagetype = "Zip"
+functions = ["storeTokenMicrosoftESL"]
+
 [layer_build_definitions]

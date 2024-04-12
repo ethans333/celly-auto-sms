@@ -263,3 +263,60 @@ export async function deleteWorkspace(id) {
 
   return await response.text(); // error
 }
+
+/*
+
+  /esl
+
+*/
+
+/**
+ * Gets login url for Microsoft
+ *
+ * @returns {Object} URL
+ */
+export async function initializeMicrosoftESL() {
+  const response = await fetch(
+    import.meta.env.VITE_ESL_API_URL + "/esl/microsoft",
+    {
+      method: "GET",
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
+    }
+  );
+
+  if (response.status === 200) return response;
+
+  return await response.text(); // error
+}
+
+/**
+ * Sends authorization code to finish Microsoft authentication process.
+ *
+ * @param {String} code Code from Microsoft URL (aquired after authentication)
+ *
+ * @returns {Object} Status
+ */
+export async function storeMicrosoftTokenESL(code) {
+  const response = await fetch(
+    import.meta.env.VITE_ESL_API_URL + "/esl/microsoft",
+    {
+      method: "POST",
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
+      body: JSON.stringify({
+        code: code,
+        flow: localStorage.getItem("microsoft-flow"),
+      }),
+    }
+  );
+
+  if (response.status === 200) {
+    localStorage.removeItem("microsoft-flow");
+    return response;
+  }
+
+  return await response.text(); // error
+}

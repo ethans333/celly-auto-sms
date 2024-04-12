@@ -1082,6 +1082,7 @@ Resources:
             RestApiId: !Ref SchedulingApi
   getAvailabilityLogGroup:
     Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${getAvailability}
@@ -1106,6 +1107,7 @@ Resources:
             RestApiId: !Ref SchedulingApi
   addCalendarEventLogGroup:
     Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${addCalendarEvent}
@@ -1115,6 +1117,23 @@ Resources:
       Name: !Sub
         - ${ResourceName} From Stack ${AWS::StackName}
         - ResourceName: ExternalServiceLinkApi
+      GatewayResponses:
+        DEFAULT_4XX:
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Origin: '''*'''
+              Access-Control-Allow-Headers: '''*'''
+              Access-Control-Allow-Methods: '''GET, POST, PATCH, PUT, DELETE, OPTIONS'''
+          ResponseTemplates:
+            application/json: '''Unauthorized'''
+        DEFAULT_5XX:
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Origin: '''*'''
+              Access-Control-Allow-Headers: '''*'''
+              Access-Control-Allow-Methods: '''GET, POST, PATCH, PUT, DELETE, OPTIONS'''
+          ResponseTemplates:
+            application/json: '''Internal Server Error'''
       StageName: Prod
       DefinitionBody:
         openapi: '3.0'
@@ -1135,14 +1154,17 @@ Resources:
               responses: {}
       EndpointConfiguration: REGIONAL
       TracingEnabled: true
+      Cors:
+        MaxAge: 5
+        AllowHeaders: '''*'''
+        AllowOrigin: '''*'''
+        AllowMethods: '''GET, POST, PATCH, PUT, DELETE, OPTIONS'''
       Auth:
+        DefaultAuthorizer: JWTAuthorizer
+        AddDefaultAuthorizerToCorsPreflight: false
         Authorizers:
           JWTAuthorizer:
             FunctionArn: !GetAtt JWTAuthorizerFunction.Arn
-      Cors:
-        MaxAge: 5
-        AllowOrigin: '''*'''
-        AllowHeaders: '''*'''
   initializeMicrosoftESL:
     Type: AWS::Serverless::Function
     Properties:
@@ -1164,6 +1186,7 @@ Resources:
             RestApiId: !Ref ExternalServiceLinkApi
   initializeMicrosoftESLLogGroup:
     Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${initializeMicrosoftESL}
@@ -1188,6 +1211,7 @@ Resources:
             RestApiId: !Ref ExternalServiceLinkApi
   storeTokenMicrosoftESLLogGroup:
     Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${storeTokenMicrosoftESL}

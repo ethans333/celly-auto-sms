@@ -33,7 +33,7 @@ export default function () {
   const navigate = useNavigate();
 
   useEffect(() => {
-    parseToken();
+    parseCode();
     validateToken();
 
     // api
@@ -110,16 +110,21 @@ export default function () {
     }
   }
 
-  function parseToken() {
+  function parseCode() {
     // If available, parse the token from the URL and set it as a cookie
     let url = new URL(window.location.href);
-    let hash = url.hash.substring(1); // remove the #
-    let params = new URLSearchParams(hash);
+    let params = url.searchParams;
 
     if (params.size === 0) return;
 
-    Cookies.set("access_token", params.get("access_token"), {
-      expires: parseInt(params.get("expires_in")),
+    api.storeMicrosoftTokenESL(params.get("code")).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          console.log(data);
+        });
+      } else {
+        console.error(res);
+      }
     });
   }
 
