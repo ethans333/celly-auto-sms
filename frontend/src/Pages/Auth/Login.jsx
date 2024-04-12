@@ -30,7 +30,7 @@ export default function () {
         <div className="text-3xl font-black mb-5">Welcome Back To Celly 👋</div>
         <div className="w-96 mt-16 space-y-4">
           <div
-            onClick={handleLoginMsft}
+            // onClick={handleLoginMsft}
             className="flex space-x-3 rounded-lg shadow w-full px-5 py-3 cursor-pointer hover:opacity-50"
           >
             <img src={microsoft} alt="microsoft-logo" className="w-5" />

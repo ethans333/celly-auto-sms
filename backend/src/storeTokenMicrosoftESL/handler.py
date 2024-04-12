@@ -2,18 +2,25 @@ import base64
 import json
 import os
 
+import boto3
+import jwt
 import msal
 
 CLIENT_ID = "746d9d45-cad6-43ee-8677-a3942d0e3573"
 AUTHORITY = "https://login.microsoftonline.com/common"
-REDIRECT_PATH = "http://127.0.0.1:5173/"  # Your app's redirect URI
-SCOPES = ["User.Read.All", "Calendars.ReadWrite"]
 
 
 def handler(event, context):
     try:
         body = json.loads(event["body"])
-        # Authentication code for msal token acquisition
+
+        # Get user id from cognito access token
+        cognito_access_token = event["headers"]["Authorization"]
+        user_id = jwt.decode(cognito_access_token, options={"verify_signature": False})[
+            "sub"
+        ]
+
+        # Get authentication code and flow from request body
         code = body["code"]
         flow = json.loads(body["flow"])
 
@@ -30,21 +37,48 @@ def handler(event, context):
             auth_code_flow=flow, auth_response=auth_response
         )
 
-        # Use the access token (e.g., call Microsoft Graph API)
+        # Check if successful
         if "access_token" in result:
             access_token = result["access_token"]
             refresh_token = result["refresh_token"]
 
-            print("\n\n" + access_token + "\n\n")
-            print("\n\n" + refresh_token + "\n\n")
+            microsoft_tokens = {
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+            }
+
+            secrets = boto3.client("secretsmanager")
+
+            # Check if secret exists
+            try:
+                old_value = secrets.get_secret_value(SecretId=user_id)
+            except secrets.exceptions.ResourceNotFoundException:
+                # Secret not found, so create a new one
+                secrets.create_secret(
+                    Name=user_id,
+                    SecretString=json.dumps(
+                        {
+                            "microsoft_tokens": microsoft_tokens,
+                        }
+                    ),
+                    Description="Microsoft ESL access token",
+                )
+            else:
+                # Secret found, update existing secret
+                old_value = json.loads(old_value["SecretString"])
+                old_value["microsoft_tokens"] = microsoft_tokens
+
+                secrets.update_secret(
+                    SecretId=user_id,
+                    SecretString=json.dumps(old_value),
+                )
 
             # save tokens in secret manager
             return {
                 "statusCode": 200,
                 "body": json.dumps(
                     {
-                        "message": "access token acquired successfully",
-                        "token": access_token,
+                        "message": "access token acquired and saved successfully",
                     }
                 ),
                 "headers": {
