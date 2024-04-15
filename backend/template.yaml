@@ -1152,6 +1152,13 @@ Resources:
                 type: aws_proxy
                 uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${storeTokenMicrosoftESL.Arn}/invocations
               responses: {}
+          /esl/microsoft/token_status:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getMicrosoftTokenStatus.Arn}/invocations
+              responses: {}
       EndpointConfiguration: REGIONAL
       TracingEnabled: true
       Cors:
@@ -1224,6 +1231,31 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${storeTokenMicrosoftESL}
+  getMicrosoftTokenStatus:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: getMicrosoftTokenStatus
+      CodeUri: src/getMicrosoftTokenStatus
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        ExternalServiceLinkApiGETeslmicrosofttokenstatus:
+          Type: Api
+          Properties:
+            Path: /esl/microsoft/token_status
+            Method: GET
+            RestApiId: !Ref ExternalServiceLinkApi
+  getMicrosoftTokenStatusLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${getMicrosoftTokenStatus}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -1271,6 +1303,7 @@ Metadata:
       Members:
         - initializeMicrosoftESL
         - storeTokenMicrosoftESL
+        - getMicrosoftTokenStatus
   Outputs:
     WokspaceApi:
       Description: Workspace API

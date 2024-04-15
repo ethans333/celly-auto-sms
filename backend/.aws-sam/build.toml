@@ -190,4 +190,13 @@ manifest_hash = "582f1d7b7f7f40ef8db5a460575b2e4a"
 packagetype = "Zip"
 functions = ["storeTokenMicrosoftESL"]
 
+[function_build_definitions.071bb5cf-123d-4b08-a473-cf846f2e2538]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\getMicrosoftTokenStatus"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["getMicrosoftTokenStatus"]
+
 [layer_build_definitions]
