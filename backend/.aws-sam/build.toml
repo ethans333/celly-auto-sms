@@ -195,8 +195,17 @@ codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\getMicrosoftTokenStatus"
 runtime = "python3.9"
 architecture = "x86_64"
 handler = "handler.handler"
-manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+manifest_hash = "fad975d2f7b12f7080d9cf20a516c695"
 packagetype = "Zip"
 functions = ["getMicrosoftTokenStatus"]
+
+[function_build_definitions.3ab54799-ac06-4d40-8f8a-8611acf79064]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\getMicrosoftCalendarEvents"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "e9bd61be0f43b7f195f0a023d80652c4"
+packagetype = "Zip"
+functions = ["getMicrosoftCalendarEvents"]
 
 [layer_build_definitions]

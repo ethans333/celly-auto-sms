@@ -320,3 +320,24 @@ export async function storeMicrosoftTokenESL(code) {
 
   return await response.text(); // error
 }
+
+/**
+ * Gets status of token (whether it has expired or not)
+ *
+ * @returns {Object} Containing status of token
+ */
+export async function tokenStatusMicrosoftESL() {
+  const response = await fetch(
+    import.meta.env.VITE_ESL_API_URL + "/esl/microsoft/token_status",
+    {
+      method: "GET",
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
+    }
+  );
+
+  if (response.status === 200) return response;
+
+  return await response.text(); // error
+}

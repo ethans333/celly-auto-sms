@@ -1250,12 +1250,82 @@ Resources:
             Path: /esl/microsoft/token_status
             Method: GET
             RestApiId: !Ref ExternalServiceLinkApi
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource:
+                - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
   getMicrosoftTokenStatusLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${getMicrosoftTokenStatus}
+  PublicExternalServiceApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub
+        - ${ResourceName} From Stack ${AWS::StackName}
+        - ResourceName: PublicExternalServiceApi
+      StageName: Prod
+      DefinitionBody:
+        openapi: '3.0'
+        info: {}
+        paths:
+          /pesl/microsoft/calendar/{workspace_id}:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getMicrosoftCalendarEvents.Arn}/invocations
+              responses: {}
+      EndpointConfiguration: REGIONAL
+      TracingEnabled: true
+      Cors:
+        AllowOrigin: '''*'''
+        AllowHeaders: '''*'''
+        AllowMethods: '''*'''
+        MaxAge: 5
+  getMicrosoftCalendarEvents:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: getMicrosoftCalendarEvents
+      CodeUri: src/getMicrosoftCalendarEvents
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        PublicExternalServiceApiGETpeslmicrosoftcalendarworkspaceid:
+          Type: Api
+          Properties:
+            Path: /pesl/microsoft/calendar/{workspace_id}
+            Method: GET
+            RestApiId: !Ref PublicExternalServiceApi
+      Environment:
+        Variables:
+          WORKSPACESTABLE_TABLE_NAME: !Ref WorkspacesTable
+          WORKSPACESTABLE_TABLE_ARN: !GetAtt WorkspacesTable.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref WorkspacesTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource:
+                - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
+  getMicrosoftCalendarEventsLogGroup:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${getMicrosoftCalendarEvents}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -1304,6 +1374,10 @@ Metadata:
         - initializeMicrosoftESL
         - storeTokenMicrosoftESL
         - getMicrosoftTokenStatus
+    Group8:
+      Label: Public External Services
+      Members:
+        - getMicrosoftCalendarEvents
   Outputs:
     WokspaceApi:
       Description: Workspace API

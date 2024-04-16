@@ -1,9 +1,10 @@
 import CellSchema from "../CellSchema";
 import { WorkspaceContext } from "../../../Pages/Home.jsx";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import SelectionCell from "../SelectionCell";
 import calendar_icon from "../../../assets/calendar-solid.svg";
 import * as mb from "../../MicrosoftButtons.jsx";
+import * as api from "../../../api.jsx";
 
 export default function CalendarCell({ id }) {
   const { workspace } = useContext(WorkspaceContext);
@@ -39,12 +40,20 @@ export function CalendarCellSelection() {
 }
 
 export function CalendarCellSidebar({ id }) {
-  const { workspace } = useContext(WorkspaceContext);
+  const [isLinked, setIsLinked] = useState(false);
+
+  useEffect(() => {
+    api.tokenStatusMicrosoftESL().then((res) => {
+      res.json().then((data) => {
+        if (res.status == 200 && !data.is_expired) setIsLinked(true);
+      });
+    });
+  }, [id]);
 
   return (
     <div className="w-full flex flex-col space-y-2">
       <p className="font-bold text-lg mb-7">Modify Calendar Cell</p>
-      <mb.LinkToGraph />
+      {isLinked ? <mb.AlreadyLinked /> : <mb.LinkToGraph />}
     </div>
   );
 }
