@@ -73,6 +73,14 @@ def handler(event, context):
                     SecretString=json.dumps(old_value),
                 )
 
+            secrets.rotate_secret(
+                SecretId=user_id,
+                RotationLambdaARN=os.environ["ROTATEMICROSOFT_FUNCTION_ARN"],
+                RotationRules={
+                    "ScheduleExpression": "rate(30 minutes)",
+                },
+            )
+
             # save tokens in secret manager
             return {
                 "statusCode": 200,

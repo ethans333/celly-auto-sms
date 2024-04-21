@@ -1159,6 +1159,13 @@ Resources:
                 type: aws_proxy
                 uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getMicrosoftTokenStatus.Arn}/invocations
               responses: {}
+          /esl/unlink/all:
+            delete:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${unlinkAllESL.Arn}/invocations
+              responses: {}
       EndpointConfiguration: REGIONAL
       TracingEnabled: true
       Cors:
@@ -1223,8 +1230,16 @@ Resources:
                 - secretsmanager:GetSecretValue
                 - secretsmanager:CreateSecret
                 - secretsmanager:UpdateSecret
+                - secretsmanager:DescribeSecret
+                - secretsmanager:RotateSecret
               Resource:
                 - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
+        - LambdaInvokePolicy:
+            FunctionName: !Ref rotateMicrosoft
+      Environment:
+        Variables:
+          ROTATEMICROSOFT_FUNCTION_NAME: !Ref rotateMicrosoft
+          ROTATEMICROSOFT_FUNCTION_ARN: !GetAtt rotateMicrosoft.Arn
   storeTokenMicrosoftESLLogGroup:
     Type: AWS::Logs::LogGroup
     UpdateReplacePolicy: Retain
@@ -1326,6 +1341,56 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${getMicrosoftCalendarEvents}
+  rotateMicrosoft:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: rotateMicrosoft
+      CodeUri: src/rotateMicrosoft
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+  rotateMicrosoftLogGroup:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${rotateMicrosoft}
+  unlinkAllESL:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: unlinkAllESL
+      CodeUri: src/unlinkAllESL
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        ExternalServiceLinkApiDELETEeslunlinkall:
+          Type: Api
+          Properties:
+            Path: /esl/unlink/all
+            Method: DELETE
+            RestApiId: !Ref ExternalServiceLinkApi
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:UpdateSecret
+              Resource:
+                - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
+  unlinkAllESLLogGroup:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${unlinkAllESL}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -1371,9 +1436,10 @@ Metadata:
     Group7:
       Label: External Service Link
       Members:
-        - initializeMicrosoftESL
         - storeTokenMicrosoftESL
         - getMicrosoftTokenStatus
+        - initializeMicrosoftESL
+        - unlinkAllESL
     Group8:
       Label: Public External Services
       Members:

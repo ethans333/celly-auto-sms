@@ -103,6 +103,7 @@ export default function () {
           <div className="text-gray-500 space-y-3">
             <p>Delete Workspace</p>
             <p>Delete Numbers</p>
+            <p>Unlink External Services</p>
           </div>
           <div className="space-y-3">
             {/* Delete Workspace */}
@@ -117,15 +118,30 @@ export default function () {
                     deleteWorkspace();
                   }
                 }}
-                className="bg-red-500 text-white text-xs px-2 py-1 rounded-lg"
+                className="bg-red-500 text-white text-xs px-2 py-1 rounded-lg w-14 hover:opacity-50"
               >
                 Delete
               </button>
             </div>
             {/* Delete Phone Numbers */}
-            <div className="flex justify-end">
-              <button className="bg-yellow-300 text-black text-xs px-2 py-1 rounded-lg">
+            <div className="flex justify-end ">
+              <button className="bg-yellow-300 text-black text-xs px-2 py-1 rounded-lg w-14 hover:opacity-50">
                 Delete
+              </button>
+            </div>
+            {/* Unlink Account */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => {
+                  api.unlinkAllESL().then((res) => {
+                    res.json().then((data) => {
+                      console.log(data);
+                    });
+                  });
+                }}
+                className="bg-yellow-300 text-black text-xs px-2 py-1 rounded-lg w-14 hover:opacity-50"
+              >
+                Unlink
               </button>
             </div>
           </div>

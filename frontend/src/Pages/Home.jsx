@@ -160,7 +160,8 @@ export default function () {
           workspaceMetaData.workspace_description,
         override.workspace || workspace,
         override.is_favorite || workspaceMetaData.is_favorite,
-        override.workspace_emoji || workspaceMetaData.workspace_emoji
+        override.workspace_emoji || workspaceMetaData.workspace_emoji,
+        override.is_deployed || workspaceMetaData.is_deployed
       )
       .then(async (res) => {
         if (res.status === 200) {

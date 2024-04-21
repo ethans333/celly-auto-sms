@@ -49,17 +49,17 @@ def handler(event, context):
                 "end": datetime.strptime(e["end"]["dateTime"], date_format),
             }
 
-        events = list(
-            map(
-                event_to_datetime,
-                events_response,
-            )
-        )
+        # events = list(
+        #     map(
+        #         event_to_datetime,
+        #         events_response,
+        #     )
+        # )
 
         # return calendar events
         return {
             "statusCode": 200,
-            "body": json.dumps({"events": str(events)}),
+            "body": json.dumps({"events": str(events_response)}),
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",

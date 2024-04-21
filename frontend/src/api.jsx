@@ -196,7 +196,8 @@ export async function updateWorkspace(
   workspace_description,
   workspace_raw,
   is_favorite,
-  workspace_emoji
+  workspace_emoji,
+  is_deployed
 ) {
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + id,
@@ -211,6 +212,7 @@ export async function updateWorkspace(
         workspace_raw: JSON.stringify(workspace_raw),
         is_favorite: is_favorite,
         workspace_emoji: workspace_emoji,
+        is_deployed: is_deployed,
       }),
     }
   );
@@ -331,6 +333,27 @@ export async function tokenStatusMicrosoftESL() {
     import.meta.env.VITE_ESL_API_URL + "/esl/microsoft/token_status",
     {
       method: "GET",
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
+    }
+  );
+
+  if (response.status === 200) return response;
+
+  return await response.text(); // error
+}
+
+/**
+ * Unlinks all External services from account.
+ *
+ * @returns {Object} Status
+ */
+export async function unlinkAllESL() {
+  const response = await fetch(
+    import.meta.env.VITE_ESL_API_URL + "/esl/unlink/all",
+    {
+      method: "DELETE",
       headers: {
         Authorization: Cookies.get("access_token"),
       },

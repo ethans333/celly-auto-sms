@@ -208,4 +208,22 @@ manifest_hash = "e9bd61be0f43b7f195f0a023d80652c4"
 packagetype = "Zip"
 functions = ["getMicrosoftCalendarEvents"]
 
+[function_build_definitions.e622bb1c-a0a9-435b-981a-64d30ddf9b22]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\rotateMicrosoft"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "183578f719b01a8233431b1aed019c55"
+packagetype = "Zip"
+functions = ["rotateMicrosoft"]
+
+[function_build_definitions.f09d3830-45b9-412c-876c-32ae12bf5efe]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\unlinkAllESL"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "b7583518ec701cb8d72af5f1019b6dab"
+packagetype = "Zip"
+functions = ["unlinkAllESL"]
+
 [layer_build_definitions]

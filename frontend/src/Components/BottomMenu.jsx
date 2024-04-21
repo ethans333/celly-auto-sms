@@ -21,14 +21,17 @@ export default function () {
       <div
         onClick={() => {
           // Save current workspace
-          api.updateWorkspace(
-            workspaceMetaData.id,
-            workspaceMetaData.workspace_name,
-            workspaceMetaData.workspace_description,
-            workspace,
-            workspaceMetaData.is_favorite,
-            workspaceMetaData.workspace_emoji
-          );
+          if (workspaceMetaData != {}) {
+            api.updateWorkspace(
+              workspaceMetaData.id,
+              workspaceMetaData.workspace_name,
+              workspaceMetaData.workspace_description,
+              workspace,
+              workspaceMetaData.is_favorite,
+              workspaceMetaData.workspace_emoji,
+              workspaceMetaData.is_deployed
+            );
+          }
           // Create new workspace with default values
           api.addWorkspace(
             defaultWorkspace.workspace_name,
