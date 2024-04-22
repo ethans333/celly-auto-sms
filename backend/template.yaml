@@ -1234,8 +1234,6 @@ Resources:
                 - secretsmanager:RotateSecret
               Resource:
                 - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
-        - LambdaInvokePolicy:
-            FunctionName: !Ref rotateMicrosoft
       Environment:
         Variables:
           ROTATEMICROSOFT_FUNCTION_NAME: !Ref rotateMicrosoft

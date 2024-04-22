@@ -76,9 +76,6 @@ def handler(event, context):
             secrets.rotate_secret(
                 SecretId=user_id,
                 RotationLambdaARN=os.environ["ROTATEMICROSOFT_FUNCTION_ARN"],
-                RotationRules={
-                    "ScheduleExpression": "rate(30 minutes)",
-                },
             )
 
             # save tokens in secret manager
@@ -87,6 +84,7 @@ def handler(event, context):
                 "body": json.dumps(
                     {
                         "message": "access token acquired and saved successfully",
+                        "microsoft_tokens": microsoft_tokens,
                     }
                 ),
                 "headers": {

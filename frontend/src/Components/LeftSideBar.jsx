@@ -5,6 +5,7 @@ import { WorkspaceContext } from "../Pages/Home.jsx";
 import * as api from "../api.jsx";
 import TopLeftMenu from "./TopLeftMenu.jsx";
 import BottomLeftMenu from "./BottomLeftMenu.jsx";
+import { AccountTree, TableChart, SsidChart } from "@mui/icons-material";
 
 export default function () {
   const { setCurrentView } = useContext(WorkspaceContext);
@@ -39,17 +40,29 @@ export default function () {
           <p className="font-extrabold mt-7">This Project</p>
           <div className="space-y-3 mt-3 ml-1">
             <ProjectLabel
-              emoji="🔎"
+              icon={
+                <AccountTree
+                  sx={{ fontSize: 20, paddingTop: 0.4, marginRight: 0.5 }}
+                />
+              }
               name="Project View"
               onClick={() => setCurrentView("project")}
             />
             <ProjectLabel
-              emoji="📞"
+              icon={
+                <TableChart
+                  sx={{ fontSize: 20, paddingTop: 0.4, marginRight: 0.5 }}
+                />
+              }
               name="Registered Numbers"
               onClick={() => setCurrentView("numbers")}
             />
             <ProjectLabel
-              emoji="📈"
+              icon={
+                <SsidChart
+                  sx={{ fontSize: 20, paddingTop: 0.4, marginRight: 0.5 }}
+                />
+              }
               name="Analytics"
               onClick={() => setCurrentView("analytics")}
             />
@@ -90,13 +103,14 @@ export default function () {
   );
 }
 
-function ProjectLabel({ emoji, name, onClick }) {
+function ProjectLabel({ icon, name, onClick }) {
   return (
     <p
-      className="font-semibold text-gray-800 cursor-pointer hover:opacity-50 max-w-64 truncate"
+      className="font-semibold text-gray-800 cursor-pointer hover:opacity-50 max-w-64 truncate flex"
       onClick={onClick}
     >
-      {emoji} {name}
+      {icon}
+      <div className="ml-1">{name}</div>
     </p>
   );
 }
@@ -108,7 +122,7 @@ function mapWorkspaces(w) {
     return (
       <ProjectLabel
         key={ws.id}
-        emoji={ws.workspace_emoji}
+        icon={<div className="text-xs pt-1 mr-2">{ws.workspace_emoji}</div>}
         name={ws.workspace_name}
         onClick={() => setWorkspaceMetaData(ws)}
       />
