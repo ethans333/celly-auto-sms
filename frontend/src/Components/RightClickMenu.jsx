@@ -57,7 +57,7 @@ export default function () {
             top: position.y,
             left: position.x,
           }}
-          className="cell-menu grid grid-cols-1 gap-y-2 z-50 animate-fadeIn"
+          className="cell-menu grid grid-cols-1 gap-y-2 z-50 animate-fadeIn text-base"
         >
           <div
             onClick={(event) => {
@@ -67,7 +67,7 @@ export default function () {
             }}
             className="cursor-pointer hover:opacity-50 flex"
           >
-            <img src={plus} alt="plus" className="w-3 mr-2" />
+            <img src={plus} alt="plus" className="w-3.5 mr-3" />
             <p>Create Cell</p>
           </div>
           <div
@@ -77,7 +77,7 @@ export default function () {
             }}
             className="cursor-pointer hover:opacity-50 flex"
           >
-            <img src={floppy} alt="floppy" className="w-3 mr-2" />
+            <img src={floppy} alt="floppy" className="w-3.5 mr-3" />
             <p>Save</p>
           </div>
           <div
@@ -87,7 +87,7 @@ export default function () {
             }}
             className="cursor-pointer hover:opacity-50 flex"
           >
-            <img src={sliders} alt="gear" className="w-3 mr-2" />
+            <img src={sliders} alt="gear" className="w-3.5 mr-3" />
             <p>Settings</p>
           </div>
         </div>

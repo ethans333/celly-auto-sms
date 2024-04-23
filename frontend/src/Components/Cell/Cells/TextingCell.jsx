@@ -10,7 +10,9 @@ export default function TextingCell({ id }) {
 
   return (
     <CellSchema id={id} sidebar={<p>{id}</p>} icon={message_icon}>
-      <p className="card-desc">{workspace[id].prompt}</p>
+      <p className="w-64 px-4 pt-6 text-xs text-gray-500 h-14">
+        Automated conversation via texting.
+      </p>
     </CellSchema>
   );
 }

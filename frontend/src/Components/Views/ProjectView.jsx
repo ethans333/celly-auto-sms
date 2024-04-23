@@ -1,5 +1,5 @@
 import { WorkspaceContext } from "../../Pages/Home";
-import { useContext } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import Curves from "../Curves/Curves";
 import Popup from "../Popup";
 import RightClickMenu from "../RightClickMenu";
@@ -10,10 +10,42 @@ export default function () {
   const { workspace, popupChildren, setPopupChildren } =
     useContext(WorkspaceContext);
 
+  const [dragStart, setDragStart] = useState(null);
+  const [translateX, setTranslateX] = useState(0);
+  const [translateY, setTranslateY] = useState(0);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", (e) => {
+      if (e.button === 1 && dragStart == null) {
+        setDragStart([e.clientX, e.clientY]);
+      }
+    });
+    document.addEventListener("mousemove", (e) => {
+      if (dragStart != null) {
+        const dx = e.clientX - dragStart[0];
+        const dy = e.clientY - dragStart[1];
+        setTranslateX(dx);
+        setTranslateY(dy);
+      }
+    });
+    document.addEventListener("mouseup", (e) => {
+      if (e.button === 1 && dragStart != null) {
+        setDragStart(null);
+        console.log("mouseup");
+      }
+    });
+  }, [dragStart]);
+
   return (
     <>
-      {Object.keys(workspace).map((id) => buildCell(id, workspace[id]))}
-      <Curves />
+      <div
+        ref={containerRef}
+        style={{ transform: `translate(${translateX}px, ${translateY}px)` }}
+      >
+        {Object.keys(workspace).map((id) => buildCell(id, workspace[id]))}
+        <Curves />
+      </div>
       {popupChildren != null && (
         <Popup onClose={() => setPopupChildren(null)}>{popupChildren}</Popup>
       )}

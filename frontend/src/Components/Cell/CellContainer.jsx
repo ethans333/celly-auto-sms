@@ -4,7 +4,11 @@ import { WorkspaceContext } from "../../Pages/Home.jsx";
 
 import circle from "../../assets/circle-solid.svg";
 
-export default function CellContainer({ children, id }) {
+export default function CellContainer({
+  children,
+  id,
+  backgroundColor = "bg-white",
+}) {
   const { workspace, setWorkspace } = useContext(WorkspaceContext);
 
   const cell = useRef(null);
@@ -31,7 +35,7 @@ export default function CellContainer({ children, id }) {
             {/* Top */}
             <Node id={`${id}$top`} />
             {/* Children */}
-            <div className="card">{children}</div>
+            <div className={`card ${backgroundColor}`}>{children}</div>
             {/* Bottom */}
             <Node id={`${id}$bottom`} />
           </div>

@@ -4,7 +4,7 @@ import { WorkspaceContext } from "../../Pages/Home.jsx";
 import { useState, useContext, useEffect } from "react";
 import CellMenu from "./CellMenu";
 
-export default function ({ id, children, sidebar, icon }) {
+export default function ({ id, children, sidebar, icon, backgroundColor }) {
   const { workspace, setWorkspace, setSideBarChildren } =
     useContext(WorkspaceContext);
   const [showMenu, setShowMenu] = useState(false);
@@ -17,10 +17,12 @@ export default function ({ id, children, sidebar, icon }) {
 
   return (
     <div>
-      <CellContainer id={id}>
+      <CellContainer id={id} backgroundColor={backgroundColor}>
         <div className="flex">
-          <img src={icon} className="w-3 " />
-          <h1 className="card-title">{workspace[id].title}</h1>
+          <img src={icon} className="w-8 p-2" />
+          <h1 className="pt-1.5 font-bold pl-1.5 text-[15px]">
+            {workspace[id].title}
+          </h1>
           <img
             src={ellipsis}
             className="card-ellipsis"

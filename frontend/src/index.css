@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -28,12 +28,12 @@
   cursor: pointer;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin: 0; 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
 body {
@@ -41,7 +41,7 @@ body {
 }
 
 .card {
-  @apply bg-white rounded-lg shadow-lg p-6 min-w-64 max-w-96 cursor-move;
+  @apply rounded-lg shadow p-6 min-w-64 max-w-96 cursor-move;
 }
 
 .card-title {
@@ -53,7 +53,7 @@ body {
 }
 
 .card-tag {
-  @apply mr-2.5 px-2 rounded-lg
+  @apply mr-2.5 px-2 rounded-lg;
 }
 
 .cell-node {
@@ -69,7 +69,7 @@ body {
 }
 
 .cell-menu {
-  @apply bg-white rounded-lg shadow-lg px-4 py-4 font-semibold pt-5;
+  @apply bg-white rounded shadow-sm border px-4 py-4 font-semibold;
 }
 
 .sidebar-input {
@@ -81,7 +81,7 @@ body {
 }
 
 .x-button {
-  @apply w-7 border-2 px-1.5 py-1 rounded-lg ml-auto cursor-pointer border-gray-100 h-fit hover:opacity-50 
+  @apply w-7 border-2 px-1.5 py-1 rounded-lg ml-auto cursor-pointer border-gray-100 h-fit hover:opacity-50;
 }
 
 .mini-cell-card {
@@ -97,15 +97,15 @@ body {
 }
 
 .square-button {
-  @apply border-2 px-1.5 py-1 rounded-lg cursor-pointer border-gray-100 hover:opacity-50
+  @apply border-2 px-1.5 py-1 rounded-lg cursor-pointer border-gray-100 hover:opacity-50;
 }
 
 .dropdown-top {
-  @apply border-2 px-1.5 py-1 rounded-lg cursor-pointer border-gray-100 hover:opacity-50 w-fit h-fit bg-white
+  @apply border-2 px-1.5 py-1 rounded-lg cursor-pointer border-gray-100 hover:opacity-50 w-fit h-fit bg-white;
 }
 
 .dropdown-bottom {
-  @apply border-2 rounded-lg cursor-pointer border-gray-100 w-fit h-fit bg-white
+  @apply border-2 rounded-lg cursor-pointer border-gray-100 w-fit h-fit bg-white;
 }
 
 .empty-mini-cell {
@@ -121,11 +121,11 @@ body {
 }
 
 .selection-card {
-  @apply bg-white rounded-lg shadow-md p-6 cursor-pointer min-w-64 max-w-96 ;
+  @apply bg-white rounded-lg shadow-md p-6 cursor-pointer min-w-64 max-w-96;
 }
 
 .selection-area {
-  @apply space-y-5 overflow-y-scroll h-[100vh] pr-5 pl-1 pb-24
+  @apply space-y-5 overflow-y-scroll h-[100vh] pr-5 pl-1 pb-24;
 }
 
 .settings-header {

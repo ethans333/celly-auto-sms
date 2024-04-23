@@ -15,15 +15,17 @@ export default function CalendarCell({ id }) {
       sidebar={<CalendarCellSidebar id={id} />}
       icon={calendar_icon}
     >
-      <p className="card-desc">{workspace[id].name}</p>
-      <div className="flex space-x-3">
+      <p className="w-64 px-4 pt-6 text-xs text-gray-500 h-14">
+        Calendar for scheduling events.
+      </p>
+      {/* <div className="flex space-x-3">
         <p className="bg-gray-100 w-fit px-2 rounded-lg text-sm">
           {workspace[id].time}
         </p>
         <p className="bg-gray-100 w-fit px-2 rounded-lg text-sm">
           {workspace[id].date}
         </p>
-      </div>
+      </div> */}
     </CellSchema>
   );
 }
