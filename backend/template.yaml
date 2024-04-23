@@ -1234,6 +1234,12 @@ Resources:
                 - secretsmanager:RotateSecret
               Resource:
                 - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
+        - Statement:
+            - Effect: Allow
+              Action:
+                - lambda:InvokeFunction
+              Resource:
+                - !GetAtt rotateMicrosoft.Arn
       Environment:
         Variables:
           ROTATEMICROSOFT_FUNCTION_NAME: !Ref rotateMicrosoft
@@ -1351,6 +1357,30 @@ Resources:
       MemorySize: 3008
       Timeout: 30
       Tracing: Active
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+                - secretsmanager:PutSecretValue
+              Resource:
+                - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
+  # policy statements for letting secrets manager invoke rotate functions
+  rotateMicrosoftFunctionPolicy:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref rotateMicrosoft
+      Principal: secretsmanager.amazonaws.com
+
+  rotateMicrosoftFunctionPolicyStatement:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref rotateMicrosoft
+      Principal: secretsmanager.amazonaws.com
+      SourceArn: !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
+
   rotateMicrosoftLogGroup:
     Type: AWS::Logs::LogGroup
     UpdateReplacePolicy: Retain

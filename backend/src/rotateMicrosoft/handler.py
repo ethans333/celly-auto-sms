@@ -5,6 +5,7 @@ import msal
 
 CLIENT_ID = "746d9d45-cad6-43ee-8677-a3942d0e3573"
 AUTHORITY = "https://login.microsoftonline.com/common"
+SCOPES = ["User.Read.All", "Calendars.ReadWrite"]
 
 
 def handler(event, context):
@@ -21,12 +22,11 @@ def handler(event, context):
 
     # Get current secret tokens
     current_tokens = json.loads(current_secret_string)
-    access_token = current_tokens["microsoft_tokens"]["access_token"]
     refresh_token = current_tokens["microsoft_tokens"]["refresh_token"]
 
     # Exchange the refresh token for new access and refresh tokens
     app = msal.PublicClientApplication(client_id=CLIENT_ID, authority=AUTHORITY)
-    result = app.acquire_token_by_refresh_token(refresh_token)
+    result = app.acquire_token_by_refresh_token(refresh_token, scopes=SCOPES)
 
     new_tokens = {
         "microsoft_tokens": {
