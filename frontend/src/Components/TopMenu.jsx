@@ -6,8 +6,10 @@ import star_filled from "../assets/star-solid.svg";
 import cloud_bolt from "../assets/cloud-bolt-solid.svg";
 
 import { WorkspaceContext } from "../Pages/Home.jsx";
+import LabeledSquareButton from "./LabeledSquareButton.jsx";
 import { useContext, useState, useEffect } from "react";
 import Settings from "./Popups/Settings.jsx";
+import WorkspaceLink from "./Popups/WorkspaceLink.jsx";
 
 export default function () {
   const {
@@ -39,6 +41,7 @@ export default function () {
         onClick={() => {
           // save current workspace
           /// deploy current workspace
+          setPopupChildren(<WorkspaceLink />);
         }}
       />
       {/* Settings */}
@@ -49,25 +52,4 @@ export default function () {
       />
     </div>
   );
-
-  function LabeledSquareButton({ icon, label, onClick }) {
-    const [isHovering, setIsHovering] = useState(false);
-
-    return (
-      <div className="relative mt-1">
-        <img
-          src={icon}
-          className="square-button w-8 h-7 z-50 bg-white"
-          onClick={onClick}
-          onMouseOver={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-        />
-        {isHovering && (
-          <div className="absolute top-7 left-4 transform -translate-x-1/2 bg-black text-white text-xs rounded p-1">
-            {label}
-          </div>
-        )}
-      </div>
-    );
-  }
 }

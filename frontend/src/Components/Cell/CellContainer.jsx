@@ -16,7 +16,7 @@ export default function CellContainer({
   return (
     <div id={id} className="absolute">
       <Draggable
-        ref={cell}
+        nodeRef={cell}
         defaultPosition={workspace[id].position}
         onDrag={(event) => {
           setWorkspace((p) => {

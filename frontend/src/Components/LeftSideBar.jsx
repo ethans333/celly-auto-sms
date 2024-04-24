@@ -105,13 +105,13 @@ export default function () {
 
 function ProjectLabel({ icon, name, onClick }) {
   return (
-    <p
+    <div
       className="font-semibold text-gray-800 cursor-pointer hover:opacity-50 max-w-64 truncate flex"
       onClick={onClick}
     >
       {icon}
       <div className="ml-1">{name}</div>
-    </p>
+    </div>
   );
 }
 

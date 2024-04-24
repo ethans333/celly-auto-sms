@@ -30,6 +30,10 @@ export default function () {
     auto_save: true,
   });
 
+  const [dx, setDX] = useState(0);
+  const [dy, setDY] = useState(0);
+  const [lastMousePosition, setLastMousePosition] = useState({ x: 0, y: 0 });
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -79,6 +83,9 @@ export default function () {
         popupChildren,
         messageStack,
         config,
+        dx,
+        dy,
+        lastMousePosition,
         setCurrentNode,
         setWorkspace,
         setSideBarChildren,
@@ -88,11 +95,17 @@ export default function () {
         saveWorkspace,
         setMessageStack,
         setConfig,
+        setDX,
+        setDY,
+        setLastMousePosition,
       }}
     >
       <LeftSideBar />
       <RightSideBar>{sideBarChildren}</RightSideBar>
-      {renderViews(currentView)}
+
+      <div style={{ transform: `translate(${dx}px, ${dy}px)` }}>
+        {renderViews(currentView)}
+      </div>
     </WorkspaceContext.Provider>
   );
 
