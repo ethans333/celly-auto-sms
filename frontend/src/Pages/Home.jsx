@@ -103,9 +103,7 @@ export default function () {
       <LeftSideBar />
       <RightSideBar>{sideBarChildren}</RightSideBar>
 
-      <div style={{ transform: `translate(${dx}px, ${dy}px)` }}>
-        {renderViews(currentView)}
-      </div>
+      {renderViews(currentView)}
     </WorkspaceContext.Provider>
   );
 

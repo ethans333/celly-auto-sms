@@ -75,10 +75,10 @@ export default function () {
     <>
       <div style={{ transform: `translate(${dx}px, ${dy}px)` }}>
         {Object.keys(workspace).map((id) => buildCell(id, workspace[id]))}
-        <Curves /> {/* Use key to trigger rerender */}
-        <RightClickMenu />
+        <Curves />
       </div>
 
+      <RightClickMenu />
       {popupChildren != null && (
         <Popup onClose={() => setPopupChildren(null)}>{popupChildren}</Popup>
       )}
