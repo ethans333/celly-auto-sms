@@ -30,10 +30,10 @@ def handler(event, context):
         # decode to get payload
         expires_in = jwt.get_unverified_claims(access_token)["exp"]
 
-        # check if token is expired
+        # check if token is expired & then refresh it
         is_expired = time.time() > expires_in
         if is_expired:
-            raise Exception("Token is expired")
+            secrets.rotate_secret(SecretId=user_id)
 
         # if token is valid then use microsoft graph api to get calendar events
         events_response = requests.get(  # events for the next week
@@ -41,25 +41,17 @@ def handler(event, context):
             headers={"Authorization": f"Bearer {access_token}"},
         ).json()["value"]
 
-        def event_to_datetime(e):
-            e = json.loads(e)
-            date_format = "%Y-%m-%dT%H:%M:%S.%f"
-            return {
-                "start": datetime.strptime(e["start"]["dateTime"], date_format),
-                "end": datetime.strptime(e["end"]["dateTime"], date_format),
-            }
+        event_times = []
 
-        # events = list(
-        #     map(
-        #         event_to_datetime,
-        #         events_response,
-        #     )
-        # )
+        for event in events_response:
+            start_ms, end_ms = convert_time_to_milliseconds(
+                event["start"], event["end"]
+            )
+            event_times.append((start_ms, end_ms))
 
-        # return calendar events
         return {
             "statusCode": 200,
-            "body": json.dumps({"events": str(events_response)}),
+            "body": json.dumps({"events": str(event_times)}),
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",
@@ -79,3 +71,18 @@ def handler(event, context):
                 "Content-Type": "application/json",
             },
         }
+
+
+def datetime_to_milliseconds(datetime_str):
+    datetime_str = datetime_str.split(".")[0]
+    dt_object = datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M:%S")
+
+    # Convert datetime object to milliseconds since the epoch
+    milliseconds = int(dt_object.timestamp() * 1000)
+    return milliseconds
+
+
+def convert_time_to_milliseconds(start_time, end_time):
+    start_ms = datetime_to_milliseconds(start_time["dateTime"])
+    end_ms = datetime_to_milliseconds(end_time["dateTime"])
+    return start_ms, end_ms
