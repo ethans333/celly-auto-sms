@@ -2,9 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import arrow from "../../assets/chevron-solid.svg";
 
-export default function () {
-  let { id } = useParams();
-
+export default function ({ events }) {
   const startHour = 9;
   const endHour = 18;
 
@@ -125,7 +123,7 @@ export default function () {
           }
         }}
         className={`w-full ${isSelected ? "bg-green-200" : "bg-gray-50"} ${
-          !Available && "bg-gray-950"
+          !Available && "bg-red-200"
         }`}
       >
         <p className="cursor-pointer opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm font-[550]">
@@ -177,7 +175,15 @@ export default function () {
         {...Array.from({ length: (endHour - startHour) * 4 - 3 }, (_, i) => {
           const time = new Date(day);
           time.setHours(9 + Math.floor(i / 4), (i % 4) * 15, 0, 0);
-          return <TimeCell Time={time} />;
+          return (
+            <TimeCell
+              Time={time}
+              Available={
+                events.filter((e) => e.start <= time && e.end >= time).length ==
+                0
+              }
+            />
+          );
         })}
       </div>
     );

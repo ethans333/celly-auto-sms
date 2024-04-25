@@ -1,17 +1,30 @@
 import Calendar from "../Components/Scheduling/Calendar";
 import Dropdown from "react-dropdown";
 import caret from "../assets/caret-down-solid.svg";
+import * as api from "../api";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 export default function () {
   const contactOptions = ["Phone", "Email"];
 
   const [method, setMethod] = useState(contactOptions[0]);
+  const [events, setEvents] = useState([]);
+  let { id } = useParams();
+
+  useEffect(() => {
+    api.getMicrosoftCalendarEvents(id).then((res) => {
+      res.json().then((data) => {
+        console.log(data);
+        setEvents(data["events"]);
+      });
+    });
+  }, []);
 
   return (
     <div className="xl:flex xl:w-[1280px] 2xl:w-[1536px] mx-auto mt-[3vw]">
-      <Calendar />
+      <Calendar events={events} />
 
       <div className="mx-[7vw] xl:w-[400px] 2xl:w-[500px] xl:mx-5 xl:shadow-lg rounded-lg py-10 px-8">
         <div className="font-extrabold">Enter Your Phone or Email</div>

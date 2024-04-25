@@ -47,11 +47,11 @@ def handler(event, context):
             start_ms, end_ms = convert_time_to_milliseconds(
                 event["start"], event["end"]
             )
-            event_times.append((start_ms, end_ms))
+            event_times.append({"start": start_ms, "end": end_ms})
 
         return {
             "statusCode": 200,
-            "body": json.dumps({"events": str(event_times)}),
+            "body": json.dumps({"events": event_times}),
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",

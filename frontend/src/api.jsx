@@ -364,3 +364,22 @@ export async function unlinkAllESL() {
 
   return await response.text(); // error
 }
+
+/*
+
+  /pesl
+
+*/
+
+export async function getMicrosoftCalendarEvents(id) {
+  const response = await fetch(
+    import.meta.env.VITE_PESL_API_URL + "/pesl/microsoft/calendar/" + id,
+    {
+      method: "GET",
+    }
+  );
+
+  if (response.status === 200) return response;
+
+  return await response.text(); // error
+}
