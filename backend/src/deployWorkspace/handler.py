@@ -13,15 +13,43 @@ def handler(event, context):
     access_token = event["headers"]["Authorization"]
     user_id = jwt.decode(access_token, options={"verify_signature": False})["sub"]
 
-    dynamodb = boto3.resource("dynamodb")
-    # s3 = boto3.resource("s3")
+    s3 = boto3.resource("s3")
+    secrets = boto3.client("secretsmanager")
     # pinpoint = boto3.client("pinpoint-sms-voice-v2")
-    lex = boto3.client("lexv2-models")
+    # lex = boto3.client("lexv2-models")
 
-    # bucket = s3.Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
+    bucket = s3.Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
+
+    dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(os.environ["WORKSPACESTABLE_TABLE_NAME"])
 
     try:
+        # Check if workspace uses calendar integration
+        cell_types = []
+
+        # load workspace data
+        workspace_raw = (
+            bucket.Object(f"{user_id}/{workspace_id}")
+            .get()["Body"]
+            .read()
+            .decode("utf-8")
+        )
+
+        workspace_raw = json.loads(workspace_raw)
+
+        # loop through all cell types
+        for cell in workspace_raw.keys():
+            cell_types.append(workspace_raw[cell]["type"])
+
+        if "calendar" in cell_types:
+            # check if user linked calendar
+            tokens = secrets.get_secret_value(SecretId=user_id)["SecretString"]
+            tokens = json.loads(tokens)
+
+            # if not, raise exception
+            if tokens["microsoft_tokens"] is None:
+                raise Exception("User has not linked calendar")
+
         # Update is_deployed status to true
         table.update_item(
             Key={"id": workspace_id},
@@ -36,11 +64,11 @@ def handler(event, context):
         # workspace_raw = bucket_object.get()["Body"].read().decode("utf-8")
 
         # create new version within user alias
-        lex.create_bot_version(
-            botId=os.environ["BOT_ID"],
-            botVersionLocaleId="en_US",
-            botVersionName=workspace_id,
-        )
+        # lex.create_bot_version(
+        #     botId=os.environ["BOT_ID"],
+        #     botVersionLocaleId="en_US",
+        #     botVersionName=workspace_id,
+        # )
 
     except Exception as e:
         return {
@@ -58,7 +86,7 @@ def handler(event, context):
         "statusCode": 200,
         "body": json.dumps(
             {
-                "message": f"workspace deployed successfully",
+                "message": f"Workspace deployed successfully",
                 "workspace_id": workspace_id,
             },
         ),

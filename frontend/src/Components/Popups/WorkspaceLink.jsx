@@ -9,8 +9,8 @@ export default function () {
   const url = "http://127.0.0.1:5173/scheduling/" + workspaceMetaData.id;
 
   return (
-    <div className="space-y-5 pb-5">
-      <div className="space-y-3 pt-7 pb-3">
+    <div className="space-y-7 pb-5 px-7">
+      <div className="space-y-3 pt-5 pb-3">
         <div className="font-extrabold text-center text-2xl">
           {workspaceMetaData.workspace_name} is Live!
         </div>

@@ -10,6 +10,7 @@ import LabeledSquareButton from "./LabeledSquareButton.jsx";
 import { useContext, useState, useEffect } from "react";
 import Settings from "./Popups/Settings.jsx";
 import WorkspaceLink from "./Popups/WorkspaceLink.jsx";
+import * as api from "../api";
 
 export default function () {
   const {
@@ -40,8 +41,17 @@ export default function () {
         label="Deploy"
         onClick={() => {
           // save current workspace
+          saveWorkspace();
           /// deploy current workspace
-          setPopupChildren(<WorkspaceLink />);
+          api.deployWorkspace(workspaceMetaData.id).then((res) => {
+            if (res.status === 200) {
+              setWorkspaceMetaData((p) => ({ ...p, is_deployed: true }));
+              setPopupChildren(<WorkspaceLink />);
+              res.json().then((data) => {
+                console.log(data);
+              });
+            }
+          });
         }}
       />
       {/* Settings */}

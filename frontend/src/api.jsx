@@ -266,6 +266,28 @@ export async function deleteWorkspace(id) {
   return await response.text(); // error
 }
 
+export async function deployWorkspace(id) {
+  const response = await fetch(
+    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/deploy/" + id,
+    {
+      method: "POST",
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
+    }
+  );
+
+  if (response.status === 200) return response;
+
+  return await response.text(); // error
+}
+
+/**
+ *
+ * Deploys an existing workspace
+ *
+ */
+
 /*
 
   /esl

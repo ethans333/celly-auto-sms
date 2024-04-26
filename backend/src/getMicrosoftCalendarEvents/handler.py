@@ -17,7 +17,10 @@ def handler(event, context):
         dynamodb = boto3.resource("dynamodb")
         table = dynamodb.Table(os.environ["WORKSPACESTABLE_TABLE_NAME"])
 
-        user_id = table.get_item(Key={"id": workspace_id})["Item"]["user_id"]
+        workspace_data = table.get_item(Key={"id": workspace_id})["Item"]
+
+        user_id = workspace_data["user_id"]
+        workspace_name = workspace_data["workspace_name"]
 
         # Get Microsoft tokens from Secrets Manager
         secrets = boto3.client("secretsmanager")
@@ -51,7 +54,9 @@ def handler(event, context):
 
         return {
             "statusCode": 200,
-            "body": json.dumps({"events": event_times}),
+            "body": json.dumps(
+                {"workspace_name": workspace_name, "events": event_times}
+            ),
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",

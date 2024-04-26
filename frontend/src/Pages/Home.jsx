@@ -163,6 +163,8 @@ export default function () {
    * @returns {Promise<void>} - Promise that resolves when the workspace is saved.
    */
   function saveWorkspace(override) {
+    if (!override) override = {};
+
     api
       .updateWorkspace(
         override.id || workspaceMetaData.id,

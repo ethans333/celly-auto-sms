@@ -76,6 +76,7 @@ def handler(event, context):
             secrets.rotate_secret(
                 SecretId=user_id,
                 RotationLambdaARN=os.environ["ROTATEMICROSOFT_FUNCTION_ARN"],
+                RotationRules={"Duration": "4h", "ScheduleExpression": "rate(4 hours)"},
             )
 
             # save tokens in secret manager
