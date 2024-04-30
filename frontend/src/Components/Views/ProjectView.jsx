@@ -27,7 +27,6 @@ export default function () {
 
     const handleMouseDown = (e) => {
       if (e.button === 1 && !buttonDown) {
-        console.log("Mouse Down");
         setButtonDown(true);
         setLastMousePosition({ x: e.clientX, y: e.clientY });
       }
@@ -35,28 +34,15 @@ export default function () {
 
     const handleMouseMove = (e) => {
       if (buttonDown) {
-        const theta = Math.atan2(
-          e.clientY - lastMousePosition.y,
-          e.clientX - lastMousePosition.x
-        );
-
-        setDX((p) => p + Math.cos(theta) * 5);
-        setDY((p) => p + Math.sin(theta) * 5);
+        setDX((p) => p + e.movementX);
+        setDY((p) => p + e.movementY);
       }
     };
 
     const handleMouseUp = (e) => {
       if (e.button === 1 && buttonDown) {
         setButtonDown(false);
-        console.log("Mouse Up");
-        // setWorkspace((p) => {
-        //   Object.keys(p).forEach((id) => {
-        //     p[id].position.x += dx;
-        //     p[id].position.y += dy;
-        //   });
-
-        //   return { ...p };
-        // });
+        document.body.style.cursor = "default";
       }
     };
 

@@ -3,7 +3,7 @@ import Curve from "./Curve.jsx";
 import { WorkspaceContext } from "../../Pages/Home.jsx";
 
 export default function () {
-  const { workspace, setWorkspace } = useContext(WorkspaceContext);
+  const { workspace } = useContext(WorkspaceContext);
   const [curves, setCurves] = useState([]);
 
   useEffect(() => {

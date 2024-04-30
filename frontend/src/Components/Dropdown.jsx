@@ -1,7 +1,7 @@
 import caret from "../assets/caret-down-solid.svg";
 import { useState, useEffect, useRef } from "react";
 
-export default function ({ values, current, setCurrent }) {
+export default function ({ values, current, setCurrent, padded = false }) {
   const [showSelection, setShowSelection] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -21,14 +21,20 @@ export default function ({ values, current, setCurrent }) {
   return (
     <div ref={dropdownRef}>
       <div
-        className="dropdown-top flex hover:opacity-50"
+        className={`${
+          padded ? "dropdown-top-padded" : "dropdown-top"
+        } flex hover:opacity-50`}
         onClick={() => setShowSelection(!showSelection)}
       >
         <div className="text-sm">{current}</div>
         <img src={caret} className="w-2 ml-2" />
       </div>
       {showSelection && (
-        <div className="dropdown-bottom absolute">
+        <div
+          className={`${
+            padded ? "dropdown-bottom-padded" : "dropdown-bottom"
+          } absolute`}
+        >
           {values.map((value, index) => (
             <div
               key={index}

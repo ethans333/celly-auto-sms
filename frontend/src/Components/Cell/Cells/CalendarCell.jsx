@@ -5,6 +5,7 @@ import SelectionCell from "../SelectionCell";
 import calendar_icon from "../../../assets/calendar-solid.svg";
 import * as mb from "../../MicrosoftButtons.jsx";
 import * as api from "../../../api.jsx";
+import Dropdown from "../../Dropdown.jsx";
 
 export default function CalendarCell({ id }) {
   const { workspace } = useContext(WorkspaceContext);
@@ -44,6 +45,17 @@ export function CalendarCellSelection() {
 export function CalendarCellSidebar({ id }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isLinked, setIsLinked] = useState(false);
+  const [selectedDays, setSelectedDays] = useState(["Saturday", "Sunday"]);
+
+  const dow = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
   useEffect(() => {
     api.tokenStatusMicrosoftESL().then((res) => {
@@ -56,7 +68,7 @@ export function CalendarCellSidebar({ id }) {
 
   return (
     <div className="w-full flex flex-col space-y-2">
-      <p className="font-bold text-lg mb-7">Modify Scheduling</p>
+      <p className="font-bold text-lg mb-3">Modify Scheduling</p>
       {isLoading ? (
         <mb.Loading />
       ) : isLinked ? (
@@ -65,25 +77,67 @@ export function CalendarCellSidebar({ id }) {
         <mb.LinkToGraph />
       )}
 
-      <div className="pt-5">
-        <p className="font-bold">Meeting Window</p>
-        <div className="mt-3 flex space-x-3">
-          <input
-            placeholder="Start"
-            type="text"
-            value={9}
-            className="w-[64px] border border-gray-300 shadow rounded-md p-2 px-3 text-sm"
-          />
-          <p className="py-1.5">-</p>
-          <input
-            placeholder="End"
-            type="text"
-            value={5}
-            className="w-[64px] border border-gray-300 shadow rounded-md p-2 px-3 text-sm"
-          />
+      <div className="pt-7 space-y-5">
+        <div>
+          <p className="font-bold">Meeting Window</p>
+          <div className="mt-3 flex space-x-3">
+            <input
+              placeholder="Start"
+              type="text"
+              // value={9}
+              className="w-[64px] border border-gray-100 border-2 rounded-md px-3 text-sm"
+            />
+            <Dropdown
+              values={["AM", "PM"]}
+              current={"AM"}
+              setCurrent={() => {}}
+            />
+            <p className="p-1">-</p>
+            <input
+              placeholder="End"
+              type="text"
+              // value={5}
+              className="w-[64px] border border-gray-100 border-2 rounded-md px-3 text-sm"
+            />
+            <Dropdown
+              values={["AM", "PM"]}
+              current={"PM"}
+              setCurrent={() => {}}
+            />
+          </div>
         </div>
-        <p className="font-bold pt-5">Blackout Days</p>
+        <div>
+          <p className="font-bold pt-5">Blackout Days</p>
+          <div className="mt-3">
+            <Dropdown
+              values={dow.filter((day) => !selectedDays.includes(day))}
+              current={dow.filter((day) => !selectedDays.includes(day))[0]}
+              setCurrent={function (value) {
+                setSelectedDays([...selectedDays, value]);
+              }}
+              padded
+            />
+            <div className="flex flex-wrap mt-3 w-64 space-x-1">
+              {selectedDays.map((day) => (
+                <DayItem key={day} Day={day} />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
+
+  function DayItem({ Day }) {
+    return (
+      <div
+        onClick={() =>
+          setSelectedDays(selectedDays.filter((day) => day != Day))
+        }
+        className="text-sm bg-black text-white rounded-full px-2.5 py-1.5 w-fit hover:bg-red-500 hover:line-through cursor-pointer mt-1.5"
+      >
+        {Day}
+      </div>
+    );
+  }
 }

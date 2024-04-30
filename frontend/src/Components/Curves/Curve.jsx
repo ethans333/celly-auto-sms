@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { WorkspaceContext } from "../../Pages/Home.jsx";
 
 export default function ({ id, start, end }) {
-  const { setWorkspace } = useContext(WorkspaceContext);
+  const { setWorkspace, dx, dy } = useContext(WorkspaceContext);
 
   const a = {
     x: start.x < end.x ? 0 : start.x - end.x,
