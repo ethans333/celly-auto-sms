@@ -42,11 +42,13 @@ export function CalendarCellSelection() {
 }
 
 export function CalendarCellSidebar({ id }) {
+  const [isLoading, setIsLoading] = useState(true);
   const [isLinked, setIsLinked] = useState(false);
 
   useEffect(() => {
     api.tokenStatusMicrosoftESL().then((res) => {
       res.json().then((data) => {
+        setIsLoading(false);
         if (res.status == 200 && !data.is_expired) setIsLinked(true);
       });
     });
@@ -54,8 +56,34 @@ export function CalendarCellSidebar({ id }) {
 
   return (
     <div className="w-full flex flex-col space-y-2">
-      <p className="font-bold text-lg mb-7">Modify Calendar Cell</p>
-      {isLinked ? <mb.AlreadyLinked /> : <mb.LinkToGraph />}
+      <p className="font-bold text-lg mb-7">Modify Scheduling</p>
+      {isLoading ? (
+        <mb.Loading />
+      ) : isLinked ? (
+        <mb.AlreadyLinked />
+      ) : (
+        <mb.LinkToGraph />
+      )}
+
+      <div className="pt-5">
+        <p className="font-bold">Meeting Window</p>
+        <div className="mt-3 flex space-x-3">
+          <input
+            placeholder="Start"
+            type="text"
+            value={9}
+            className="w-[64px] border border-gray-300 shadow rounded-md p-2 px-3 text-sm"
+          />
+          <p className="py-1.5">-</p>
+          <input
+            placeholder="End"
+            type="text"
+            value={5}
+            className="w-[64px] border border-gray-300 shadow rounded-md p-2 px-3 text-sm"
+          />
+        </div>
+        <p className="font-bold pt-5">Blackout Days</p>
+      </div>
     </div>
   );
 }
