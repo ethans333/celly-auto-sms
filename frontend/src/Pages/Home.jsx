@@ -24,6 +24,8 @@ export default function () {
   const [currentView, setCurrentView] = useState("project");
   const [popupChildren, setPopupChildren] = useState();
   const [messageStack, setMessageStack] = useState([]);
+  const [workspaceList, setWorkspaceList] = useState([]);
+  const [favoriteWorkspaceList, setFavoriteWorkspaceList] = useState([]);
   const [config, setConfig] = useState({
     placeholder_1: true,
     placeholder_2: false,
@@ -39,20 +41,6 @@ export default function () {
   useEffect(() => {
     parseCode();
     validateToken();
-
-    // api
-    //   .getWorkspace("cbb8f7ca-e4a3-45ea-9a22-00e40769a609")
-    //   .then(async (res) => {
-    //     if (res.status === 200) {
-    //       const json = await res.json();
-    //       setWorkspace(JSON.parse(json.workspace_raw));
-    //       delete json.workspace_raw;
-    //       setWorkspaceMetaData(json);
-    //       console.log(json);
-    //     } else {
-    //       console.log(res);
-    //     }
-    //   });
   }, []);
 
   useEffect(() => {
@@ -73,6 +61,10 @@ export default function () {
     setCurrentView("project");
   }, [popupChildren]); // these variables change
 
+  useEffect(() => {
+    if (workspaceList.length > 0) setWorkspaceMetaData(workspaceList[0]);
+  }, [workspaceList]);
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -86,6 +78,8 @@ export default function () {
         dx,
         dy,
         lastMousePosition,
+        workspaceList,
+        favoriteWorkspaceList,
         setCurrentNode,
         setWorkspace,
         setSideBarChildren,
@@ -98,6 +92,7 @@ export default function () {
         setDX,
         setDY,
         setLastMousePosition,
+        updateWorkspaceLists,
       }}
     >
       <LeftSideBar />
@@ -191,6 +186,8 @@ export default function () {
             });
           }, 3000);
           console.log(json);
+
+          updateWorkspaceLists();
         } else {
           setMessageStack((p) => [{ message: res, type: "error" }, ...p]);
 
@@ -203,5 +200,19 @@ export default function () {
           console.log(res);
         }
       });
+  }
+
+  function updateWorkspaceLists() {
+    api.getAllUserWorkspaces().then(async (res) => {
+      if (res.status === 200) {
+        const json = await res.json();
+        setWorkspaceList(json.workspaces);
+        setFavoriteWorkspaceList(
+          json.workspaces.filter((ws) => ws.is_favorite)
+        );
+      } else {
+        console.log(res);
+      }
+    });
   }
 }

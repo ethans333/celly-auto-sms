@@ -32,10 +32,11 @@ In progress:
 
 To Do:
 
-- [ ] Add events to calendar using graph api.
 - [ ] Build out UI for the side bar of both cells.
 - [ ] Build landing page.
 - [ ] Remove workspace description, not needed.
+- [ ] Migrate workspace metadata over to S3 Metadata and remove table.
+- [ ] Add versioning to workspaces and workspace deployments
 
 ### Diagrams
 

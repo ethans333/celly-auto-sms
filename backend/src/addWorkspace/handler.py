@@ -40,7 +40,12 @@ def handler(event, context):
         )
 
         # Add workspace to bucket
-        bucket.put_object(Key=f"{user_id}/{workspace_id}", Body=workspace_raw)
+        bucket.put_object(
+            Key=f"{user_id}/{workspace_id}",
+            Body=workspace_raw,
+            ContentType="application/json",
+            Tagging="deployed=false",
+        )
     except Exception as e:
         return {
             "statusCode": 500,

@@ -4,22 +4,29 @@ import { WorkspaceContext } from "../Pages/Home.jsx";
 import * as api from "../api.jsx";
 
 export default function () {
-  const { workspace, workspaceMetaData, setWorkspaceMetaData, setWorkspace } =
-    useContext(WorkspaceContext);
+  const {
+    workspace,
+    workspaceMetaData,
+    setWorkspaceMetaData,
+    setWorkspace,
+    updateWorkspaceLists,
+  } = useContext(WorkspaceContext);
 
   const defaultWorkspace = {
-    workspace_name: import.meta.env.VITE_DEFAULT_WORKSPACE_NAME,
+    workspace_name: "My Workspace",
     workspace_description: "Lorem Ipsum",
     workspace_raw: {},
     is_favorite: false,
     workspace_emoji: "👽",
+    workspace_id: null,
+    is_deployed: false,
   };
 
   return (
     <div className="flex pr-5 h-full">
       {/* Add Button */}
       <div
-        onClick={() => {
+        onClick={async () => {
           // Save current workspace
           if (workspaceMetaData != {}) {
             api.updateWorkspace(
@@ -33,18 +40,27 @@ export default function () {
             );
           }
           // Create new workspace with default values
-          api.addWorkspace(
+          const res = await api.addWorkspace(
             defaultWorkspace.workspace_name,
             defaultWorkspace.workspace_description,
             defaultWorkspace.workspace_raw,
             defaultWorkspace.is_favorite,
             defaultWorkspace.workspace_emoji
           );
-          // Set current workspace to new workspace
-          const tempRaw = defaultWorkspace.workspace_raw;
-          delete defaultWorkspace.workspace_raw;
-          setWorkspaceMetaData(defaultWorkspace);
-          setWorkspace(tempRaw);
+
+          if (res.status === 200) {
+            const json = await res.json();
+
+            // Set current workspace to new workspace
+            const tempRaw = defaultWorkspace.workspace_raw;
+            delete defaultWorkspace.workspace_raw;
+            defaultWorkspace.id = json.workspace_id;
+
+            setWorkspaceMetaData(defaultWorkspace);
+            setWorkspace(tempRaw);
+
+            updateWorkspaceLists();
+          }
         }}
         className="bg-black p-3 rounded-lg h-fit mt-auto mb-20 ml-auto mr-5 cursor-pointer hover:opacity-50"
       >

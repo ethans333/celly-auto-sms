@@ -8,21 +8,16 @@ import BottomLeftMenu from "./BottomLeftMenu.jsx";
 import { AccountTree, TableChart, SsidChart } from "@mui/icons-material";
 
 export default function () {
-  const { setCurrentView } = useContext(WorkspaceContext);
+  const {
+    setCurrentView,
+    workspaceList,
+    favoriteWorkspaceList,
+    updateWorkspaceLists,
+  } = useContext(WorkspaceContext);
   const [showSideBar, setShowSideBar] = useState(true);
-  const [workspaces, setWorkspaces] = useState([]);
-  const [favoriteWorkspaces, setFavoriteWorkspaces] = useState([]);
 
   useEffect(() => {
-    api.getAllUserWorkspaces().then(async (res) => {
-      if (res.status === 200) {
-        const json = await res.json();
-        setWorkspaces(json.workspaces);
-        setFavoriteWorkspaces(json.workspaces.filter((ws) => ws.is_favorite));
-      } else {
-        console.log(res);
-      }
-    });
+    updateWorkspaceLists();
   }, []);
 
   return showSideBar ? (
@@ -71,11 +66,13 @@ export default function () {
           <p className="font-extrabold mt-8">Favorites</p>
           {/* Favorite Projects */}
           <div className="space-y-3 mt-3 ml-1">
-            {mapWorkspaces(favoriteWorkspaces)}
+            {mapWorkspaces(favoriteWorkspaceList)}
           </div>
           <p className="font-extrabold mt-8">Projects</p>
           {/* All Projects */}
-          <div className="space-y-3 mt-3 ml-1">{mapWorkspaces(workspaces)}</div>
+          <div className="space-y-3 mt-3 ml-1">
+            {mapWorkspaces(workspaceList)}
+          </div>
         </div>
       </div>
       <div>

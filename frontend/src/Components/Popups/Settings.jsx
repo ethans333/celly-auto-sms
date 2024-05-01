@@ -12,6 +12,7 @@ export default function () {
     setWorkspaceMetaData,
     setWorkspace,
     setPopupChildren,
+    updateWorkspaceLists,
   } = useContext(WorkspaceContext);
 
   return (
@@ -162,6 +163,7 @@ export default function () {
     api.deleteWorkspace(workspaceMetaData.id).then((res) => {
       if (res.status === 200) {
         console.log("Workspace Deleted");
+        updateWorkspaceLists();
       } else {
         console.log(res);
       }

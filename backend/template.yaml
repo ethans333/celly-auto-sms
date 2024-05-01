@@ -201,6 +201,8 @@ Resources:
                 - s3:PutObjectLegalHold
                 - s3:PutObjectRetention
                 - s3:RestoreObject
+                - s3:PutObjectVersionTagging
+                - s3:PutObjectTagging
               Resource:
                 - !Sub arn:${AWS::Partition}:s3:::${WorkspacesBucket}
                 - !Sub arn:${AWS::Partition}:s3:::${WorkspacesBucket}/*
@@ -356,6 +358,8 @@ Resources:
       PublicAccessBlockConfiguration:
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
   WorkspacesBucketBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
