@@ -39,7 +39,16 @@ def handler(event, context):
 
         # Add workspace to bucket
         bucket.put_object(
-            Key=f"{workspace['user_id']}/{workspace_id}", Body=workspace_raw
+            Key=f"{workspace['user_id']}/{workspace_id}",
+            Body=workspace_raw,
+            Metadata={
+                "workspace_name": workspace_name,
+                "workspace_description": workspace_description,
+                "is_favorite": str(is_favorite),
+                "workspace_emoji": "U+{:X}".format(ord(workspace_emoji)),
+                "is_deployed": str(is_deployed),
+                "id": workspace_id,
+            },
         )
     except Exception as e:
         return {

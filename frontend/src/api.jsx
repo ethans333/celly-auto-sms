@@ -130,8 +130,7 @@ export async function getUser() {
 export async function addWorkspace(
   workspace_name,
   workspace_description,
-  workspace_raw,
-  workspace_emoji
+  workspace_raw
 ) {
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace",
@@ -145,7 +144,7 @@ export async function addWorkspace(
         workspace_name: workspace_name,
         workspace_description: workspace_description,
         workspace_raw: JSON.stringify(workspace_raw),
-        workspace_emoji: workspace_emoji,
+        workspace_emoji: "👽",
       }),
     }
   );

@@ -20,6 +20,13 @@ def handler(event, context):
 
     bucket = s3.Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
 
+    # bucket.put_object(
+    #     Key=f"{user_id}/{workspace_id}",
+    #     Metadata={
+    #         "is_deployed": "true",
+    #     },
+    # )
+
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(os.environ["WORKSPACESTABLE_TABLE_NAME"])
 

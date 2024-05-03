@@ -2,24 +2,32 @@ import json
 import os
 
 import boto3
+import jwt
 
 
 def handler(event, context):
     try:
         workspace_id = event["pathParameters"]["id"]
 
-        dynamodb = boto3.resource("dynamodb")
         s3 = boto3.resource("s3")
-
         bucket = s3.Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
-        table = dynamodb.Table(os.environ["WORKSPACESTABLE_TABLE_NAME"])
 
-        # Get meta data from table
-        workspace = table.get_item(Key={"id": workspace_id})["Item"]
+        access_token = event["headers"]["Authorization"]
+        user_id = jwt.decode(access_token, options={"verify_signature": False})["sub"]
 
         # Get workspace from bucket
-        bucket_object = bucket.Object(f"{workspace['user_id']}/{workspace_id}")
+        bucket_object = bucket.Object(f"{user_id}/{workspace_id}")
         workspace_raw = bucket_object.get()["Body"].read().decode("utf-8")
+
+        # Get meta data from bucket object
+        workspace_metadata = bucket_object.get()["Metadata"]
+
+        # convert unicode to emoji string
+        if "workspace_emoji" in workspace_metadata:
+            workspace_metadata["workspace_emoji"] = chr(
+                int(workspace_metadata["workspace_emoji"][2:], 16)
+            )
+
     except Exception as e:
         return {
             "statusCode": 500,
@@ -37,12 +45,8 @@ def handler(event, context):
         "body": json.dumps(
             {
                 "id": workspace_id,
-                "workspace_name": workspace["workspace_name"],
-                "workspace_description": workspace["workspace_description"],
+                "workspace_metadata": workspace_metadata,
                 "workspace_raw": workspace_raw,
-                "is_favorite": workspace["is_favorite"],
-                "workspace_emoji": workspace["workspace_emoji"],
-                "is_deployed": workspace["is_deployed"],
             },
         ),
         "headers": {

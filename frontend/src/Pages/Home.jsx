@@ -62,7 +62,8 @@ export default function () {
   }, [popupChildren]); // these variables change
 
   useEffect(() => {
-    if (workspaceList.length > 0) setWorkspaceMetaData(workspaceList[0]);
+    if (workspaceList.length > 0 && Object.keys(workspaceMetaData).length == 0)
+      setWorkspaceMetaData(workspaceList[0]);
   }, [workspaceList]);
 
   return (
@@ -206,6 +207,7 @@ export default function () {
     api.getAllUserWorkspaces().then(async (res) => {
       if (res.status === 200) {
         const json = await res.json();
+        console.log(json);
         setWorkspaceList(json.workspaces);
         setFavoriteWorkspaceList(
           json.workspaces.filter((ws) => ws.is_favorite)

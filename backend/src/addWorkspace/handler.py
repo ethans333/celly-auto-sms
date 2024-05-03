@@ -39,13 +39,26 @@ def handler(event, context):
             }
         )
 
+        workspace_metadata = {
+            "is_deployed": "False",
+            "is_favorite": "False",
+            "workspace_emoji": "U+{:X}".format(ord(workspace_emoji)),
+            "workspace_name": workspace_name,
+            "workspace_description": workspace_description,
+            "user_id": user_id,
+            "id": workspace_id,
+        }
+
         # Add workspace to bucket
         bucket.put_object(
             Key=f"{user_id}/{workspace_id}",
             Body=workspace_raw,
             ContentType="application/json",
-            Tagging="deployed=false",
+            Metadata=workspace_metadata,
         )
+
+        workspace_metadata["workspace_emoji"] = workspace_emoji
+
     except Exception as e:
         return {
             "statusCode": 500,
@@ -64,6 +77,7 @@ def handler(event, context):
             {
                 "message": f"{workspace_name} created successfully",
                 "workspace_id": workspace_id,
+                "workspace_metadata": workspace_metadata,
             },
         ),
         "headers": {

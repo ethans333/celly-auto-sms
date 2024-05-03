@@ -7,6 +7,7 @@ export default function () {
   const {
     workspace,
     workspaceMetaData,
+    saveWorkspace,
     setWorkspaceMetaData,
     setWorkspace,
     updateWorkspaceLists,
@@ -28,36 +29,22 @@ export default function () {
       <div
         onClick={async () => {
           // Save current workspace
-          if (workspaceMetaData != {}) {
-            api.updateWorkspace(
-              workspaceMetaData.id,
-              workspaceMetaData.workspace_name,
-              workspaceMetaData.workspace_description,
-              workspace,
-              workspaceMetaData.is_favorite,
-              workspaceMetaData.workspace_emoji,
-              workspaceMetaData.is_deployed
-            );
-          }
+          saveWorkspace();
           // Create new workspace with default values
           const res = await api.addWorkspace(
             defaultWorkspace.workspace_name,
             defaultWorkspace.workspace_description,
             defaultWorkspace.workspace_raw,
-            defaultWorkspace.is_favorite,
-            defaultWorkspace.workspace_emoji
+            defaultWorkspace.is_favorite
           );
 
           if (res.status === 200) {
             const json = await res.json();
 
-            // Set current workspace to new workspace
-            const tempRaw = defaultWorkspace.workspace_raw;
-            delete defaultWorkspace.workspace_raw;
-            defaultWorkspace.id = json.workspace_id;
+            console.log(json);
 
-            setWorkspaceMetaData(defaultWorkspace);
-            setWorkspace(tempRaw);
+            setWorkspaceMetaData(json.workspace_metadata);
+            setWorkspace({});
 
             updateWorkspaceLists();
           }
