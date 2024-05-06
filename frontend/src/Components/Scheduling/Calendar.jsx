@@ -1,20 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import arrow from "../../assets/chevron-solid.svg";
 
 export default function ({ events, workspace }) {
-  const startHour = 9;
-  const endHour = 18;
-
+  const [startHour, setStartHour] = useState(9);
+  const [endHour, setEndHour] = useState(18);
   const [weekShift, setWeekShift] = useState(0);
   const [currentWeek, setCurrentWeek] = useState(getWeek(weekShift));
   const [selectedDateTimes, setSelectedDateTimes] = useState([]);
+
+  useEffect(() => {
+    if (Object.keys(workspace).length == 0) return;
+
+    setStartHour(parseInt(workspace.meeting_window_start));
+    setEndHour(parseInt(workspace.meeting_window_end) + 1);
+  });
 
   return (
     <div className="w-full border-b xl:border-none xl:shadow-lg rounded-lg px-10 pb-10">
       <div className="w-[90%] xl:w-full mx-auto">
         <div className="w-full">
           <div className="flex justify-between pt-5 pb-8">
-            <div className="font-extrabold text-xl">
+            <div className="font-black text-xl">
               {workspace["workspace_name"]}
             </div>
             <div className="flex space-x-2">
@@ -123,11 +129,15 @@ export default function ({ events, workspace }) {
             });
           }
         }}
-        className={`w-full ${isSelected ? "bg-green-200" : "bg-gray-50"} ${
-          !Available && "bg-red-200"
-        }`}
+        className={
+          Available
+            ? `w-full cursor-pointer  ${
+                isSelected ? "bg-green-200" : "bg-gray-50"
+              }`
+            : "bg-red-200 w-full cursor-not-allowed"
+        }
       >
-        <p className="cursor-pointer opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm font-[550]">
+        <p className="opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm font-[550]">
           {`${h > 12 ? h % 12 : h}:${!m ? "00" : m} ${h >= 12 ? "PM" : "AM"}`}
         </p>
       </div>
@@ -166,7 +176,7 @@ export default function ({ events, workspace }) {
               0: "Sunday",
               1: "Monday",
               2: "Tuesday",
-              3: "Wednesay",
+              3: "Wednesday",
               4: "Thursday",
               5: "Friday",
               6: "Saturday",
@@ -176,17 +186,24 @@ export default function ({ events, workspace }) {
         {...Array.from({ length: (endHour - startHour) * 4 - 3 }, (_, i) => {
           const time = new Date(day);
           time.setHours(9 + Math.floor(i / 4), (i % 4) * 15, 0, 0);
-          return (
-            <TimeCell
-              Time={time}
-              Available={
-                events.filter((e) => e.start <= time && e.end >= time).length ==
-                0
-              }
-            />
-          );
+          return <TimeCell Time={time} Available={isAvailable(time)} />;
         })}
       </div>
     );
+  }
+
+  function isAvailable(time) {
+    // Between busy times
+    if (events.filter((e) => e.start <= time && e.end >= time).length > 0)
+      return false;
+
+    if (Object.keys(workspace).length != 0) {
+      const dow = new Date(time).getDay();
+      const blackoutDays = JSON.parse(workspace.blackout_days);
+
+      if (blackoutDays.includes(dow)) return false;
+    }
+
+    return true;
   }
 }

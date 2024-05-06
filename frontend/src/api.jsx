@@ -181,37 +181,23 @@ export async function getWorkspace(id) {
 /**
  * Updates an existing workspace
  *
- * @param {String} id Id of the workspace
- * @param {String} workspace_name Name of the workspace
- * @param {String} workspace_description Description of the workspace
- * @param {String} workspace_raw Raw data of the workspace
- * @param {Boolean} is_favorite Whether the workspace is favorited
- * @param {String} workspace_emoji Emoji of the workspace
+ * @param {Object} metadata Workspace metadata
+ * @param {Object} workspace_raw Raw data of the workspace
  * @returns {Object} Message and workspace id
  */
-export async function updateWorkspace(
-  id,
-  workspace_name,
-  workspace_description,
-  workspace_raw,
-  is_favorite,
-  workspace_emoji,
-  is_deployed
-) {
+export async function updateWorkspace(metadata, workspace_raw) {
+  console.log(metadata);
+
   const response = await fetch(
-    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + id,
+    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + metadata.id,
     {
       method: "PUT",
       headers: {
         Authorization: Cookies.get("access_token"),
       },
       body: JSON.stringify({
-        workspace_name: workspace_name,
-        workspace_description: workspace_description,
+        metadata: JSON.stringify(metadata),
         workspace_raw: JSON.stringify(workspace_raw),
-        is_favorite: is_favorite,
-        workspace_emoji: workspace_emoji,
-        is_deployed: is_deployed,
       }),
     }
   );

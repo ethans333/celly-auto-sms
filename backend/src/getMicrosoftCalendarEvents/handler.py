@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import boto3
 import requests
@@ -34,8 +34,14 @@ def handler(event, context):
             secrets.rotate_secret(SecretId=user_id)
 
         # if token is valid then use microsoft graph api to get calendar events
+        today = datetime.today()
+        seven_days_ago = today - timedelta(days=7)
+        a_month_from_now = today + timedelta(days=30)
+        start_datetime = seven_days_ago.strftime("%Y-%m-%dT%H:%M:%S.%f")
+        end_datetime = a_month_from_now.strftime("%Y-%m-%dT%H:%M:%S.%f")
+
         events_response = requests.get(  # events for the next week
-            "https://graph.microsoft.com/v1.0/me/calendarview?startdatetime=2024-04-16T13:51:01.787Z&enddatetime=2024-04-23T13:51:01.787Z",
+            f"https://graph.microsoft.com/v1.0/me/calendarview?startdatetime={start_datetime}&enddatetime={end_datetime}",
             headers={"Authorization": f"Bearer {access_token}"},
         ).json()["value"]
 

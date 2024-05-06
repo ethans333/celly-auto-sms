@@ -159,48 +159,48 @@ export default function () {
    * @returns {Promise<void>} - Promise that resolves when the workspace is saved.
    */
   function saveWorkspace(override) {
-    if (!override) override = {};
+    let metadata;
 
-    api
-      .updateWorkspace(
-        override.id || workspaceMetaData.id,
-        override.workspace_name || workspaceMetaData.workspace_name,
-        override.workspace_description ||
-          workspaceMetaData.workspace_description,
-        override.workspace || workspace,
-        override.is_favorite || workspaceMetaData.is_favorite,
-        override.workspace_emoji || workspaceMetaData.workspace_emoji,
-        override.is_deployed || workspaceMetaData.is_deployed
-      )
-      .then(async (res) => {
-        if (res.status === 200) {
-          const json = await res.json();
-          setMessageStack((p) => [
-            { message: json.message, type: "success" },
-            ...p,
-          ]);
+    if (override && !(override.constructor.name === "SyntheticBaseEvent")) {
+      metadata = override;
+    } else {
+      metadata = workspaceMetaData;
+    }
 
-          setTimeout(() => {
-            setMessageStack((p) => {
-              p.pop();
-              return [...p];
-            });
-          }, 3000);
-          console.log(json);
+    if (!metadata.id) {
+      console.log("No workspace selected.");
+      return;
+    }
 
-          updateWorkspaceLists();
-        } else {
-          setMessageStack((p) => [{ message: res, type: "error" }, ...p]);
+    api.updateWorkspace(metadata, workspace).then(async (res) => {
+      if (res.status === 200) {
+        const json = await res.json();
+        setMessageStack((p) => [
+          { message: json.message, type: "success" },
+          ...p,
+        ]);
 
-          setTimeout(() => {
-            setMessageStack((p) => {
-              p.pop();
-              return [...p];
-            });
-          }, 3000);
-          console.log(res);
-        }
-      });
+        setTimeout(() => {
+          setMessageStack((p) => {
+            p.pop();
+            return [...p];
+          });
+        }, 3000);
+        console.log(json);
+
+        updateWorkspaceLists();
+      } else {
+        setMessageStack((p) => [{ message: res, type: "error" }, ...p]);
+
+        setTimeout(() => {
+          setMessageStack((p) => {
+            p.pop();
+            return [...p];
+          });
+        }, 3000);
+        console.log(res);
+      }
+    });
   }
 
   function updateWorkspaceLists() {

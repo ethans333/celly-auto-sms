@@ -32,7 +32,11 @@ export default function () {
         onClick={() => {
           // on favorite
           setWorkspaceMetaData((p) => ({ ...p, is_favorite: !p.is_favorite }));
-          saveWorkspace({ is_favorite: !workspaceMetaData.is_favorite });
+
+          let metadata = workspaceMetaData;
+          workspaceMetaData.is_favorite = !workspaceMetaData.is_favorite;
+
+          saveWorkspace(metadata);
         }}
       />
       {/* Deploy */}

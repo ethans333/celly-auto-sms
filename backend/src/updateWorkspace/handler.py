@@ -18,18 +18,20 @@ def handler(event, context):
         user_id = jwt.decode(access_token, options={"verify_signature": False})["sub"]
 
         # Update metdata
-        metadata = bucket.Object(f"{user_id}/{workspace_id}").metadata
+        new_metadata = json.loads(body["metadata"])
 
-        metadata["workspace_emoji"] = "U+{:X}".format(ord(body["workspace_emoji"]))
-        metadata["is_favorite"] = str(body["is_favorite"])
-        metadata["workspace_description"] = body["workspace_description"]
-        metadata["is_deployed"] = str(body["is_deployed"])
-        metadata["workspace_name"] = body["workspace_name"]
+        new_metadata["workspace_emoji"] = "U+{:X}".format(
+            ord(new_metadata["workspace_emoji"])
+        )
+
+        # change everything to string
+        for k in new_metadata:
+            new_metadata[k] = str(new_metadata[k])
 
         bucket.put_object(
             Key=f"{user_id}/{workspace_id}",
             Body=body["workspace_raw"],
-            Metadata=metadata,
+            Metadata=new_metadata,
         )
 
     except Exception as e:
