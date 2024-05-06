@@ -132,7 +132,7 @@ export default function ({ events, workspace }) {
         className={`w-full  ${m == 0 ? "border-t" : ""} ${
           Available
             ? `cursor-pointer  ${isSelected ? "bg-green-200" : "bg-white"}`
-            : "bg-red-200 cursor-not-allowed"
+            : "bg-red-100 cursor-not-allowed"
         }`}
       >
         <p className="opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm font-[550]">
