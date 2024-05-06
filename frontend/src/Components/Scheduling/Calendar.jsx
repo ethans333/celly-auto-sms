@@ -129,13 +129,11 @@ export default function ({ events, workspace }) {
             });
           }
         }}
-        className={
+        className={`w-full  ${m == 0 ? "border-t" : ""} ${
           Available
-            ? `w-full cursor-pointer  ${
-                isSelected ? "bg-green-200" : "bg-gray-50"
-              }`
-            : "bg-red-200 w-full cursor-not-allowed"
-        }
+            ? `cursor-pointer  ${isSelected ? "bg-green-200" : "bg-white"}`
+            : "bg-red-200 cursor-not-allowed"
+        }`}
       >
         <p className="opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm font-[550]">
           {`${h > 12 ? h % 12 : h}:${!m ? "00" : m} ${h >= 12 ? "PM" : "AM"}`}
