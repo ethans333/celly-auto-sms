@@ -1,55 +1,37 @@
 import json
 import os
-import uuid
 
 import boto3
+import jwt
 
 
 def handler(event, context):
     body = json.loads(event["body"])
     workspace_id = event["pathParameters"]["id"]
-    workspace_name = body["workspace_name"]
-    workspace_description = body["workspace_description"]
-    workspace_raw = body["workspace_raw"]
-    is_favorite = body["is_favorite"]
-    workspace_emoji = body["workspace_emoji"]
-    is_deployed = body["is_deployed"]
 
-    dynamodb = boto3.resource("dynamodb")
     s3 = boto3.resource("s3")
 
     bucket = s3.Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
-    table = dynamodb.Table(os.environ["WORKSPACESTABLE_TABLE_NAME"])
 
     try:
-        workspace = table.get_item(Key={"id": workspace_id})["Item"]
+        access_token = event["headers"]["Authorization"]
+        user_id = jwt.decode(access_token, options={"verify_signature": False})["sub"]
 
-        # Put meta data in table
-        table.update_item(
-            Key={"id": workspace_id},
-            UpdateExpression="SET workspace_name = :n, workspace_description = :d, is_favorite = :f, workspace_emoji = :e, is_deployed = :dp",
-            ExpressionAttributeValues={
-                ":n": workspace_name,
-                ":d": workspace_description,
-                ":f": is_favorite,
-                ":e": workspace_emoji,
-                ":dp": is_deployed,
-            },
-        )
+        # Update metdata
+        metadata = bucket.Object(f"{user_id}/{workspace_id}").metadata
 
-        # Add workspace to bucket
+        metadata["workspace_emoji"] = "U+{:X}".format(ord(body["workspace_emoji"]))
+        metadata["is_favorite"] = str(body["is_favorite"])
+        metadata["workspace_description"] = body["workspace_description"]
+        metadata["is_deployed"] = str(body["is_deployed"])
+        metadata["workspace_name"] = body["workspace_name"]
+
         bucket.put_object(
-            Key=f"{workspace['user_id']}/{workspace_id}",
-            Body=workspace_raw,
-            Metadata={
-                "workspace_name": workspace_name,
-                "workspace_description": workspace_description,
-                "is_favorite": str(is_favorite),
-                "workspace_emoji": "U+{:X}".format(ord(workspace_emoji)),
-                "is_deployed": str(is_deployed),
-                "id": workspace_id,
-            },
+            Key=f"{user_id}/{workspace_id}",
+            Body=body["workspace_raw"],
+            Metadata=metadata,
         )
+
     except Exception as e:
         return {
             "statusCode": 500,
@@ -66,7 +48,7 @@ def handler(event, context):
         "statusCode": 200,
         "body": json.dumps(
             {
-                "message": f"{workspace_name} updated successfully",
+                "message": f"Workspace updated successfully",
                 "workspace_id": workspace_id,
             }
         ),

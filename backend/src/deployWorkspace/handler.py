@@ -20,16 +20,6 @@ def handler(event, context):
 
     bucket = s3.Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
 
-    # bucket.put_object(
-    #     Key=f"{user_id}/{workspace_id}",
-    #     Metadata={
-    #         "is_deployed": "true",
-    #     },
-    # )
-
-    dynamodb = boto3.resource("dynamodb")
-    table = dynamodb.Table(os.environ["WORKSPACESTABLE_TABLE_NAME"])
-
     try:
         # Check if workspace uses calendar integration
         cell_types = []
@@ -58,12 +48,12 @@ def handler(event, context):
                 raise Exception("User has not linked calendar")
 
         # Update is_deployed status to true
-        table.update_item(
-            Key={"id": workspace_id},
-            UpdateExpression="SET is_deployed = :dp",
-            ExpressionAttributeValues={
-                ":dp": True,
-            },
+        metadata = bucket.Object(f"{user_id}/{workspace_id}").metadata
+        metadata["is_deployed"] = "true"
+
+        bucket.put_object(
+            Key=f"{user_id}/{workspace_id}",
+            Metadata=metadata,
         )
 
         # # Get workspace from bucket

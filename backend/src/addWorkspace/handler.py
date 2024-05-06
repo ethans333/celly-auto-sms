@@ -19,26 +19,11 @@ def handler(event, context):
 
     workspace_id = str(uuid.uuid4())
 
-    dynamodb = boto3.resource("dynamodb")
     s3 = boto3.resource("s3")
 
     bucket = s3.Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
-    table = dynamodb.Table(os.environ["WORKSPACESTABLE_TABLE_NAME"])
 
     try:
-        # Add meta data to table
-        table.put_item(
-            Item={
-                "id": workspace_id,
-                "user_id": user_id,
-                "workspace_name": workspace_name,
-                "workspace_description": workspace_description,
-                "is_favorite": False,
-                "workspace_emoji": workspace_emoji,
-                "is_deployed": False,
-            }
-        )
-
         workspace_metadata = {
             "is_deployed": "False",
             "is_favorite": "False",
@@ -58,6 +43,8 @@ def handler(event, context):
         )
 
         workspace_metadata["workspace_emoji"] = workspace_emoji
+        workspace_metadata["is_deployed"] = False
+        workspace_metadata["is_favorite"] = False
 
     except Exception as e:
         return {

@@ -1,8 +1,7 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import arrow from "../../assets/chevron-solid.svg";
 
-export default function ({ events }) {
+export default function ({ events, workspace }) {
   const startHour = 9;
   const endHour = 18;
 
@@ -15,7 +14,9 @@ export default function ({ events }) {
       <div className="w-[90%] xl:w-full mx-auto">
         <div className="w-full">
           <div className="flex justify-between pt-5 pb-8">
-            <div className="font-extrabold text-xl">Lorem Ipsum Dolor</div>
+            <div className="font-extrabold text-xl">
+              {workspace["workspace_name"]}
+            </div>
             <div className="flex space-x-2">
               <div
                 onClick={() => {

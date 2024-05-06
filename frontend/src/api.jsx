@@ -392,9 +392,10 @@ export async function unlinkAllESL() {
 
 */
 
-export async function getMicrosoftCalendarEvents(id) {
+export async function getMicrosoftCalendarEvents(user_id, workspace_id) {
   const response = await fetch(
-    import.meta.env.VITE_PESL_API_URL + "/pesl/microsoft/calendar/" + id,
+    import.meta.env.VITE_PESL_API_URL +
+      `/pesl/microsoft/calendar/${user_id}/${workspace_id}`,
     {
       method: "GET",
     }

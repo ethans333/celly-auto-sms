@@ -11,20 +11,22 @@ export default function () {
 
   const [method, setMethod] = useState(contactOptions[0]);
   const [events, setEvents] = useState([]);
-  let { id } = useParams();
+  const [workspace, setWorkspace] = useState({});
+  let { user_id, id } = useParams();
 
   useEffect(() => {
-    api.getMicrosoftCalendarEvents(id).then((res) => {
+    api.getMicrosoftCalendarEvents(user_id, id).then((res) => {
       res.json().then((data) => {
         console.log(data);
         setEvents(data["events"]);
+        setWorkspace(data["workspace"]);
       });
     });
   }, []);
 
   return (
     <div className="xl:flex xl:w-[1280px] 2xl:w-[1536px] mx-auto mt-[3vw]">
-      <Calendar events={events} />
+      <Calendar events={events} workspace={workspace} />
 
       <div className="mx-[7vw] xl:w-[400px] 2xl:w-[500px] xl:mx-5 xl:shadow-lg rounded-lg py-10 px-8">
         <div className="font-extrabold">Enter Your Phone or Email</div>

@@ -10,17 +10,12 @@ from jose import jwt
 
 def handler(event, context):
     try:
-        # get workspace id from path parameters
+        # get path parameters
+        user_id = event["pathParameters"]["user_id"]
         workspace_id = event["pathParameters"]["workspace_id"]
 
-        # get user id via the workspace_id (creator of the workspace)
-        dynamodb = boto3.resource("dynamodb")
-        table = dynamodb.Table(os.environ["WORKSPACESTABLE_TABLE_NAME"])
-
-        workspace_data = table.get_item(Key={"id": workspace_id})["Item"]
-
-        user_id = workspace_data["user_id"]
-        workspace_name = workspace_data["workspace_name"]
+        bucket = boto3.resource("s3").Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
+        metadata = bucket.Object(f"{user_id}/{workspace_id}").metadata
 
         # Get Microsoft tokens from Secrets Manager
         secrets = boto3.client("secretsmanager")
@@ -54,9 +49,7 @@ def handler(event, context):
 
         return {
             "statusCode": 200,
-            "body": json.dumps(
-                {"workspace_name": workspace_name, "events": event_times}
-            ),
+            "body": json.dumps({"workspace": metadata, "events": event_times}),
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",
