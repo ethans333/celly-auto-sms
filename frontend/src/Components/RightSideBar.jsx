@@ -9,7 +9,7 @@ export default function ({ children, topChildren }) {
 
   return children != null ? (
     <div className="absolute right-0 z-20 animate-shiftRL">
-      <div className="flex h-screen">
+      <div className="flex h-screen overflow-y-clip">
         <div>
           {currentView == "project" && <TopMenu />}
           {currentView == "project" && <BottomMenu />}

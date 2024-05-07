@@ -1,12 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import arrow from "../../assets/chevron-solid.svg";
+import { SchedulingContext } from "../../Pages/Scheduling";
 
-export default function ({ events, workspace }) {
+export default function () {
   const [startHour, setStartHour] = useState(9);
   const [endHour, setEndHour] = useState(18);
   const [weekShift, setWeekShift] = useState(0);
   const [currentWeek, setCurrentWeek] = useState(getWeek(weekShift));
-  const [selectedDateTimes, setSelectedDateTimes] = useState([]);
+  const [hoverTime, setHoverTime] = useState(null);
+
+  const {
+    selectedStartTime,
+    selectedEndTime,
+    setSelectedStartTime,
+    setSelectedEndTime,
+    events,
+    workspace,
+  } = useContext(SchedulingContext);
 
   useEffect(() => {
     if (Object.keys(workspace).length == 0) return;
@@ -16,22 +26,28 @@ export default function ({ events, workspace }) {
   });
 
   return (
-    <div className="w-full border-b xl:border-none xl:shadow-lg rounded-lg px-10 pb-10">
+    <div className="w-full border-b xl:border border-gray-300 xl:shadow-lg rounded-lg px-10 pb-10">
       <div className="w-[90%] xl:w-full mx-auto">
         <div className="w-full">
-          <div className="flex justify-between pt-5 pb-8">
-            <div className="font-black text-xl">
+          <div className="flex justify-between pt-5 xl:pt-12 pb-12">
+            <div className="font-black text-2xl">
               {workspace["workspace_name"]}
             </div>
             <div className="flex space-x-2">
               <div
                 onClick={() => {
                   setWeekShift((p) => {
+                    if (p - 1 < 0) return p;
+
                     setCurrentWeek(getWeek(p - 1));
                     return p - 1;
                   });
                 }}
-                className="bg-gray-200 flex items-center justify-center w-7 rounded-lg py-1 cursor-pointer hover:opacity-50"
+                className={`${
+                  weekShift - 1 < 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer"
+                } bg-gray-200  flex items-center justify-center w-7 rounded-lg py-1 hover:opacity-50`}
               >
                 <img src={arrow} className="w-3 h-3 rotate-180" />
               </div>
@@ -107,9 +123,14 @@ export default function ({ events, workspace }) {
     );
   }
 
+  // TimeCell
   function TimeCell({ Time, Available = true }) {
     const [isSelected, setIsSelected] = useState(
-      selectedDateTimes.includes(Time.toString())
+      selectedStartTime == Time.getTime() ||
+        selectedEndTime == Time.getTime() ||
+        (selectedStartTime <= Time.getTime() &&
+          selectedEndTime >= Time.getTime()) ||
+        (selectedStartTime <= Time.getTime() && hoverTime >= Time.getTime())
     );
 
     const h = Time.getHours();
@@ -118,21 +139,34 @@ export default function ({ events, workspace }) {
     return (
       <div
         onClick={() => {
-          if (Available) {
-            setIsSelected(!isSelected);
-            setSelectedDateTimes((p) => {
-              if (isSelected) {
-                return p.filter((t) => t.toString() != Time);
-              } else {
-                return [...p, Time.toString()];
-              }
-            });
+          if (!Available) return;
+
+          if (selectedStartTime != null && selectedEndTime != null) {
+            setSelectedStartTime(null);
+            setSelectedEndTime(null);
+            return;
           }
+
+          if (selectedStartTime == null) {
+            setSelectedStartTime(Time.getTime());
+            return;
+          } else {
+            setSelectedEndTime(Time.getTime());
+          }
+        }}
+        onMouseOver={() => {
+          if (!Available) return;
+          if (selectedStartTime == null) return;
+          if (selectedStartTime != null && selectedEndTime != null) return;
+          if (Time.getTime() <= selectedStartTime) return;
+          if (Time.getDay() != new Date(selectedStartTime).getDay()) return;
+
+          setHoverTime(Time.getTime());
         }}
         className={`w-full  ${m == 0 ? "border-t" : ""} ${
           Available
             ? `cursor-pointer  ${isSelected ? "bg-green-200" : "bg-white"}`
-            : "bg-red-100 cursor-not-allowed"
+            : "bg-rose-100 cursor-not-allowed"
         }`}
       >
         <p className="opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm font-[550]">

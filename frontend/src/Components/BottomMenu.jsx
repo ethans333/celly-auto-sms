@@ -5,8 +5,6 @@ import * as api from "../api.jsx";
 
 export default function () {
   const {
-    workspace,
-    workspaceMetaData,
     saveWorkspace,
     setWorkspaceMetaData,
     setWorkspace,
@@ -24,7 +22,7 @@ export default function () {
   };
 
   return (
-    <div className="flex pr-5 h-full">
+    <div className="pl-20">
       {/* Add Button */}
       <div
         onClick={async () => {
@@ -49,7 +47,7 @@ export default function () {
             updateWorkspaceLists();
           }
         }}
-        className="bg-black p-3 rounded-lg h-fit mt-auto mb-20 ml-auto mr-5 cursor-pointer hover:opacity-50"
+        className="bg-black p-3 rounded-lg h-fit cursor-pointer hover:opacity-50 w-fit absolute bottom-10"
       >
         <img src={plus} className="w-3" alt="plus" />
       </div>

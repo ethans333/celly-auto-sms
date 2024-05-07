@@ -64,9 +64,15 @@ export function CalendarCellSidebar({ id }) {
     setMwStart(s < 12 ? s : s - 12);
     setMwEnd(e < 12 ? e : e - 12);
 
-    setSelectedDays(
-      JSON.parse(workspaceMetaData.blackout_days).map((day) => dow[day])
-    );
+    let bdays;
+
+    if (Array.isArray(workspaceMetaData.blackout_days)) {
+      bdays = workspaceMetaData.blackout_days;
+    } else {
+      bdays = JSON.parse(workspaceMetaData.blackout_days);
+    }
+
+    setSelectedDays(bdays.map((day) => dow[day]));
   }, []);
 
   useEffect(() => {

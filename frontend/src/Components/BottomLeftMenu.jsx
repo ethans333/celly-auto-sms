@@ -5,15 +5,15 @@ export default function () {
   const { messageStack } = useContext(WorkspaceContext);
 
   return (
-    <div className="flex pr-5 h-full">
-      <div className="mt-auto mb-20 ml-5">
+    <div className="absolute bottom-0 pb-5 flex pr-5">
+      <div className="mt-auto ml-5 w-[50vw]">
         {messageStack.map((m, i) => (
           <p
             key={i}
             className={`text-sm ${
               {
                 error: "text-red-500",
-                success: "text-gray-300",
+                success: "text-gray-400",
               }[m.type]
             }`}
           >

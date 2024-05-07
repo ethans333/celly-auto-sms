@@ -391,3 +391,36 @@ export async function getMicrosoftCalendarEvents(user_id, workspace_id) {
 
   return await response.text(); // error
 }
+
+/*
+
+  /scheduling
+
+*/
+
+export async function addCalendarEvent(
+  userId,
+  id,
+  contactMethod,
+  contactValue,
+  startTime,
+  endTime
+) {
+  const response = await fetch(
+    import.meta.env.VITE_SCHEDULING_API_URL + "/scheduling/" + id,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        user_id: userId,
+        contact_method: contactMethod,
+        contact_value: contactValue,
+        start_time: startTime,
+        end_time: endTime,
+      }),
+    }
+  );
+
+  if (response.status === 200) return response;
+
+  return await response.text(); // error
+}

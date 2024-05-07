@@ -168,7 +168,7 @@ codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\addCalendarEvent"
 runtime = "python3.9"
 architecture = "x86_64"
 handler = "handler.handler"
-manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+manifest_hash = "fdde0fdb35a74d01e1a6e3c530f2882c"
 packagetype = "Zip"
 functions = ["addCalendarEvent"]
 

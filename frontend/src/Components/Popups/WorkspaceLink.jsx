@@ -6,7 +6,9 @@ import { GenericLabeledSquareButton } from "../LabeledSquareButton";
 export default function () {
   const { workspaceMetaData } = useContext(WorkspaceContext);
 
-  const url = `http://127.0.0.1:5173/scheduling/${workspaceMetaData.user_id}/${workspaceMetaData.id}`;
+  const url = `${import.meta.env.VITE_BASE_URL}/scheduling/${
+    workspaceMetaData.user_id
+  }/${workspaceMetaData.id}`;
 
   return (
     <div className="space-y-7 pb-5 px-7">
