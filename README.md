@@ -30,6 +30,9 @@ To Do:
 - [ ] Make the Cells class based
 - [ ] Calendar data shouldn't be in workspace metadata it should be in workspace json
 - [ ] Add time zone support for scheduling
+- [ ] Redirection
+
+
 
 
 
