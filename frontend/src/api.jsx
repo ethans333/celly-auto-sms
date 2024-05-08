@@ -346,9 +346,7 @@ export async function tokenStatusMicrosoftESL() {
     }
   );
 
-  if (response.status === 200) return response;
-
-  return await response.text(); // error
+  return response;
 }
 
 /**

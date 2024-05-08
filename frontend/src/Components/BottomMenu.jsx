@@ -43,7 +43,6 @@ export default function () {
 
             setWorkspaceMetaData(json.workspace_metadata);
             setWorkspace({});
-
             updateWorkspaceLists();
           }
         }}

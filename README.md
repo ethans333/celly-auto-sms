@@ -2,8 +2,6 @@
 
 Automated text messaging system.
 
-[The GANNT Chart](https://docs.google.com/spreadsheets/d/1BHNAObOwO4VI0TWgIXEIb1LyrxmVR_9PMCc-vQX5WZY/edit#gid=0)
-
 ## Todo Board
 
 Done:
@@ -18,30 +16,37 @@ Done:
 - [x] Fix token only working for one action issue.
 - [x] Fix checking if token expired.
 - [x] Expiration check for JWT Authorizer.
-
-
-
----
-
-In progress:
-
-- [ ] Tie backend to frontend.
-- [ ] Write out API docs for User & Other functions
+- [x] Migrate workspace metadata over to S3 Metadata and remove table.
+- [x] When check if msft linked you try to link it automatically if it's not linked
 
 ---
 
 To Do:
 
-- [ ] Build out UI for the side bar of both cells.
+- [ ] Write out API docs
+- [ ] Add comments to functions
 - [ ] Build landing page.
-- [ ] Remove workspace description, not needed.
-- [ ] Migrate workspace metadata over to S3 Metadata and remove table.
 - [ ] Add versioning to workspaces and workspace deployments
+- [ ] Make the Cells class based
+- [ ] Calendar data shouldn't be in workspace metadata it should be in workspace json
+- [ ] Add time zone support for scheduling
 
-### Diagrams
 
-<img width="500px" src="./Diagrams/bot_schema.png"/>
-<img width="500px" src="./Diagrams/deployment_pipeline.png"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Authorization URL For Azure AD Authentication
 

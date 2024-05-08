@@ -16,7 +16,12 @@ def handler(event, context):
         secret = secrets.get_secret_value(SecretId=user_id)
 
         # microsoft_tokens = { "access_token": access_token, "refresh_token": refresh_token }
-        microsoft_tokens = json.loads(secret["SecretString"])["microsoft_tokens"]
+        secret_dict = json.loads(secret["SecretString"])
+
+        if "microsoft_tokens" not in secret_dict:
+            raise Exception("Microsoft tokens not found in secret")
+
+        microsoft_tokens = secret_dict["microsoft_tokens"]
         access_token = microsoft_tokens["access_token"]
 
         # decode to get payload
@@ -24,6 +29,9 @@ def handler(event, context):
 
         # check if token is expired
         is_expired = time.time() > expires_in
+
+        if is_expired:
+            secrets.rotate_secret(SecretId=user_id)
 
         return {
             "statusCode": 200,

@@ -47,6 +47,7 @@ export default function () {
     api.getWorkspace(workspaceMetaData.id).then(async (res) => {
       if (res.status === 200) {
         const json = await res.json();
+        console.log(json);
         setWorkspace(JSON.parse(json.workspace_raw));
         delete json.workspace_raw;
         console.log(json);

@@ -1203,6 +1203,12 @@ Resources:
                 - secretsmanager:RotateSecret
               Resource:
                 - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
+            - Effect: Allow
+              Action:
+                - sms-voice:DescribePhoneNumbers
+                - sms-voice:SendTextMessage
+              Resource:
+                - !Sub arn:aws:sms-voice:${AWS::Region}:${AWS::AccountId}:phone-number/*
 
   addCalendarEventLogGroup:
     Type: AWS::Logs::LogGroup
@@ -1373,6 +1379,7 @@ Resources:
             - Effect: Allow
               Action:
                 - secretsmanager:GetSecretValue
+                - secretsmanager:RotateSecret
               Resource:
                 - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
   getMicrosoftTokenStatusLogGroup:

@@ -33,7 +33,7 @@ def handler(event, context):
             "is_deployed": "False",
             "is_favorite": "False",
             "meeting_window_start": "9",
-            "meeting_window_end": "18",
+            "meeting_window_end": "17",
             "blackout_days": str([0, 6]),
         }
 

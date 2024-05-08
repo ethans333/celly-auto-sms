@@ -1,6 +1,6 @@
 import json
 import os
-import time
+import sys
 from datetime import datetime
 
 import boto3
@@ -36,7 +36,8 @@ def handler(event, context):
         expires_in = jwt.get_unverified_claims(access_token)["exp"]
 
         # check if token is expired & then refresh it
-        is_expired = time.time() > expires_in
+        now = datetime.now()
+        is_expired = int(now.timestamp()) > expires_in
         if is_expired:
             secrets.rotate_secret(SecretId=user_id)
 
@@ -62,7 +63,7 @@ def handler(event, context):
                     "subject": f"{workspace_name} meeting",
                     "body": {
                         "contentType": "HTML",
-                        "content": f"{workspace_name} meeting. Scheduled via Celly",
+                        "content": f"{workspace_name} meeting. Scheduled via Celly.",
                     },
                     "start": {
                         "dateTime": start_time,
@@ -72,12 +73,12 @@ def handler(event, context):
                         "dateTime": end_time,
                         "timeZone": "Pacific Standard Time",
                     },
-                    "location": {"displayName": "Harry's Bar"},
+                    "location": {"displayName": "Online Meeting"},
                     "attendees": [
                         {
                             "emailAddress": {
-                                "address": "adelev@contoso.com",
-                                "name": "Adele Vance",
+                                "address": "jdoe@contoso.com",
+                                "name": "John Doe",
                             },
                             "type": "required",
                         }
@@ -85,6 +86,24 @@ def handler(event, context):
                 }
             ),
         ).json()
+
+        # notify client of appointment
+        if body["contact_method"] == "Email":
+            email = body["contact_value"]
+            print("email")
+        elif body["contact_method"] == "Phone":
+            day_of_week = datetime.fromtimestamp(
+                float(body["start_time"]) / 1000
+            ).strftime("%A")
+            month_day = datetime.fromtimestamp(
+                float(body["start_time"]) / 1000
+            ).strftime("%B %-d")
+            time = datetime.fromtimestamp(float(body["start_time"]) / 1000).strftime(
+                "%-I:%M %p"
+            )
+            message = f"{workspace_name} is scheduled for {day_of_week}, {month_day} at {time}"
+
+            send_text(body["contact_value"], message)
 
         return {
             "statusCode": 200,
@@ -102,12 +121,39 @@ def handler(event, context):
         }
 
     except Exception as e:
+        print()
         return {
             "statusCode": 500,
-            "body": str(e),
+            "body": json.dumps(
+                {
+                    "error": str(e),
+                    "traceback": f"ERROR: line {sys.exc_info()[-1].tb_lineno}, {str(e)}",
+                }
+            ),
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",
                 "Access-Control-Allow-Methods": "*",
             },
         }
+
+
+def send_text(phone, message):
+    pinpoint = boto3.client("pinpoint-sms-voice-v2")
+
+    # get sender_id
+    phone_nums = pinpoint.describe_phone_numbers()
+
+    if len(phone_nums["PhoneNumbers"]) == 0:
+        raise Exception(
+            "No phone numbers found. You need to register a phone number in pinpoint."
+        )
+
+    originator_id = phone_nums["PhoneNumbers"][0]["PhoneNumberId"]
+
+    pinpoint.send_text_message(
+        DestinationPhoneNumber=f"+1{phone}",
+        OriginationIdentity=originator_id,
+        MessageBody=message,
+        MessageType="TRANSACTIONAL",
+    )

@@ -9,7 +9,7 @@ export default function () {
   const [method, setMethod] = useState(contactOptions[0]);
   const [contactValue, setContactValue] = useState("");
 
-  const { selectedStartTime, selectedEndTime, id, user_id } =
+  const { selectedStartTime, selectedEndTime, id, user_id, setIsScheduled } =
     useContext(SchedulingContext);
 
   return (
@@ -64,6 +64,7 @@ export default function () {
               )
               .then((res) => {
                 if (res.status === 200) {
+                  setIsScheduled(true);
                   res.json().then((data) => {
                     console.log(data);
                   });

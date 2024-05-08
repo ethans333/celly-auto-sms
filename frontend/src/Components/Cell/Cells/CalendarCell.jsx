@@ -77,8 +77,11 @@ export function CalendarCellSidebar({ id }) {
 
   useEffect(() => {
     api.tokenStatusMicrosoftESL().then((res) => {
+      setIsLoading(false);
+
+      if (res.status != 200) return;
+
       res.json().then((data) => {
-        setIsLoading(false);
         if (res.status == 200 && !data.is_expired) setIsLinked(true);
       });
     });
