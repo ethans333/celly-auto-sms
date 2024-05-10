@@ -5,6 +5,8 @@ import Popup from "../Popup";
 import RightClickMenu from "../RightClickMenu";
 import TextingCell from "../Cell/Cells/TextingCell";
 import CalendarCell from "../Cell/Cells/CalendarCell";
+import { Cell } from "../Cell/Cell.jsx";
+import { Calendar } from "../Cell/Cells/Calendar/Calendar.jsx";
 
 export default function () {
   const {
@@ -57,11 +59,14 @@ export default function () {
     };
   }, [buttonDown, lastMousePosition, setWorkspace]); // Add lastMousePosition and setWorkspace to dependencies
 
+  const Test = new Calendar();
+
   return (
     <>
       <div style={{ transform: `translate(${dx}px, ${dy}px)` }}>
         {Object.keys(workspace).map((id) => buildCell(id, workspace[id]))}
         <Curves />
+        {Test.render()}
       </div>
 
       <RightClickMenu />

@@ -53,6 +53,8 @@ def handler(event, context):
 
         bucket.put_object(
             Key=f"{user_id}/{workspace_id}",
+            Body=json.dumps(workspace_raw),
+            ContentType="application/json",
             Metadata=metadata,
         )
 

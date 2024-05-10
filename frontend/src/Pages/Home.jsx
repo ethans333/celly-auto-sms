@@ -14,6 +14,7 @@ import RightSideBar from "../Components/RightSideBar.jsx";
 import RegisteredNumbers from "../Components/Views/RegisteredNumbers.jsx";
 import ProjectView from "../Components/Views/ProjectView.jsx";
 import Analytics from "../Components/Views/Analytics.jsx";
+
 export const WorkspaceContext = createContext();
 
 export default function () {
@@ -171,6 +172,10 @@ export default function () {
     if (!metadata.id) {
       console.log("No workspace selected.");
       return;
+    }
+
+    if (workspace === undefined || workspace === null || workspace === "") {
+      alert("Workspace is undefined");
     }
 
     api.updateWorkspace(metadata, workspace).then(async (res) => {
