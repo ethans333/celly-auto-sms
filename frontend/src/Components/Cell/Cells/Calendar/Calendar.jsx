@@ -6,10 +6,12 @@ export class Calendar extends Cell {
   description = "Calendar for scheduling events.";
   icon = calendar_icon;
 
+  start_time = 0;
+  end_time = 0;
+  blackout_days = [];
+
   toJSON() {
-    return {
-      test: "TEST",
-    };
+    return super.toObject();
   }
 
   constructor() {

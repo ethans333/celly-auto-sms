@@ -4,12 +4,19 @@ import React from "react";
 import ellipsis from "../../assets/ellipsis-vertical.svg";
 import CellMenu from "./CellComponents/CellMenu.jsx";
 import { WorkspaceContext } from "../../Pages/Home.jsx";
-import Curve from "../Curves/Curve.jsx";
+import { Curve } from "./Curve.jsx";
 
 class Position {
   constructor(x = 0, y = 0) {
     this.x = x;
     this.y = y;
+  }
+
+  toObject() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
   }
 }
 
@@ -18,14 +25,14 @@ class Node extends React.Component {
     super();
     this.state = {
       selected: false,
+      next: [], // Curve[]
+      prev: [], // Curve[]
     };
   }
 
   componentDidMount() {}
 
   id = uuid();
-  next = [];
-  prev = [];
   width = 12.5;
   ref = React.createRef();
 
@@ -52,13 +59,23 @@ class Node extends React.Component {
               if (!context.currentNode) {
                 context.setCurrentNode(this);
               } else {
-                const rS =
-                  context.currentNode.ref.current.getBoundingClientRect();
-                const rE = this.ref.current.getBoundingClientRect();
+                context.currentNode.setState((p) => {
+                  return { next: [...p.next, curveRef] };
+                });
 
-                context.pushToComponentsStack(<Curve start={rS} end={rE} />);
-                this.setState({ selected: false });
-                context.currentNode.setState({ selected: false });
+                this.setState((p) => {
+                  return { prev: [...p.prev, curveRef] };
+                });
+
+                // Push Curve
+                const curveRef = React.createRef();
+                context.pushToComponentsStack(
+                  <Curve
+                    ref={curveRef}
+                    start={context.currentNode}
+                    end={this}
+                  />
+                );
                 context.setCurrentNode(null);
               }
             }}
@@ -66,6 +83,14 @@ class Node extends React.Component {
         )}
       </WorkspaceContext.Consumer>
     );
+  }
+
+  toObject() {
+    return {
+      id: this.id,
+      next: this.state.next.map((c) => c.current.state.end.id),
+      prev: this.state.prev.map((c) => c.current.state.start.id),
+    };
   }
 }
 
@@ -76,18 +101,26 @@ export class Cell extends React.Component {
   id;
   menuOffset = new Position(-45, 42);
 
-  // Cell Properties Defined in Sub Class
-  title;
-
   // Refs
   cellRef;
   ellipsisRef;
 
   // Node Refs
-  top;
-  left;
-  right;
-  bottom;
+  nodes = {};
+
+  toObject() {
+    return {
+      id: this.id,
+      position: this.state.position.toObject(),
+      menuOffset: this.menuOffset.toObject(),
+      nodes: {
+        top: this.nodes.top.current.toObject(),
+        left: this.nodes.left.current.toObject(),
+        right: this.nodes.right.current.toObject(),
+        bottom: this.nodes.bottom.current.toObject(),
+      },
+    };
+  }
 
   constructor(props) {
     super(props);
@@ -101,10 +134,10 @@ export class Cell extends React.Component {
     };
 
     // Node Refs
-    this.top = React.createRef();
-    this.left = React.createRef();
-    this.right = React.createRef();
-    this.bottom = React.createRef();
+    this.nodes.top = React.createRef();
+    this.nodes.left = React.createRef();
+    this.nodes.right = React.createRef();
+    this.nodes.bottom = React.createRef();
   }
 
   componentDidMount() {
@@ -144,6 +177,21 @@ export class Cell extends React.Component {
           this.setState({
             position: new Position(event.screenX, event.screenY),
           });
+
+          // Update Curves
+          for (const node of Object.values(this.nodes)) {
+            for (const next of Object.values(node.current.state.next)) {
+              next.current.setState({
+                start: node.current,
+              });
+            }
+
+            for (const prev of Object.values(node.current.state.prev)) {
+              prev.current.setState({
+                end: node.current,
+              });
+            }
+          }
         }}
         defaultPosition={{
           x: this.props.x,
@@ -177,7 +225,7 @@ export class Cell extends React.Component {
               style={{ transform: `translateY(-${this.nodeWidth}px)` }}
               className="flex justify-center"
             >
-              <Node ref={this.top} />
+              <Node ref={this.nodes.top} />
             </div>
             <div className="flex">
               {/* Left Node */}
@@ -185,18 +233,18 @@ export class Cell extends React.Component {
                 style={{ transform: `translateX(-${this.nodeWidth}px)` }}
                 className="my-auto"
               >
-                <Node ref={this.left} />
+                <Node ref={this.nodes.left} />
               </div>
               {/* Inner */}
               {this.innerCellComponent()}
               {/* Right Node */}
               <div className="my-auto">
-                <Node ref={this.right} />
+                <Node ref={this.nodes.right} />
               </div>
             </div>
             {/* Bottom Node */}
             <div className="flex justify-center">
-              <Node ref={this.bottom} />
+              <Node ref={this.nodes.bottom} />
             </div>
           </div>
         </div>

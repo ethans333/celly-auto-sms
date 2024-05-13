@@ -16,6 +16,7 @@ import ProjectView from "../Components/Views/ProjectView.jsx";
 import Analytics from "../Components/Views/Analytics.jsx";
 
 import { Calendar } from "../Components/Cell/Cells/Calendar/Calendar.jsx";
+import uuid from "react-uuid";
 
 export const WorkspaceContext = createContext();
 
@@ -30,11 +31,9 @@ export default function () {
   const [workspaceList, setWorkspaceList] = useState([]);
   const [favoriteWorkspaceList, setFavoriteWorkspaceList] = useState([]);
 
-  const cRef = useRef();
-
   const [componentsStack, setComponentsStack] = useState([
-    <Calendar ref={cRef} x={500} y={500} />,
-    <Calendar x={900} y={500} />,
+    <Calendar key={uuid()} ref={useRef()} x={500} y={500} />,
+    <Calendar key={uuid()} ref={useRef()} x={900} y={500} />,
   ]);
 
   const [config, setConfig] = useState({
@@ -48,10 +47,6 @@ export default function () {
   const [lastMousePosition, setLastMousePosition] = useState({ x: 0, y: 0 });
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(cRef.current.toJSON());
-  }, []);
 
   useEffect(() => {
     parseCode();

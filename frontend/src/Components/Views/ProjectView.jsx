@@ -26,7 +26,11 @@ export default function () {
   const [buttonDown, setButtonDown] = useState(false);
 
   useEffect(() => {
-    console.log(componentsStack);
+    componentsStack.forEach((c) => {
+      if (c.ref.current.constructor.prototype instanceof Cell) {
+        console.log(c.ref.current.toJSON());
+      }
+    });
   }, [componentsStack]);
 
   useEffect(() => {
