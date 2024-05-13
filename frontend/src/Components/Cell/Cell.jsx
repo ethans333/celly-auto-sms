@@ -2,11 +2,12 @@ import uuid from "react-uuid";
 import Draggable from "react-draggable";
 import React from "react";
 import ellipsis from "../../assets/ellipsis-vertical.svg";
+import CellMenu from "./CellComponents/CellMenu.jsx";
 import { WorkspaceContext } from "../../Pages/Home.jsx";
-import { useContext } from "react";
+import Curve from "../Curves/Curve.jsx";
 
 class Position {
-  constructor(x, y) {
+  constructor(x = 0, y = 0) {
     this.x = x;
     this.y = y;
   }
@@ -16,56 +17,105 @@ class Node extends React.Component {
   constructor() {
     super();
     this.state = {
-      clicked: false,
+      selected: false,
     };
   }
+
+  componentDidMount() {}
 
   id = uuid();
   next = [];
   prev = [];
   width = 12.5;
-
-  handleClick = () => {
-    this.setState((p) => ({
-      clicked: !p.clicked,
-    }));
-  };
+  ref = React.createRef();
 
   render() {
-    const { clicked } = this.state;
+    const { selected } = this.state;
     return (
-      <div
-        style={{
-          width: `${this.width}px`,
-          height: `${this.width}px`,
-          opacity: 1,
-          backgroundColor: clicked ? "red" : "black",
-        }}
-        className="absolute rounded-full cursor-pointer"
-        onClick={this.handleClick}
-      ></div>
+      <WorkspaceContext.Consumer>
+        {(context) => (
+          <div
+            ref={this.ref}
+            style={{
+              width: `${this.width}px`,
+              height: `${this.width}px`,
+              backgroundColor: "black",
+            }}
+            className={`absolute rounded-full cursor-pointer ${
+              selected ? "opacity-100" : "opacity-0 hover:opacity-50"
+            }`}
+            onClick={() => {
+              this.setState({
+                selected: !selected,
+              });
+
+              if (!context.currentNode) {
+                context.setCurrentNode(this);
+              } else {
+                const rS =
+                  context.currentNode.ref.current.getBoundingClientRect();
+                const rE = this.ref.current.getBoundingClientRect();
+
+                context.pushToComponentsStack(<Curve start={rS} end={rE} />);
+                this.setState({ selected: false });
+                context.currentNode.setState({ selected: false });
+                context.setCurrentNode(null);
+              }
+            }}
+          ></div>
+        )}
+      </WorkspaceContext.Consumer>
     );
   }
 }
 
 export class Cell extends React.Component {
-  id;
-  position;
-  title;
-  nodes = {
-    top: new Node(),
-    right: new Node(),
-    bottom: new Node(),
-    left: new Node(),
-  };
+  nodeWidth = new Node().width;
 
-  constructor(x = 300, y = 500) {
-    super();
+  // Cell Properties
+  id;
+  menuOffset = new Position(-45, 42);
+
+  // Cell Properties Defined in Sub Class
+  title;
+
+  // Refs
+  cellRef;
+  ellipsisRef;
+
+  // Node Refs
+  top;
+  left;
+  right;
+  bottom;
+
+  constructor(props) {
+    super(props);
+
+    // Cell Properties
     this.id = uuid();
-    this.position = new Position(x, y);
+    this.cellRef = React.createRef();
+    this.state = {
+      position: new Position(0, 0),
+      showMenu: false,
+    };
+
+    // Node Refs
+    this.top = React.createRef();
+    this.left = React.createRef();
+    this.right = React.createRef();
+    this.bottom = React.createRef();
   }
 
-  innerComponent() {
+  componentDidMount() {
+    this.width = this.cellRef.current.offsetWidth;
+
+    this.setState({
+      position: new Position(this.props.x, this.props.y),
+    });
+  }
+
+  innerCellComponent() {
     return (
       <div className="rounded-lg shadow p-6 min-w-72 max-w-96 cursor-move bg-white w-fit">
         <div className="flex">
@@ -76,7 +126,7 @@ export class Cell extends React.Component {
             className="w-1 ml-auto cursor-pointer hover:opacity-50 mb-auto"
             alt="ellipsis"
             draggable={false}
-            // onClick={() => setShowMenu((p) => !p)}
+            onClick={() => this.setState((p) => ({ showMenu: !p.showMenu }))}
           />
         </div>
         <div className="text-sm py-7 text-xs px-5 text-gray-600">
@@ -88,30 +138,67 @@ export class Cell extends React.Component {
 
   render() {
     return (
-      <Draggable defaultPosition={this.position}>
-        <div className="w-fit">
-          {/* Top Node */}
+      <Draggable
+        nodeRef={this.cellRef}
+        onDrag={(event) => {
+          this.setState({
+            position: new Position(event.screenX, event.screenY),
+          });
+        }}
+        defaultPosition={{
+          x: this.props.x,
+          y: this.props.y,
+        }}
+      >
+        <div className="w-fit absolute" ref={this.cellRef}>
           <div
-            style={{ transform: `translateY(-${this.nodes.top.width}px)` }}
-            className="flex justify-center"
+            style={{
+              transform: `translate(${this.width}px, ${0}px)`,
+            }}
           >
-            {this.nodes.top.render()}
-          </div>
-          <div className="flex">
-            {/* Left Node */}
             <div
-              style={{ transform: `translateX(-${this.nodes.left.width}px)` }}
-              className="my-auto"
+              style={{
+                position: "absolute",
+                top: this.menuOffset.y,
+                left: this.menuOffset.x,
+              }}
             >
-              {this.nodes.left.render()}
+              <CellMenu
+                show={this.state.showMenu}
+                setShow={(e) => {
+                  this.setState({ showMenu: e });
+                }}
+              />
             </div>
-            {/* Inner */}
-            {this.innerComponent()}
-            {/* Right Node */}
-            <div className="my-auto">{this.nodes.left.render()}</div>
           </div>
-          {/* Top Node */}
-          <div className="flex justify-center">{this.nodes.top.render()}</div>
+          <div className="w-fit">
+            {/* Top Node */}
+            <div
+              style={{ transform: `translateY(-${this.nodeWidth}px)` }}
+              className="flex justify-center"
+            >
+              <Node ref={this.top} />
+            </div>
+            <div className="flex">
+              {/* Left Node */}
+              <div
+                style={{ transform: `translateX(-${this.nodeWidth}px)` }}
+                className="my-auto"
+              >
+                <Node ref={this.left} />
+              </div>
+              {/* Inner */}
+              {this.innerCellComponent()}
+              {/* Right Node */}
+              <div className="my-auto">
+                <Node ref={this.right} />
+              </div>
+            </div>
+            {/* Bottom Node */}
+            <div className="flex justify-center">
+              <Node ref={this.bottom} />
+            </div>
+          </div>
         </div>
       </Draggable>
     );

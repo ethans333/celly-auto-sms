@@ -5,7 +5,12 @@ import { WorkspaceContext } from "../Pages/Home.jsx";
 import * as api from "../api.jsx";
 import TopLeftMenu from "./TopLeftMenu.jsx";
 import BottomLeftMenu from "./BottomLeftMenu.jsx";
-import { AccountTree, TableChart, SsidChart } from "@mui/icons-material";
+import {
+  AccountTree,
+  TableChart,
+  SsidChart,
+  TextSnippet,
+} from "@mui/icons-material";
 
 export default function () {
   const {

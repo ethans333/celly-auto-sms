@@ -20,9 +20,14 @@ export default function () {
     setDY,
     setLastMousePosition,
     lastMousePosition,
+    componentsStack,
   } = useContext(WorkspaceContext);
 
   const [buttonDown, setButtonDown] = useState(false);
+
+  useEffect(() => {
+    console.log(componentsStack);
+  }, [componentsStack]);
 
   useEffect(() => {
     console.log(dx, dy);
@@ -59,14 +64,12 @@ export default function () {
     };
   }, [buttonDown, lastMousePosition, setWorkspace]); // Add lastMousePosition and setWorkspace to dependencies
 
-  const Test = new Calendar();
-
   return (
     <>
       <div style={{ transform: `translate(${dx}px, ${dy}px)` }}>
         {Object.keys(workspace).map((id) => buildCell(id, workspace[id]))}
         <Curves />
-        {Test.render()}
+        {componentsStack}
       </div>
 
       <RightClickMenu />

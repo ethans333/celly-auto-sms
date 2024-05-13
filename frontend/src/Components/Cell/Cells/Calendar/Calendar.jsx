@@ -6,6 +6,12 @@ export class Calendar extends Cell {
   description = "Calendar for scheduling events.";
   icon = calendar_icon;
 
+  toJSON() {
+    return {
+      test: "TEST",
+    };
+  }
+
   constructor() {
     super();
   }

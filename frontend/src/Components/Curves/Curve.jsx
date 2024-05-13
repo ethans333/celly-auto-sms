@@ -45,7 +45,7 @@ export default function ({ id, start, end }) {
 
   return (
     <div className="relative">
-      <svg
+      {/* <svg
         fill="white"
         stroke="black"
         strokeWidth={5}
@@ -56,6 +56,36 @@ export default function ({ id, start, end }) {
           top: Math.min(start.y, end.y) + start.width / 2,
           left: Math.min(start.x, end.x) + start.width / 2,
           overflow: "visible",
+        }}
+      >
+        <path
+          onClick={() => {
+            // Delete curve
+            const [s, e] = id.split("#");
+            setWorkspace((p) => {
+              delete p[s.split("$")[0]].nodes[s].next[e];
+              delete p[e.split("$")[0]].nodes[e].prev[s];
+              return { ...p };
+            });
+          }}
+          className="hover:stroke-red-600 cursor-pointer"
+          d={`M${a.x},${a.y} C${c1.x},${c1.y} ${c2.x},${c2.y} ${b.x},${b.y}`}
+          style={{
+            strokeDasharray: "10,10",
+            strokeDashoffset: dashoffset,
+          }}
+        />
+      </svg> */}
+      <svg
+        fill="white"
+        stroke="black"
+        strokeWidth={5}
+        className="absolute -z-50"
+        style={{
+          top: Math.min(start.y, end.y) + start.width / 2,
+          left: Math.min(start.x, end.x) + start.width / 2,
+          overflow: "visible",
+          fill: "red",
         }}
       >
         <path

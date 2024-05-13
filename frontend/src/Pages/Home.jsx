@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Helpers
@@ -15,6 +15,8 @@ import RegisteredNumbers from "../Components/Views/RegisteredNumbers.jsx";
 import ProjectView from "../Components/Views/ProjectView.jsx";
 import Analytics from "../Components/Views/Analytics.jsx";
 
+import { Calendar } from "../Components/Cell/Cells/Calendar/Calendar.jsx";
+
 export const WorkspaceContext = createContext();
 
 export default function () {
@@ -27,6 +29,14 @@ export default function () {
   const [messageStack, setMessageStack] = useState([]);
   const [workspaceList, setWorkspaceList] = useState([]);
   const [favoriteWorkspaceList, setFavoriteWorkspaceList] = useState([]);
+
+  const cRef = useRef();
+
+  const [componentsStack, setComponentsStack] = useState([
+    <Calendar ref={cRef} x={500} y={500} />,
+    <Calendar x={900} y={500} />,
+  ]);
+
   const [config, setConfig] = useState({
     placeholder_1: true,
     placeholder_2: false,
@@ -38,6 +48,10 @@ export default function () {
   const [lastMousePosition, setLastMousePosition] = useState({ x: 0, y: 0 });
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(cRef.current.toJSON());
+  }, []);
 
   useEffect(() => {
     parseCode();
@@ -83,6 +97,7 @@ export default function () {
         lastMousePosition,
         workspaceList,
         favoriteWorkspaceList,
+        componentsStack,
         setCurrentNode,
         setWorkspace,
         setSideBarChildren,
@@ -96,6 +111,8 @@ export default function () {
         setDY,
         setLastMousePosition,
         updateWorkspaceLists,
+        setComponentsStack,
+        pushToComponentsStack,
       }}
     >
       <LeftSideBar />
@@ -222,5 +239,9 @@ export default function () {
         console.log(res);
       }
     });
+  }
+
+  function pushToComponentsStack(component) {
+    setComponentsStack((p) => [...p, component]);
   }
 }
