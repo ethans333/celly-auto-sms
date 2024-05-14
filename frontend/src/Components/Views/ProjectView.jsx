@@ -71,8 +71,8 @@ export default function () {
   return (
     <>
       <div style={{ transform: `translate(${dx}px, ${dy}px)` }}>
-        {Object.keys(workspace).map((id) => buildCell(id, workspace[id]))}
-        <Curves />
+        {/*        {Object.keys(workspace).map((id) => buildCell(id, workspace[id]))}
+        <Curves />*/}
         {componentsStack}
       </div>
 

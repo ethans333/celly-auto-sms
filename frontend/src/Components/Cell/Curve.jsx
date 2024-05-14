@@ -68,16 +68,16 @@ export class Curve extends React.Component {
                   this.state.start.setState((p) => {
                     return {
                       selected: p.next.length + p.prev.length - 1 > 0,
-                      next: p.next.filter((e) => e != this),
-                      prev: p.prev.filter((e) => e != this),
+                      next: p.next.filter((e) => e.current != this),
+                      prev: p.prev.filter((e) => e.current != this),
                     };
                   });
 
                   this.state.end.setState((p) => {
                     return {
                       selected: p.next.length + p.prev.length - 1 > 0,
-                      next: p.next.filter((e) => e != this),
-                      prev: p.prev.filter((e) => e != this),
+                      next: p.next.filter((e) => e.current != this),
+                      prev: p.prev.filter((e) => e.current != this),
                     };
                   });
 

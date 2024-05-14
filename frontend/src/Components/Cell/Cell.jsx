@@ -4,95 +4,8 @@ import React from "react";
 import ellipsis from "../../assets/ellipsis-vertical.svg";
 import CellMenu from "./CellComponents/CellMenu.jsx";
 import { WorkspaceContext } from "../../Pages/Home.jsx";
-import { Curve } from "./Curve.jsx";
-
-class Position {
-  constructor(x = 0, y = 0) {
-    this.x = x;
-    this.y = y;
-  }
-
-  toObject() {
-    return {
-      x: this.x,
-      y: this.y,
-    };
-  }
-}
-
-class Node extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      selected: false,
-      next: [], // Curve[]
-      prev: [], // Curve[]
-    };
-  }
-
-  componentDidMount() {}
-
-  id = uuid();
-  width = 12.5;
-  ref = React.createRef();
-
-  render() {
-    const { selected } = this.state;
-    return (
-      <WorkspaceContext.Consumer>
-        {(context) => (
-          <div
-            ref={this.ref}
-            style={{
-              width: `${this.width}px`,
-              height: `${this.width}px`,
-              backgroundColor: "black",
-            }}
-            className={`absolute rounded-full cursor-pointer ${
-              selected ? "opacity-100" : "opacity-0 hover:opacity-50"
-            }`}
-            onClick={() => {
-              this.setState({
-                selected: !selected,
-              });
-
-              if (!context.currentNode) {
-                context.setCurrentNode(this);
-              } else {
-                context.currentNode.setState((p) => {
-                  return { next: [...p.next, curveRef] };
-                });
-
-                this.setState((p) => {
-                  return { prev: [...p.prev, curveRef] };
-                });
-
-                // Push Curve
-                const curveRef = React.createRef();
-                context.pushToComponentsStack(
-                  <Curve
-                    ref={curveRef}
-                    start={context.currentNode}
-                    end={this}
-                  />
-                );
-                context.setCurrentNode(null);
-              }
-            }}
-          ></div>
-        )}
-      </WorkspaceContext.Consumer>
-    );
-  }
-
-  toObject() {
-    return {
-      id: this.id,
-      next: this.state.next.map((c) => c.current.state.end.id),
-      prev: this.state.prev.map((c) => c.current.state.start.id),
-    };
-  }
-}
+import { Node } from "./Node.jsx";
+import { Position } from "./Position.jsx";
 
 export class Cell extends React.Component {
   nodeWidth = new Node().width;
@@ -171,84 +84,91 @@ export class Cell extends React.Component {
 
   render() {
     return (
-      <Draggable
-        nodeRef={this.cellRef}
-        onDrag={(event) => {
-          this.setState({
-            position: new Position(event.screenX, event.screenY),
-          });
-
-          // Update Curves
-          for (const node of Object.values(this.nodes)) {
-            for (const next of Object.values(node.current.state.next)) {
-              next.current.setState({
-                start: node.current,
+      <WorkspaceContext.Consumer>
+        {(context) => (
+          <Draggable
+            nodeRef={this.cellRef}
+            onDrag={(event) => {
+              this.setState({
+                position: new Position(event.screenX, event.screenY),
               });
-            }
 
-            for (const prev of Object.values(node.current.state.prev)) {
-              prev.current.setState({
-                end: node.current,
-              });
-            }
-          }
-        }}
-        defaultPosition={{
-          x: this.props.x,
-          y: this.props.y,
-        }}
-      >
-        <div className="w-fit absolute" ref={this.cellRef}>
-          <div
-            style={{
-              transform: `translate(${this.width}px, ${0}px)`,
+              // Update Curves
+              for (const node of Object.values(this.nodes)) {
+                for (const next of Object.values(node.current.state.next)) {
+                  next.current.setState({
+                    start: node.current,
+                  });
+                }
+
+                for (const prev of Object.values(node.current.state.prev)) {
+                  prev.current.setState({
+                    end: node.current,
+                  });
+                }
+              }
+            }}
+            defaultPosition={{
+              x: this.props.x,
+              y: this.props.y,
             }}
           >
-            <div
-              style={{
-                position: "absolute",
-                top: this.menuOffset.y,
-                left: this.menuOffset.x,
-              }}
-            >
-              <CellMenu
-                show={this.state.showMenu}
-                setShow={(e) => {
-                  this.setState({ showMenu: e });
-                }}
-              />
-            </div>
-          </div>
-          <div className="w-fit">
-            {/* Top Node */}
-            <div
-              style={{ transform: `translateY(-${this.nodeWidth}px)` }}
-              className="flex justify-center"
-            >
-              <Node ref={this.nodes.top} />
-            </div>
-            <div className="flex">
-              {/* Left Node */}
+            <div className="w-fit absolute" ref={this.cellRef}>
               <div
-                style={{ transform: `translateX(-${this.nodeWidth}px)` }}
-                className="my-auto"
+                style={{
+                  transform: `translate(${this.width}px, ${0}px)`,
+                }}
               >
-                <Node ref={this.nodes.left} />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: this.menuOffset.y,
+                    left: this.menuOffset.x,
+                  }}
+                >
+                  <CellMenu
+                    show={this.state.showMenu}
+                    setShow={(e) => {
+                      this.setState({ showMenu: e });
+                    }}
+                    onOpen={() => {
+                      context.setSideBarChildren(this.sidebar());
+                    }}
+                  />
+                </div>
               </div>
-              {/* Inner */}
-              {this.innerCellComponent()}
-              {/* Right Node */}
-              <div className="my-auto">
-                <Node ref={this.nodes.right} />
+              <div className="w-fit">
+                {/* Top Node */}
+                <div
+                  style={{ transform: `translateY(-${this.nodeWidth}px)` }}
+                  className="flex justify-center"
+                >
+                  <Node ref={this.nodes.top} />
+                </div>
+                <div className="flex">
+                  {/* Left Node */}
+                  <div
+                    style={{ transform: `translateX(-${this.nodeWidth}px)` }}
+                    className="my-auto"
+                  >
+                    <Node ref={this.nodes.left} />
+                  </div>
+                  {/* Inner */}
+                  {this.innerCellComponent()}
+                  {/* Right Node */}
+                  <div className="my-auto">
+                    <Node ref={this.nodes.right} />
+                  </div>
+                </div>
+                {/* Bottom Node */}
+                <div className="flex justify-center">
+                  <Node ref={this.nodes.bottom} />
+                </div>
               </div>
             </div>
-            {/* Bottom Node */}
-            <div className="flex justify-center">
-              <Node ref={this.nodes.bottom} />
-            </div>
-          </div>
-        </div>
-      </Draggable>
+          </Draggable>
+        )}
+      </WorkspaceContext.Consumer>
     );
   }
 }
