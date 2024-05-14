@@ -1,10 +1,9 @@
-import xmark from "../assets/xmark-solid.svg";
-import angles from "../assets/angles-right-solid.svg";
+import xmark from "../../../assets/xmark-solid.svg";
+import angles from "../../../assets/angles-right-solid.svg";
 import { useContext, useEffect, useState } from "react";
-import { WorkspaceContext } from "../Pages/Home.jsx";
-import * as api from "../api.jsx";
-import TopLeftMenu from "./TopLeftMenu.jsx";
-import BottomLeftMenu from "./BottomLeftMenu.jsx";
+import { WorkspaceContext } from "../../../Pages/Home.jsx";
+import TopLeftMenu from "../Menus/TopLeftMenu.jsx";
+import BottomLeftMenu from "../Menus/BottomLeftMenu.jsx";
 import {
   AccountTree,
   TableChart,

@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { WorkspaceContext } from "../Pages/Home";
-import plus from "../assets/plus-solid.svg";
-import floppy from "../assets/floppy-disk-solid.svg";
-import gear from "../assets/gear-solid.svg";
-import CellSelection from "./Cell/CellSelection";
-import Settings from "./Popups/Settings";
-import sliders from "../assets/sliders-solid.svg";
+import { WorkspaceContext } from "../../../Pages/Home";
+import plus from "../../../assets/plus-solid.svg";
+import floppy from "../../../assets/floppy-disk-solid.svg";
+import CellSelection from "../../Cell/CellSelection";
+import Settings from "../../Popups/Settings";
+import sliders from "../../../assets/sliders-solid.svg";
 
 export default function () {
   const [showMenu, setShowMenu] = useState(false);

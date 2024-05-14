@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { WorkspaceContext } from "../Pages/Home";
+import { WorkspaceContext } from "../../../Pages/Home";
 
 export default function () {
   const { messageStack } = useContext(WorkspaceContext);

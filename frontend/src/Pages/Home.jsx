@@ -7,8 +7,8 @@ import Cookies from "js-cookie";
 import * as api from "../api.jsx";
 
 // Components
-import LeftSideBar from "../Components/LeftSideBar.jsx";
-import RightSideBar from "../Components/RightSideBar.jsx";
+import LeftSideBar from "../Components/UI/Sidebars/LeftSideBar.jsx";
+import RightSideBar from "../Components/UI/Sidebars/RightSideBar.jsx";
 
 // Views
 import RegisteredNumbers from "../Components/Views/RegisteredNumbers.jsx";

@@ -1,7 +1,7 @@
-import plus from "../assets/plus-solid-white.svg";
+import plus from "../../../assets/plus-solid-white.svg";
 import { useContext } from "react";
-import { WorkspaceContext } from "../Pages/Home.jsx";
-import * as api from "../api.jsx";
+import { WorkspaceContext } from "../../../Pages/Home.jsx";
+import * as api from "../../../api.jsx";
 
 export default function () {
   const {

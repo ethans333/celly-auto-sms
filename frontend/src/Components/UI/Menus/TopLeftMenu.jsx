@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
-import { WorkspaceContext } from "../Pages/Home";
-import Dropdown from "./Dropdown";
-import red_circle from "../assets/circle-solid-red.svg";
+import { WorkspaceContext } from "../../../Pages/Home";
+import Dropdown from "../../Dropdown";
 
 export default function () {
   const { workspaceMetaData, setWorkspaceMetaData } =

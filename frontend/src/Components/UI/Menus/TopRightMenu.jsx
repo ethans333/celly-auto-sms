@@ -1,16 +1,15 @@
-import floppy from "../assets/floppy-disk-solid.svg";
-import gear from "../assets/gear-solid.svg";
-import sliders from "../assets/sliders-solid.svg";
-import star_regular from "../assets/star-regular.svg";
-import star_filled from "../assets/star-solid.svg";
-import cloud_bolt from "../assets/cloud-bolt-solid.svg";
+import floppy from "../../../assets/floppy-disk-solid.svg";
+import sliders from "../../../assets/sliders-solid.svg";
+import star_regular from "../../../assets/star-regular.svg";
+import star_filled from "../../../assets/star-solid.svg";
+import cloud_bolt from "../../../assets/cloud-bolt-solid.svg";
 
-import { WorkspaceContext } from "../Pages/Home.jsx";
-import LabeledSquareButton from "./LabeledSquareButton.jsx";
+import { WorkspaceContext } from "../../../Pages/Home.jsx";
+import LabeledSquareButton from "../../LabeledSquareButton.jsx";
 import { useContext, useState, useEffect } from "react";
-import Settings from "./Popups/Settings.jsx";
-import WorkspaceLink from "./Popups/WorkspaceLink.jsx";
-import * as api from "../api";
+import Settings from "../../Popups/Settings.jsx";
+import WorkspaceLink from "../../Popups/WorkspaceLink.jsx";
+import * as api from "../../../api.jsx";
 
 export default function () {
   const {
@@ -18,7 +17,6 @@ export default function () {
     setWorkspaceMetaData,
     setPopupChildren,
     saveWorkspace,
-    settingsConfig,
   } = useContext(WorkspaceContext);
 
   return (

@@ -1,12 +1,8 @@
 import { WorkspaceContext } from "../../Pages/Home";
 import { useContext, useState, useEffect } from "react";
-import Curves from "../Curves/Curves";
 import Popup from "../Popup";
-import RightClickMenu from "../RightClickMenu";
-import TextingCell from "../Cell/Cells/TextingCell";
-import CalendarCell from "../Cell/Cells/CalendarCell";
+import RightClickMenu from "../UI/Menus/RightClickMenu";
 import { Cell } from "../Cell/Cell.jsx";
-import { Calendar } from "../Cell/Cells/Calendar/Calendar.jsx";
 
 export default function () {
   const {
@@ -26,11 +22,11 @@ export default function () {
   const [buttonDown, setButtonDown] = useState(false);
 
   useEffect(() => {
-    componentsStack.forEach((c) => {
-      if (c.ref.current.constructor.prototype instanceof Cell) {
-        console.log(c.ref.current.toJSON());
-      }
-    });
+    // componentsStack.forEach((c) => {
+    //   if (c.ref.current.constructor.prototype instanceof Cell) {
+    //     console.log(c.ref.current.toJSON());
+    //   }
+    // });
   }, [componentsStack]);
 
   useEffect(() => {
@@ -71,8 +67,6 @@ export default function () {
   return (
     <>
       <div style={{ transform: `translate(${dx}px, ${dy}px)` }}>
-        {/*        {Object.keys(workspace).map((id) => buildCell(id, workspace[id]))}
-        <Curves />*/}
         {componentsStack}
       </div>
 
@@ -82,16 +76,4 @@ export default function () {
       )}
     </>
   );
-}
-
-function buildCell(id, cell) {
-  // function for mapping cell type to cell type's component
-  switch (cell.type) {
-    case "texting":
-      return <TextingCell key={id} id={id} />;
-    case "calendar":
-      return <CalendarCell key={id} id={id} />;
-    default:
-      return <></>;
-  }
 }

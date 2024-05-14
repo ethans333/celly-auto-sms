@@ -41,6 +41,7 @@ export class Cell extends React.Component {
     // Cell Properties
     this.id = uuid();
     this.cellRef = React.createRef();
+    this.selectionRef = React.createRef();
     this.state = {
       position: new Position(0, 0),
       showMenu: false,
@@ -61,7 +62,7 @@ export class Cell extends React.Component {
     });
   }
 
-  innerCellComponent() {
+  inner() {
     return (
       <div className="rounded-lg shadow p-6 min-w-72 max-w-96 cursor-move bg-white w-fit">
         <div className="flex">
@@ -79,6 +80,60 @@ export class Cell extends React.Component {
           {this.description}
         </div>
       </div>
+    );
+  }
+
+  newSelf(props) {
+    return React.createElement(this.constructor, props);
+  }
+
+  selectionCell() {
+    return (
+      <div className="rounded-lg shadow p-6 min-w-72 max-w-96 cursor-move bg-white w-fit">
+        <div className="flex">
+          <img src={this.icon} className="w-8 p-2 mb-auto" />
+          <h1 className="pt-1.5 font-bold text-[15px] pl-1.5">{this.title}</h1>
+          <img
+            src={ellipsis}
+            className="w-1 ml-auto cursor-pointer hover:opacity-50 mb-auto invisible"
+            alt="ellipsis"
+            draggable={false}
+          />
+        </div>
+        <div className="text-sm py-7 text-xs px-5 text-gray-600">
+          {this.description}
+        </div>
+      </div>
+    );
+  }
+
+  selection() {
+    return (
+      <WorkspaceContext.Consumer>
+        {(context) => (
+          <div>
+            <Draggable
+              onStop={(e) => {
+                const r = this.selectionRef.current.getBoundingClientRect();
+
+                const el = this.newSelf({
+                  key: uuid(),
+                  x: r.x,
+                  y: r.y,
+                });
+
+                context.pushToComponentsStack(el);
+              }}
+              nodeRef={this.selectionRef}
+              position={{ x: 0, y: 0 }}
+            >
+              <div ref={this.selectionRef} className="hover:opacity-80">
+                {this.selectionCell()}
+              </div>
+            </Draggable>
+          </div>
+        )}
+      </WorkspaceContext.Consumer>
     );
   }
 
@@ -154,7 +209,7 @@ export class Cell extends React.Component {
                     <Node ref={this.nodes.left} />
                   </div>
                   {/* Inner */}
-                  {this.innerCellComponent()}
+                  {this.inner()}
                   {/* Right Node */}
                   <div className="my-auto">
                     <Node ref={this.nodes.right} />

@@ -1,7 +1,7 @@
-import xmark from "../assets/xmark-solid.svg";
-import TopMenu from "./TopMenu.jsx";
-import BottomMenu from "./BottomMenu.jsx";
-import { WorkspaceContext } from "../Pages/Home.jsx";
+import xmark from "../../../assets/xmark-solid.svg";
+import TopMenu from "../Menus/TopRightMenu.jsx";
+import BottomMenu from "../Menus/BottomRightMenu.jsx";
+import { WorkspaceContext } from "../../../Pages/Home.jsx";
 import { useContext } from "react";
 
 export default function ({ children, topChildren }) {
