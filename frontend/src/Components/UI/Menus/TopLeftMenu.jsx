@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { WorkspaceContext } from "../../../Pages/Home";
+import { WorkspaceContext } from "../../../Contexts/Workspace";
 import Dropdown from "../../Dropdown";
 
 export default function () {

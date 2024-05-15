@@ -3,7 +3,7 @@ import Draggable from "react-draggable";
 import React from "react";
 import ellipsis from "../../assets/ellipsis-vertical.svg";
 import CellMenu from "./CellComponents/CellMenu.jsx";
-import { WorkspaceContext } from "../../Pages/Home.jsx";
+import { WorkspaceContext } from "../../Contexts/Workspace";
 import { Node } from "./Node.jsx";
 import { Position } from "./Position.jsx";
 
@@ -118,11 +118,12 @@ export class Cell extends React.Component {
 
                 const el = this.newSelf({
                   key: uuid(),
+                  ref: React.createRef(),
                   x: r.x,
                   y: r.y,
                 });
 
-                context.pushToComponentsStack(el);
+                context.setComponentsStack([...context.componentsStack, el]);
               }}
               nodeRef={this.selectionRef}
               position={{ x: 0, y: 0 }}
@@ -187,7 +188,7 @@ export class Cell extends React.Component {
                       this.setState({ showMenu: e });
                     }}
                     onOpen={() => {
-                      context.setSideBarChildren(this.sidebar());
+                      context.setSidebar(this.sidebar());
                     }}
                   />
                 </div>

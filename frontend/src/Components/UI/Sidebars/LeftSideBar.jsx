@@ -1,23 +1,16 @@
 import xmark from "../../../assets/xmark-solid.svg";
 import angles from "../../../assets/angles-right-solid.svg";
 import { useContext, useEffect, useState } from "react";
-import { WorkspaceContext } from "../../../Pages/Home.jsx";
+import { WorkspaceContext } from "../../../Contexts/Workspace.jsx";
 import TopLeftMenu from "../Menus/TopLeftMenu.jsx";
 import BottomLeftMenu from "../Menus/BottomLeftMenu.jsx";
-import {
-  AccountTree,
-  TableChart,
-  SsidChart,
-  TextSnippet,
-} from "@mui/icons-material";
-
+import { AccountTree, TableChart, SsidChart } from "@mui/icons-material";
+import { HelpersContext } from "../../../Contexts/Helpers.jsx";
 export default function () {
-  const {
-    setCurrentView,
-    workspaceList,
-    favoriteWorkspaceList,
-    updateWorkspaceLists,
-  } = useContext(WorkspaceContext);
+  const { setCurrentView, workspaceList, favoriteWorkspaceList } =
+    useContext(WorkspaceContext);
+  const { updateWorkspaceLists } = useContext(HelpersContext);
+
   const [showSideBar, setShowSideBar] = useState(true);
 
   useEffect(() => {

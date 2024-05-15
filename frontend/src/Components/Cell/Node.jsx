@@ -1,8 +1,7 @@
 import { Curve } from "./Curve.jsx";
-import { WorkspaceContext } from "../../Pages/Home.jsx";
+import { WorkspaceContext } from "../../Contexts/Workspace";
 import React from "react";
 import uuid from "react-uuid";
-import { Position } from "./Position.jsx";
 export class Node extends React.Component {
   constructor() {
     super();
@@ -52,14 +51,15 @@ export class Node extends React.Component {
 
                 // Push Curve
                 const curveRef = React.createRef();
-                context.pushToComponentsStack(
+                context.setComponentsStack([
+                  ...context.componentsStack,
                   <Curve
                     key={uuid()}
                     ref={curveRef}
                     start={context.currentNode}
                     end={this}
-                  />
-                );
+                  />,
+                ]);
                 context.setCurrentNode(null);
               }
             }}

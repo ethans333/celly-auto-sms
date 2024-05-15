@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { WorkspaceContext } from "../../Pages/Home.jsx";
+import { WorkspaceContext } from "../../Contexts/Workspace";
 import uuid from "react-uuid";
 
 export class Curve extends React.Component {

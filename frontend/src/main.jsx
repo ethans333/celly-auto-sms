@@ -15,10 +15,23 @@ import Register from "./Pages/Auth/Register.jsx";
 import ConfirmCode from "./Pages/Auth/ConfirmCode.jsx";
 import Scheduling from "./Pages/Scheduling.jsx";
 
+// Contexts
+import { HelpersProvider } from "./Contexts/Helpers.jsx";
+import { WorkspaceProvider } from "./Contexts/Workspace.jsx";
+
 const msalInstance = new PublicClientApplication(msalConfig);
 
 const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
+  {
+    path: "/",
+    element: (
+      <WorkspaceProvider>
+        <HelpersProvider>
+          <Home />
+        </HelpersProvider>
+      </WorkspaceProvider>
+    ),
+  },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/confirm-code", element: <ConfirmCode /> },

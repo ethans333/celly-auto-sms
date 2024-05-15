@@ -1,48 +1,41 @@
-import { WorkspaceContext } from "../../Pages/Home";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import Popup from "../Popup";
 import RightClickMenu from "../UI/Menus/RightClickMenu";
 import { Cell } from "../Cell/Cell.jsx";
+import { WorkspaceContext } from "../../Contexts/Workspace.jsx";
+import uuid from "react-uuid";
 
 export default function () {
   const {
-    workspace,
-    setWorkspace,
-    popupChildren,
-    setPopupChildren,
-    dx,
-    dy,
-    setDX,
-    setDY,
-    setLastMousePosition,
-    lastMousePosition,
     componentsStack,
+    setComponentsStack,
+    deltaX,
+    deltaY,
+    setDeltaX,
+    setDeltaY,
+    popup,
   } = useContext(WorkspaceContext);
 
   const [buttonDown, setButtonDown] = useState(false);
 
   useEffect(() => {
-    // componentsStack.forEach((c) => {
-    //   if (c.ref.current.constructor.prototype instanceof Cell) {
-    //     console.log(c.ref.current.toJSON());
-    //   }
-    // });
-  }, [componentsStack]);
+    // console.log(componentsStack);
+    // setComponentsStack((p) => [
+    //   p,
+    // ]);
+  }, []);
 
   useEffect(() => {
-    console.log(dx, dy);
-
     const handleMouseDown = (e) => {
       if (e.button === 1 && !buttonDown) {
         setButtonDown(true);
-        setLastMousePosition({ x: e.clientX, y: e.clientY });
       }
     };
 
     const handleMouseMove = (e) => {
       if (buttonDown) {
-        setDX((p) => p + e.movementX);
-        setDY((p) => p + e.movementY);
+        setDeltaX((p) => p + e.movementX);
+        setDeltaY((p) => p + e.movementY);
       }
     };
 
@@ -62,18 +55,16 @@ export default function () {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [buttonDown, lastMousePosition, setWorkspace]); // Add lastMousePosition and setWorkspace to dependencies
+  }, [buttonDown]); // Add lastMousePosition and setWorkspace to dependencies
 
   return (
     <>
-      <div style={{ transform: `translate(${dx}px, ${dy}px)` }}>
+      <div style={{ transform: `translate(${deltaX}px, ${deltaY}px)` }}>
         {componentsStack}
       </div>
 
       <RightClickMenu />
-      {popupChildren != null && (
-        <Popup onClose={() => setPopupChildren(null)}>{popupChildren}</Popup>
-      )}
+      {popup != null && <Popup onClose={() => setPopup(null)}>{popup}</Popup>}
     </>
   );
 }

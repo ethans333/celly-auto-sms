@@ -4,7 +4,7 @@ import star_regular from "../../../assets/star-regular.svg";
 import star_filled from "../../../assets/star-solid.svg";
 import cloud_bolt from "../../../assets/cloud-bolt-solid.svg";
 
-import { WorkspaceContext } from "../../../Pages/Home.jsx";
+import { WorkspaceContext } from "../../../Contexts/Workspace.jsx";
 import LabeledSquareButton from "../../LabeledSquareButton.jsx";
 import { useContext, useState, useEffect } from "react";
 import Settings from "../../Popups/Settings.jsx";
@@ -12,12 +12,8 @@ import WorkspaceLink from "../../Popups/WorkspaceLink.jsx";
 import * as api from "../../../api.jsx";
 
 export default function () {
-  const {
-    workspaceMetaData,
-    setWorkspaceMetaData,
-    setPopupChildren,
-    saveWorkspace,
-  } = useContext(WorkspaceContext);
+  const { workspaceMetaData, setWorkspaceMetaData, setPopup, saveWorkspace } =
+    useContext(WorkspaceContext);
 
   return (
     <div className="flex pr-5 mt-3.5 h-fit space-x-2.5">
@@ -48,7 +44,7 @@ export default function () {
           api.deployWorkspace(workspaceMetaData.id).then((res) => {
             if (res.status === 200) {
               setWorkspaceMetaData((p) => ({ ...p, is_deployed: true }));
-              setPopupChildren(<WorkspaceLink />);
+              setPopup(<WorkspaceLink />);
               res.json().then((data) => {
                 console.log(data);
               });
@@ -60,7 +56,7 @@ export default function () {
       <LabeledSquareButton
         icon={sliders}
         label="Settings"
-        onClick={() => setPopupChildren(<Settings />)}
+        onClick={() => setPopup(<Settings />)}
       />
     </div>
   );

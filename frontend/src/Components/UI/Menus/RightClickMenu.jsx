@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { WorkspaceContext } from "../../../Pages/Home";
+import { WorkspaceContext } from "../../../Contexts/Workspace";
 import plus from "../../../assets/plus-solid.svg";
 import floppy from "../../../assets/floppy-disk-solid.svg";
 import CellSelection from "../../Cell/CellSelection";
@@ -10,8 +10,7 @@ export default function () {
   const [showMenu, setShowMenu] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const { setPopupChildren, saveWorkspace, setSideBarChildren } =
-    useContext(WorkspaceContext);
+  const { setPopup, saveWorkspace, setSidebar } = useContext(WorkspaceContext);
 
   const menuRef = useRef();
 
@@ -61,7 +60,7 @@ export default function () {
           <div
             onClick={(event) => {
               setShowMenu(false);
-              setSideBarChildren(<CellSelection />);
+              setSidebar(<CellSelection />);
               // onCreate(event.clientX, event.clientY);
             }}
             className="cursor-pointer hover:opacity-50 flex"
@@ -82,7 +81,7 @@ export default function () {
           <div
             onClick={() => {
               setShowMenu(false);
-              setPopupChildren(<Settings />);
+              setPopup(<Settings />);
             }}
             className="cursor-pointer hover:opacity-50 flex"
           >

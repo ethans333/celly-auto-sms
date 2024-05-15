@@ -1,13 +1,11 @@
 import { useContext } from "react";
-import { WorkspaceContext } from "../../../Pages/Home";
+import { WorkspaceContext } from "../../../Contexts/Workspace";
 
 export default function () {
-  const { messageStack } = useContext(WorkspaceContext);
-
   return (
     <div className="absolute bottom-0 pb-5 flex pr-5">
       <div className="mt-auto ml-5 w-[50vw]">
-        {messageStack.map((m, i) => (
+        {/* {messageStack.map((m, i) => (
           <p
             key={i}
             className={`text-sm ${
@@ -19,7 +17,7 @@ export default function () {
           >
             {m.message}
           </p>
-        ))}
+        ))} */}
       </div>
     </div>
   );

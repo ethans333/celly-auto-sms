@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { WorkspaceContext } from "../../Pages/Home";
+import { WorkspaceContext } from "../../Contexts/Workspace";
 import { ContentCopy } from "@mui/icons-material";
 import { GenericLabeledSquareButton } from "../LabeledSquareButton";
 

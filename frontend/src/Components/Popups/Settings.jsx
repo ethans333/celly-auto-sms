@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { WorkspaceContext } from "../../Pages/Home";
+import { WorkspaceContext } from "../../Contexts/Workspace";
 import toggle_on from "../../assets/toggle-on-solid.svg";
 import toggle_off from "../../assets/toggle-off-solid.svg";
 import * as api from "../../api";
@@ -11,7 +11,7 @@ export default function () {
     workspaceMetaData,
     setWorkspaceMetaData,
     setWorkspace,
-    setPopupChildren,
+    setPopup,
     updateWorkspaceLists,
   } = useContext(WorkspaceContext);
 
@@ -169,7 +169,7 @@ export default function () {
       }
     });
 
-    setPopupChildren(null);
+    setPopup(null);
     setWorkspaceMetaData({});
     setWorkspace({});
   }

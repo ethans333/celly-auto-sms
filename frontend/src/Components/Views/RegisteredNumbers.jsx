@@ -2,7 +2,7 @@ import eye from "../../assets/eye-solid.svg";
 import square from "../../assets/square-regular.svg";
 import numbers from "../../assets/numbers.json";
 import { useEffect, useState, useContext } from "react";
-import { WorkspaceContext } from "../../Pages/Home.jsx";
+import { WorkspaceContext } from "../../Contexts/Workspace";
 export default function () {
   return (
     <div>
@@ -48,7 +48,7 @@ function Row({
   location,
   background,
 }) {
-  const { setSideBarChildren } = useContext(WorkspaceContext);
+  const { setSidebar } = useContext(WorkspaceContext);
 
   return (
     <tr className={`${background && "bg-gray-50"}`}>
@@ -72,7 +72,7 @@ function Row({
           src={eye}
           className="w-4 h-4 mx-auto cursor-pointer hover:opacity-50"
           onClick={() =>
-            setSideBarChildren(
+            setSidebar(
               <div>
                 <div className="max-w-96 space-y-5 mt-10 overflow-y-scroll pr-5 max-h-[90vh]">
                   <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
