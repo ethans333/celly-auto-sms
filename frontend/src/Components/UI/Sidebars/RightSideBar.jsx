@@ -5,14 +5,14 @@ import { WorkspaceContext } from "../../../Contexts/Workspace.jsx";
 import { useContext } from "react";
 
 export default function ({ children, topChildren }) {
-  const { setSidebar, currentView } = useContext(WorkspaceContext);
+  const { setSidebar, currentView, Views } = useContext(WorkspaceContext);
 
   return children != null ? (
     <div className="absolute right-0 z-20 animate-shiftRL">
       <div className="flex h-screen overflow-y-clip">
         <div>
-          {currentView == "project" && <TopMenu />}
-          {currentView == "project" && <BottomMenu />}
+          {currentView === Views.Project && <TopMenu />}
+          {currentView === Views.Project && <BottomMenu />}
         </div>
 
         <div className="min-w-96 border-l-2 border-gray-100 bg-white px-5 pt-3">
@@ -30,8 +30,8 @@ export default function ({ children, topChildren }) {
     </div>
   ) : (
     <div className="absolute right-0 h-screen">
-      {currentView == "project" && <TopMenu />}
-      {currentView == "project" && <BottomMenu />}
+      {currentView === Views.Project && <TopMenu />}
+      {currentView === Views.Project && <BottomMenu />}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { Curve } from "./Curve.jsx";
 import { WorkspaceContext } from "../../Contexts/Workspace";
 import React from "react";
 import uuid from "react-uuid";
+import { Position } from "./Position.jsx";
 export class Node extends React.Component {
   constructor() {
     super();

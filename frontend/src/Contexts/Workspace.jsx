@@ -6,6 +6,7 @@ import { useRef, createContext } from "react";
 export const WorkspaceContext = createContext();
 
 export function WorkspaceProvider({ children }) {
+  const [scale, setScale] = useState(1);
   const [deltaX, setDeltaX] = useState(0);
   const [deltaY, setDeltaY] = useState(0);
   const [popup, setPopup] = useState(null);
@@ -16,9 +17,16 @@ export function WorkspaceProvider({ children }) {
   ]);
   const [workspaceMetaData, setWorkspaceMetaData] = useState({});
   const [currentNode, setCurrentNode] = useState(null);
-  const [currentView, setCurrentView] = useState("project");
   const [workspaceList, setWorkspaceList] = useState([]);
   const [favoriteWorkspaceList, setFavoriteWorkspaceList] = useState([]);
+
+  const Views = {
+    Project: 0,
+    RegisteredNumbers: 1,
+    Analytics: 2,
+  };
+
+  const [currentView, setCurrentView] = useState(Views.Project);
 
   return (
     <WorkspaceContext.Provider
@@ -43,6 +51,9 @@ export function WorkspaceProvider({ children }) {
         setWorkspaceList,
         favoriteWorkspaceList,
         setFavoriteWorkspaceList,
+        Views,
+        scale,
+        setScale,
       }}
     >
       {children}

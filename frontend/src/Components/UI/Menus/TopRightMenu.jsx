@@ -6,7 +6,7 @@ import cloud_bolt from "../../../assets/cloud-bolt-solid.svg";
 
 import { WorkspaceContext } from "../../../Contexts/Workspace.jsx";
 import LabeledSquareButton from "../../LabeledSquareButton.jsx";
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import Settings from "../../Popups/Settings.jsx";
 import WorkspaceLink from "../../Popups/WorkspaceLink.jsx";
 import * as api from "../../../api.jsx";

@@ -6,8 +6,9 @@ import TopLeftMenu from "../Menus/TopLeftMenu.jsx";
 import BottomLeftMenu from "../Menus/BottomLeftMenu.jsx";
 import { AccountTree, TableChart, SsidChart } from "@mui/icons-material";
 import { HelpersContext } from "../../../Contexts/Helpers.jsx";
+
 export default function () {
-  const { setCurrentView, workspaceList, favoriteWorkspaceList } =
+  const { setCurrentView, workspaceList, favoriteWorkspaceList, Views } =
     useContext(WorkspaceContext);
   const { updateWorkspaceLists } = useContext(HelpersContext);
 
@@ -38,7 +39,7 @@ export default function () {
                 />
               }
               name="Project View"
-              onClick={() => setCurrentView("project")}
+              onClick={() => setCurrentView(Views.Project)}
             />
             <ProjectLabel
               icon={
@@ -47,7 +48,7 @@ export default function () {
                 />
               }
               name="Registered Numbers"
-              onClick={() => setCurrentView("numbers")}
+              onClick={() => setCurrentView(Views.RegisteredNumbers)}
             />
             <ProjectLabel
               icon={
@@ -56,7 +57,7 @@ export default function () {
                 />
               }
               name="Analytics"
-              onClick={() => setCurrentView("analytics")}
+              onClick={() => setCurrentView(Views.RegisteredNumbers)}
             />
           </div>
 

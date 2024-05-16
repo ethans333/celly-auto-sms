@@ -9,7 +9,7 @@ import { msalConfig } from "../authConfig.jsx";
 import "./index.css";
 
 // Pages
-import Home from "./Pages/Home.jsx";
+import App from "./Pages/App.jsx";
 import Login from "./Pages/Auth/Login.jsx";
 import Register from "./Pages/Auth/Register.jsx";
 import ConfirmCode from "./Pages/Auth/ConfirmCode.jsx";
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     element: (
       <WorkspaceProvider>
         <HelpersProvider>
-          <Home />
+          <App />
         </HelpersProvider>
       </WorkspaceProvider>
     ),

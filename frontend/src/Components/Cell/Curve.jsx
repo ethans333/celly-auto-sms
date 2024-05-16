@@ -10,6 +10,8 @@ export class Curve extends React.Component {
     this.state = {
       start: this.props.start, // Node
       end: this.props.end, // Node
+      deltaX: 0,
+      deltaY: 0,
     };
   }
 
@@ -57,8 +59,15 @@ export class Curve extends React.Component {
               strokeWidth={5}
               className="absolute -z-50"
               style={{
-                top: Math.min(start.y, end.y) + start.width / 2,
-                left: Math.min(start.x, end.x) + start.width / 2,
+                position: "absolute",
+                top:
+                  Math.min(start.y, end.y) +
+                  start.width / 2 -
+                  this.state.deltaY,
+                left:
+                  Math.min(start.x, end.x) +
+                  start.width / 2 -
+                  this.state.deltaX,
                 overflow: "visible",
               }}
             >

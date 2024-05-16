@@ -155,12 +155,28 @@ export class Cell extends React.Component {
                   next.current.setState({
                     start: node.current,
                   });
+                  next.current.setState({
+                    deltaX: context.deltaX,
+                    deltaY: context.deltaY,
+                  });
                 }
 
                 for (const prev of Object.values(node.current.state.prev)) {
                   prev.current.setState({
                     end: node.current,
                   });
+                  prev.current.setState({
+                    deltaX: context.deltaX,
+                    deltaY: context.deltaY,
+                  });
+                  console.log(
+                    "deltaX",
+                    context.deltaX,
+                    "deltaY",
+                    context.deltaY,
+                    "scale",
+                    context.scale
+                  );
                 }
               }
             }}
