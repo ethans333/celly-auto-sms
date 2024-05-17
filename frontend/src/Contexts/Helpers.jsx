@@ -4,13 +4,21 @@ import * as jose from "jose";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import * as api from "../api";
+import { Cell } from "../Components/Cell/Cell";
+import objectsToCells from "../Components/Cell/Cells/objectsToCells";
 
 export const HelpersContext = createContext();
 
 export function HelpersProvider({ children }) {
   const navigate = useNavigate();
-  const { setWorkspaceList, setFavoriteWorkspaceList } =
-    useContext(WorkspaceContext);
+  const {
+    setWorkspaceList,
+    setFavoriteWorkspaceList,
+    componentsStack,
+    workspaceMetaData,
+    setWorkspaceMetaData,
+    setComponentsStack,
+  } = useContext(WorkspaceContext);
 
   /**
    * A function to validate the token's expiration.
@@ -63,14 +71,14 @@ export function HelpersProvider({ children }) {
    *
    */
   function saveWorkspace() {
-    const { componentsStack } = useContext(WorkspaceContext);
+    const objects = componentsStack
+      .filter((c) => c.ref.current.constructor.prototype instanceof Cell)
+      .map((c) => c.ref.current.toJSON());
 
-    componentsStack.forEach((c) => {
-      console.log("FIRST", c);
+    console.log(objects);
 
-      if (c.ref.current.constructor.prototype instanceof Cell) {
-        console.log(c.ref.current.toJSON());
-      }
+    api.updateWorkspace(workspaceMetaData, objects).then((res) => {
+      console.log(res);
     });
 
     // let metadata;
@@ -121,18 +129,22 @@ export function HelpersProvider({ children }) {
     // });
   }
 
+  function loadWorkspace() {
+    api.getWorkspace(workspaceMetaData.id).then((res) => {
+      if (!res.workspace_raw) return;
+
+      const objects = JSON.parse(res.workspace_raw);
+      const cells = objectsToCells(objects);
+      console.log(cells);
+      setComponentsStack(cells);
+    });
+  }
+
   function updateWorkspaceLists() {
-    api.getAllUserWorkspaces().then(async (res) => {
-      if (res.status === 200) {
-        const json = await res.json();
-        console.log(json);
-        setWorkspaceList(json.workspaces);
-        setFavoriteWorkspaceList(
-          json.workspaces.filter((ws) => ws.is_favorite)
-        );
-      } else {
-        console.log(res);
-      }
+    api.getAllUserWorkspaces().then((res) => {
+      setWorkspaceList(res.workspaces);
+      setFavoriteWorkspaceList(res.workspaces.filter((ws) => ws.is_favorite));
+      if (res.workspaces.length > 0) setWorkspaceMetaData(res.workspaces[0]);
     });
   }
 
@@ -143,6 +155,7 @@ export function HelpersProvider({ children }) {
         parseCode,
         saveWorkspace,
         updateWorkspaceLists,
+        loadWorkspace,
       }}
     >
       {children}

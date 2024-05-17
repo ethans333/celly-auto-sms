@@ -4,20 +4,21 @@ import React from "react";
 import uuid from "react-uuid";
 import { Position } from "./Position.jsx";
 export class Node extends React.Component {
-  constructor() {
-    super();
+  id;
+  width = 12.5;
+
+  constructor(props) {
+    super(props);
+
     this.state = {
       selected: false,
       next: [], // Curve[]
       prev: [], // Curve[]
     };
+
+    if (!props) return;
+    this.id = this.props.id;
   }
-
-  componentDidMount() {}
-
-  id = uuid();
-  width = 12.5;
-  ref = React.createRef();
 
   render() {
     const { selected } = this.state;

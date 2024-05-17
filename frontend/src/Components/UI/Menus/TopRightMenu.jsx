@@ -10,9 +10,11 @@ import { useContext } from "react";
 import Settings from "../../Popups/Settings.jsx";
 import WorkspaceLink from "../../Popups/WorkspaceLink.jsx";
 import * as api from "../../../api.jsx";
+import { HelpersContext } from "../../../Contexts/Helpers.jsx";
 
 export default function () {
-  const { workspaceMetaData, setWorkspaceMetaData, setPopup, saveWorkspace } =
+  const { saveWorkspace } = useContext(HelpersContext);
+  const { workspaceMetaData, setWorkspaceMetaData, setPopup } =
     useContext(WorkspaceContext);
 
   return (

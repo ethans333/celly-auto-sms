@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { HelpersContext } from "../Contexts/Helpers.jsx";
 import { WorkspaceContext } from "../Contexts/Workspace.jsx";
 
@@ -8,19 +8,19 @@ import RightSideBar from "../Components/UI/Sidebars/RightSideBar.jsx";
 import ViewRenderer from "../Components/Views/ViewRenderer.jsx";
 
 export default function () {
-  const { workspaceMetaData, setWorkspaceMetaData, workspaceList, sidebar } =
-    useContext(WorkspaceContext);
-  const { parseCode, validateToken } = useContext(HelpersContext);
+  const { sidebar, workspaceMetaData } = useContext(WorkspaceContext);
+  const { parseCode, validateToken, loadWorkspace, updateWorkspaceLists } =
+    useContext(HelpersContext);
 
   useEffect(() => {
     parseCode();
     validateToken();
+    updateWorkspaceLists();
   }, []);
 
   useEffect(() => {
-    if (workspaceList.length > 0 && Object.keys(workspaceMetaData).length == 0)
-      setWorkspaceMetaData(workspaceList[0]);
-  }, [workspaceList]);
+    loadWorkspace();
+  }, [workspaceMetaData.id]);
 
   return (
     <div>

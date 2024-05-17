@@ -24,8 +24,10 @@ export class Cell extends React.Component {
   toObject() {
     return {
       id: this.id,
-      position: this.state.position.toObject(),
+      x: this.state.position.x,
+      y: this.state.position.y,
       menuOffset: this.menuOffset.toObject(),
+      type: this.constructor.name,
       nodes: {
         top: this.nodes.top.current.toObject(),
         left: this.nodes.left.current.toObject(),
@@ -60,6 +62,21 @@ export class Cell extends React.Component {
     this.setState({
       position: new Position(this.props.x, this.props.y),
     });
+
+    // Render Existing Curves
+    /*
+      You need to some how get the refs of both nodes
+      at the end of the curve. Once you have them you can
+      set its next and prev properties and then pass those refs
+      to the curve.
+    */
+    if (!this.props.nodes) return;
+
+    for (const node of Object.values(this.nodes)) {
+      console.log(node.current);
+    }
+
+    console.log("---------------");
   }
 
   inner() {
@@ -139,6 +156,8 @@ export class Cell extends React.Component {
   }
 
   render() {
+    Cell.contextType = WorkspaceContext;
+
     return (
       <WorkspaceContext.Consumer>
         {(context) => (
@@ -215,7 +234,11 @@ export class Cell extends React.Component {
                   style={{ transform: `translateY(-${this.nodeWidth}px)` }}
                   className="flex justify-center"
                 >
-                  <Node ref={this.nodes.top} />
+                  <Node
+                    ref={this.nodes.top}
+                    id={this.nodes.top.id || uuid()}
+                    key={this.nodes.top.id || uuid()}
+                  />
                 </div>
                 <div className="flex">
                   {/* Left Node */}
@@ -223,18 +246,30 @@ export class Cell extends React.Component {
                     style={{ transform: `translateX(-${this.nodeWidth}px)` }}
                     className="my-auto"
                   >
-                    <Node ref={this.nodes.left} />
+                    <Node
+                      ref={this.nodes.left}
+                      id={this.nodes.left.id || uuid()}
+                      key={this.nodes.left.id || uuid()}
+                    />
                   </div>
                   {/* Inner */}
                   {this.inner()}
                   {/* Right Node */}
                   <div className="my-auto">
-                    <Node ref={this.nodes.right} />
+                    <Node
+                      ref={this.nodes.right}
+                      id={this.nodes.right.id || uuid()}
+                      key={this.nodes.right.id || uuid()}
+                    />
                   </div>
                 </div>
                 {/* Bottom Node */}
                 <div className="flex justify-center">
-                  <Node ref={this.nodes.bottom} />
+                  <Node
+                    ref={this.nodes.bottom}
+                    id={this.nodes.bottom.id || uuid()}
+                    key={this.nodes.bottom.id || uuid()}
+                  />
                 </div>
               </div>
             </div>

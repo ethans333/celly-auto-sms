@@ -173,7 +173,7 @@ export async function getWorkspace(id) {
     }
   );
 
-  if (response.status === 200) return response;
+  if (response.status === 200) return await response.json();
 
   return await response.text(); // error
 }
@@ -202,8 +202,7 @@ export async function updateWorkspace(metadata, workspace_raw) {
     }
   );
 
-  if (response.status === 200) return response;
-
+  if (response.status === 200) return await response.json();
   return await response.text(); // error
 }
 
@@ -222,7 +221,7 @@ export async function getAllUserWorkspaces() {
     }
   );
 
-  if (response.status === 200) return response;
+  if (response.status === 200) return await response.json();
 
   return await response.text(); // error
 }

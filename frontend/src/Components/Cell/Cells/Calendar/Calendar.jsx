@@ -24,7 +24,7 @@ export class Calendar extends Cell {
     return <Sidebar />;
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
 }

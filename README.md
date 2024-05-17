@@ -18,6 +18,8 @@ Done:
 - [x] Expiration check for JWT Authorizer.
 - [x] Migrate workspace metadata over to S3 Metadata and remove table.
 - [x] When check if msft linked you try to link it automatically if it's not linked
+- [x] Make the Cells class based
+
 
 ---
 
@@ -27,10 +29,10 @@ To Do:
 - [ ] Add comments to functions
 - [ ] Build landing page.
 - [ ] Add versioning to workspaces and workspace deployments
-- [ ] Make the Cells class based
 - [ ] Calendar data shouldn't be in workspace metadata it should be in workspace json
 - [ ] Add time zone support for scheduling
 - [ ] Redirection
+- [ ] When view scaled and cells moved curves dont properly align
 
 
 
