@@ -4,8 +4,11 @@ Workflow System
 
 ## Usage
 
-```cd frontend```
-```npm run dev```
+```
+cd frontend
+npm run dev
+```
+
 
 ## Todo Board
 
