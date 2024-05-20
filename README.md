@@ -1,6 +1,14 @@
-# Celly Auto SMS
+# Intwine
 
-Automated text messaging system.
+Workflow System built with
+
+## Usage
+
+```
+cd frontend
+npm run dev
+```
+
 
 ## Todo Board
 
