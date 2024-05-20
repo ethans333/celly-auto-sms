@@ -8,7 +8,8 @@ import RightSideBar from "../Components/UI/Sidebars/RightSideBar.jsx";
 import ViewRenderer from "../Components/Views/ViewRenderer.jsx";
 
 export default function () {
-  const { sidebar, workspaceMetaData } = useContext(WorkspaceContext);
+  const { sidebar, workspaceMetaData, componentsStack } =
+    useContext(WorkspaceContext);
   const { parseCode, validateToken, loadWorkspace, updateWorkspaceLists } =
     useContext(HelpersContext);
 
@@ -21,6 +22,10 @@ export default function () {
   useEffect(() => {
     loadWorkspace();
   }, [workspaceMetaData.id]);
+
+  useEffect(() => {
+    console.log(componentsStack);
+  }, [componentsStack]);
 
   return (
     <div>

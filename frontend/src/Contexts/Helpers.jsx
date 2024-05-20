@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import * as api from "../api";
 import { Cell } from "../Components/Cell/Cell";
-import objectsToCells from "../Components/Cell/Cells/objectsToCells";
+import ObjectsToComponents from "../Components/Cell/Cells/ObjectsToComponents";
 
 export const HelpersContext = createContext();
 
@@ -134,9 +134,11 @@ export function HelpersProvider({ children }) {
       if (!res.workspace_raw) return;
 
       const objects = JSON.parse(res.workspace_raw);
-      const cells = objectsToCells(objects);
-      console.log(cells);
-      setComponentsStack(cells);
+
+      setComponentsStack((p) => [
+        ...p,
+        <ObjectsToComponents objects={objects} />,
+      ]);
     });
   }
 

@@ -2,10 +2,10 @@ import { Curve } from "./Curve.jsx";
 import { WorkspaceContext } from "../../Contexts/Workspace";
 import React from "react";
 import uuid from "react-uuid";
-import { Position } from "./Position.jsx";
 export class Node extends React.Component {
   id;
   width = 12.5;
+  ref = React.createRef();
 
   constructor(props) {
     super(props);
@@ -18,6 +18,10 @@ export class Node extends React.Component {
 
     if (!props) return;
     this.id = this.props.id;
+  }
+
+  componentDidMount() {
+    if (this.props.onMount) this.props.onMount(this);
   }
 
   render() {

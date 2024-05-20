@@ -58,25 +58,9 @@ export class Cell extends React.Component {
 
   componentDidMount() {
     this.width = this.cellRef.current.offsetWidth;
-
     this.setState({
       position: new Position(this.props.x, this.props.y),
     });
-
-    // Render Existing Curves
-    /*
-      You need to some how get the refs of both nodes
-      at the end of the curve. Once you have them you can
-      set its next and prev properties and then pass those refs
-      to the curve.
-    */
-    if (!this.props.nodes) return;
-
-    for (const node of Object.values(this.nodes)) {
-      console.log(node.current);
-    }
-
-    console.log("---------------");
   }
 
   inner() {
@@ -173,8 +157,6 @@ export class Cell extends React.Component {
                 for (const next of Object.values(node.current.state.next)) {
                   next.current.setState({
                     start: node.current,
-                  });
-                  next.current.setState({
                     deltaX: context.deltaX,
                     deltaY: context.deltaY,
                   });
@@ -183,19 +165,9 @@ export class Cell extends React.Component {
                 for (const prev of Object.values(node.current.state.prev)) {
                   prev.current.setState({
                     end: node.current,
-                  });
-                  prev.current.setState({
                     deltaX: context.deltaX,
                     deltaY: context.deltaY,
                   });
-                  console.log(
-                    "deltaX",
-                    context.deltaX,
-                    "deltaY",
-                    context.deltaY,
-                    "scale",
-                    context.scale
-                  );
                 }
               }
             }}
@@ -236,8 +208,8 @@ export class Cell extends React.Component {
                 >
                   <Node
                     ref={this.nodes.top}
-                    id={this.nodes.top.id || uuid()}
-                    key={this.nodes.top.id || uuid()}
+                    id={this.props.nodes ? this.props.nodes.top.id : uuid()}
+                    onMount={this.props.onNodeMount}
                   />
                 </div>
                 <div className="flex">
@@ -248,8 +220,8 @@ export class Cell extends React.Component {
                   >
                     <Node
                       ref={this.nodes.left}
-                      id={this.nodes.left.id || uuid()}
-                      key={this.nodes.left.id || uuid()}
+                      id={this.props.nodes ? this.props.nodes.left.id : uuid()}
+                      onMount={this.props.onNodeMount}
                     />
                   </div>
                   {/* Inner */}
@@ -258,8 +230,8 @@ export class Cell extends React.Component {
                   <div className="my-auto">
                     <Node
                       ref={this.nodes.right}
-                      id={this.nodes.right.id || uuid()}
-                      key={this.nodes.right.id || uuid()}
+                      id={this.props.nodes ? this.props.nodes.right.id : uuid()}
+                      onMount={this.props.onNodeMount}
                     />
                   </div>
                 </div>
@@ -267,8 +239,8 @@ export class Cell extends React.Component {
                 <div className="flex justify-center">
                   <Node
                     ref={this.nodes.bottom}
-                    id={this.nodes.bottom.id || uuid()}
-                    key={this.nodes.bottom.id || uuid()}
+                    id={this.props.nodes ? this.props.nodes.bottom.id : uuid()}
+                    onMount={this.props.onNodeMount}
                   />
                 </div>
               </div>
