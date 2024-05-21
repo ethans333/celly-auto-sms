@@ -34,7 +34,7 @@ export default function () {
       console.error(
         "Unknown Cell Type: " +
           c.type +
-          "\n Perhaps you failed to add type to type array in useLoadWorkspace.jsx"
+          "\n Perhaps you failed to add Cell Type to type array in useLoadWorkspace.jsx"
       );
       type = [Cell];
     }
