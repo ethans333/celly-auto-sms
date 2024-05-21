@@ -1,9 +1,14 @@
-import { Calendar } from "../Components/Cell/Cells/Calendar/Calendar";
-import uuid from "react-uuid";
-import { useState, useRef, createContext } from "react";
-
+import { useState, createContext } from "react";
 export const WorkspaceContext = createContext();
 
+/**
+ * Creates a WorkspaceProvider component that wraps its children with a WorkspaceContext.Provider.
+ * The WorkspaceContext provides state and functions related to the workspace.
+ *
+ * @param {Object} props - The props object.
+ * @param {ReactNode} props.children - The children to be wrapped by the WorkspaceContext.Provider.
+ * @return {JSX.Element} The WorkspaceProvider component.
+ */
 export function WorkspaceProvider({ children }) {
   const [scale, setScale] = useState(1);
   const [deltaX, setDeltaX] = useState(0);

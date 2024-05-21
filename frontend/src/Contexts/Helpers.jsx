@@ -5,10 +5,17 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import * as api from "../api";
 import { Cell } from "../Components/Cell/Cell";
-import ObjectsToComponents from "../Components/Cell/Cells/ObjectsToComponents";
 
 export const HelpersContext = createContext();
 
+/**
+ * A provider component that wraps its children with the HelpersContext.
+ * HelpersContext provides helper functions for various operations for the application.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {ReactNode} props.children - The child components to be wrapped.
+ * @return {ReactNode} The wrapped child components.
+ */
 export function HelpersProvider({ children }) {
   const navigate = useNavigate();
   const {
@@ -17,12 +24,12 @@ export function HelpersProvider({ children }) {
     componentsStack,
     workspaceMetaData,
     setWorkspaceMetaData,
-    setComponentsStack,
   } = useContext(WorkspaceContext);
 
   /**
-   * A function to validate the token's expiration.
+   * Validates the token's expiration.
    *
+   * @return {void} This function does not return a value.
    */
   function validateToken() {
     // Check if token is expired or does not exist
@@ -43,10 +50,9 @@ export function HelpersProvider({ children }) {
   }
 
   /**
-   * If available, parse the token from the URL and set it as a cookie
+   * Parses the code from the URL and sets it as a cookie.
    *
-   * @param None
-   * @return None
+   * @return {void} This function does not return a value.
    */
   function parseCode() {
     // If available, parse the token from the URL and set it as a cookie
@@ -67,7 +73,8 @@ export function HelpersProvider({ children }) {
   }
 
   /**
-   * Function to save the workspace data.
+   *
+   * Write JS Doc Todo
    *
    */
   function saveWorkspace() {
@@ -129,19 +136,11 @@ export function HelpersProvider({ children }) {
     // });
   }
 
-  function loadWorkspace() {
-    api.getWorkspace(workspaceMetaData.id).then((res) => {
-      if (!res.workspace_raw) return;
-
-      const objects = JSON.parse(res.workspace_raw);
-
-      setComponentsStack((p) => [
-        ...p,
-        <ObjectsToComponents objects={objects} />,
-      ]);
-    });
-  }
-
+  /**
+   * Updates the workspace lists by fetching all user workspaces from the API and updating the state variables accordingly.
+   *
+   * @return {void} This function does not return a value.
+   */
   function updateWorkspaceLists() {
     api.getAllUserWorkspaces().then((res) => {
       setWorkspaceList(res.workspaces);
@@ -157,7 +156,6 @@ export function HelpersProvider({ children }) {
         parseCode,
         saveWorkspace,
         updateWorkspaceLists,
-        loadWorkspace,
       }}
     >
       {children}

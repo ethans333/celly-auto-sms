@@ -7,11 +7,16 @@ import LeftSideBar from "../Components/UI/Sidebars/LeftSideBar.jsx";
 import RightSideBar from "../Components/UI/Sidebars/RightSideBar.jsx";
 import ViewRenderer from "../Components/Views/ViewRenderer.jsx";
 
+// Hooks
+import useLoadWorkspace from "../Components/Cell/Cells/useLoadWorkspace.jsx";
+
 export default function () {
-  const { sidebar, workspaceMetaData, componentsStack } =
+  const { sidebar, workspaceMetaData, setComponentsStack } =
     useContext(WorkspaceContext);
-  const { parseCode, validateToken, loadWorkspace, updateWorkspaceLists } =
+  const { parseCode, validateToken, updateWorkspaceLists } =
     useContext(HelpersContext);
+
+  const { cells, curves } = useLoadWorkspace();
 
   useEffect(() => {
     parseCode();
@@ -19,13 +24,10 @@ export default function () {
     updateWorkspaceLists();
   }, []);
 
+  // Load Workspace
   useEffect(() => {
-    loadWorkspace();
-  }, [workspaceMetaData.id]);
-
-  useEffect(() => {
-    console.log(componentsStack);
-  }, [componentsStack]);
+    setComponentsStack([...cells, ...curves]);
+  }, [workspaceMetaData.id, cells, curves]);
 
   return (
     <div>
