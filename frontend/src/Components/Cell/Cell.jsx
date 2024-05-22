@@ -41,7 +41,7 @@ export class Cell extends React.Component {
     super(props);
 
     // Cell Properties
-    this.id = uuid();
+    this.id = this.props.id;
     this.cellRef = React.createRef();
     this.selectionRef = React.createRef();
     this.state = {
@@ -193,6 +193,14 @@ export class Cell extends React.Component {
                     show={this.state.showMenu}
                     setShow={(e) => {
                       this.setState({ showMenu: e });
+                    }}
+                    onDelete={() => {
+                      // Remove associated curves
+                      // Todo
+                      // Remove from components stack
+                      context.setComponentsStack((p) =>
+                        p.filter((c) => c.key !== this.id)
+                      );
                     }}
                     onOpen={() => {
                       context.setSidebar(this.sidebar());

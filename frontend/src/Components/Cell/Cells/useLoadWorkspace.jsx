@@ -41,7 +41,7 @@ export default function () {
 
     return createElement(type[0], {
       ...c,
-      key: uuid(),
+      key: c.id,
       ref: createRef(),
       onNodeMount: (e) => onNodeMount(e, c),
     });
@@ -73,6 +73,7 @@ export default function () {
         ) {
           // partner exists and pair not yet processed
 
+          // Create Curve
           const start = e;
           const end = nodes[id];
 
@@ -88,7 +89,6 @@ export default function () {
             prev: [...p.prev, curveRef],
           }));
 
-          // Create Curve
           setCurves((p) => [
             ...p,
             <Curve key={uuid()} ref={curveRef} start={start} end={end} />,
@@ -108,6 +108,7 @@ export default function () {
         ) {
           // partner exists and pair not yet processed
 
+          // Create Curve
           const start = nodes[id];
           const end = e;
 
@@ -123,7 +124,6 @@ export default function () {
             prev: [...p.prev, curveRef],
           }));
 
-          // Create Curve
           setCurves((p) => [
             ...p,
             <Curve key={uuid()} ref={curveRef} start={start} end={end} />,
