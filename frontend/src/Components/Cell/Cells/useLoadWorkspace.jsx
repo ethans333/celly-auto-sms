@@ -18,8 +18,8 @@ import { Calendar } from "./Calendar/Calendar";
 const types = [Calendar];
 
 export default function () {
-  const [connections, setConnections] = useState([]);
-  const [nodes, setNodes] = useState({});
+  const nodes = {};
+  const processed = [];
 
   const [cells, setCells] = useState([]);
   const [curves, setCurves] = useState([]);
@@ -60,61 +60,85 @@ export default function () {
     });
   }, [workspaceMetaData.id]);
 
-  // Build Curves
-  useEffect(() => {
-    buildCurves();
-  }, [nodes]);
-
   function onNodeMount(e, c) {
     for (const n in c.nodes) {
-      if (c.nodes[n].id != e.id) continue;
+      // for each cell node
+      if (c.nodes[n].id != e.id) continue; // skip non self
 
-      // Add Connection
-      for (const con of c.nodes[n].next) {
-        setConnections((p) =>
-          [...p, { start: c.nodes[n].id, end: con }].filter(onlyUnique)
-        );
+      // Add Curve
+      for (const id of c.nodes[n].next) {
+        if (
+          nodes[id] &&
+          !processed.find((p) => p.start == e.id && p.end == id)
+        ) {
+          // partner exists and pair not yet processed
+
+          const start = e;
+          const end = nodes[id];
+
+          const curveRef = createRef();
+
+          start.setState((p) => ({
+            selected: true,
+            next: [...p.next, curveRef],
+          }));
+
+          end.setState((p) => ({
+            selected: true,
+            prev: [...p.prev, curveRef],
+          }));
+
+          // Create Curve
+          setCurves((p) => [
+            ...p,
+            <Curve key={uuid()} ref={curveRef} start={start} end={end} />,
+          ]);
+
+          processed.push({
+            start: e.id,
+            end: id,
+          });
+        }
+      }
+
+      for (const id of c.nodes[n].prev) {
+        if (
+          nodes[id] &&
+          !processed.find((p) => p.start == id && p.end == e.id)
+        ) {
+          // partner exists and pair not yet processed
+
+          const start = nodes[id];
+          const end = e;
+
+          const curveRef = createRef();
+
+          start.setState((p) => ({
+            selected: true,
+            next: [...p.next, curveRef],
+          }));
+
+          end.setState((p) => ({
+            selected: true,
+            prev: [...p.prev, curveRef],
+          }));
+
+          // Create Curve
+          setCurves((p) => [
+            ...p,
+            <Curve key={uuid()} ref={curveRef} start={start} end={end} />,
+          ]);
+          processed.push({
+            start: id,
+            end: e.id,
+          });
+        }
       }
     }
 
     // Track Node Ref
-    setNodes((p) => ({ ...p, [e.id]: e }));
-  }
-
-  function buildCurves() {
-    console.log(connections);
-
-    connections.forEach((c) => {
-      const s = nodes[c.start];
-      const e = nodes[c.end];
-
-      const curveRef = createRef();
-
-      s.setState((p) => ({
-        selected: true,
-        next: [...p.next, curveRef],
-      }));
-
-      e.setState((p) => ({
-        selected: true,
-        prev: [...p.prev, curveRef],
-      }));
-
-      // Add Curve
-      setCurves((p) => [
-        ...p,
-        <Curve key={uuid()} ref={curveRef} start={s} end={e} />,
-      ]);
-    });
+    nodes[e.id] = e;
   }
 
   return { cells, curves };
-}
-
-// Helpers
-function onlyUnique(value, index, array) {
-  return (
-    array.findIndex((obj) => JSON.stringify(obj) === JSON.stringify(value)) ===
-    index
-  );
 }
