@@ -78,6 +78,7 @@ export default function () {
           const end = nodes[id];
 
           const curveRef = createRef();
+          const cid = uuid();
 
           start.setState((p) => ({
             selected: true,
@@ -91,7 +92,7 @@ export default function () {
 
           setCurves((p) => [
             ...p,
-            <Curve key={uuid()} ref={curveRef} start={start} end={end} />,
+            <Curve key={cid} id={cid} ref={curveRef} start={start} end={end} />,
           ]);
 
           processed.push({

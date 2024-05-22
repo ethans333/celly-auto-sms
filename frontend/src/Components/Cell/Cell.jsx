@@ -196,7 +196,28 @@ export class Cell extends React.Component {
                     }}
                     onDelete={() => {
                       // Remove associated curves
-                      // Todo
+                      for (const node of Object.values(this.nodes)) {
+                        for (const next of Object.values(
+                          node.current.state.next
+                        )) {
+                          next.current.state.end.setState({
+                            selected: false,
+                          });
+                          context.setComponentsStack((p) =>
+                            p.filter((c) => c.key !== next.current.id)
+                          );
+                        }
+                        for (const prev of Object.values(
+                          node.current.state.prev
+                        )) {
+                          prev.current.state.start.setState({
+                            selected: false,
+                          });
+                          context.setComponentsStack((p) =>
+                            p.filter((c) => c.key !== prev.current.id)
+                          );
+                        }
+                      }
                       // Remove from components stack
                       context.setComponentsStack((p) =>
                         p.filter((c) => c.key !== this.id)

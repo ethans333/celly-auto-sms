@@ -3,10 +3,9 @@ import { WorkspaceContext } from "../../Contexts/Workspace";
 import uuid from "react-uuid";
 
 export class Curve extends React.Component {
-  id = uuid();
-
   constructor(props) {
     super(props);
+    this.id = this.props.id;
     this.state = {
       start: this.props.start, // Node
       end: this.props.end, // Node
