@@ -4,7 +4,7 @@ import * as mb from "../../../MicrosoftButtons.jsx";
 import * as api from "../../../../api.jsx";
 import Dropdown from "../../../Dropdown.jsx";
 
-export default function ({ id }) {
+export default function ({ self }) {
   const { workspaceMetaData, setWorkspaceMetaData } =
     useContext(WorkspaceContext);
 
@@ -57,7 +57,7 @@ export default function ({ id }) {
         if (res.status == 200 && !data.is_expired) setIsLinked(true);
       });
     });
-  }, [id]);
+  }, [self]);
 
   useEffect(() => {
     if (mwStart == "" || mwEnd == "") return;
@@ -69,13 +69,11 @@ export default function ({ id }) {
 
     const days = selectedDays.map((day) => dow.indexOf(day));
 
-    setWorkspaceMetaData((p) => {
-      p["meeting_window_start"] = s;
-      p["meeting_window_end"] = e;
-      p["blackout_days"] = days;
-
-      return p;
-    });
+    self.setState((p) => ({
+      meeting_window_start: s,
+      meeting_window_end: e,
+      blackout_days: days,
+    }));
   }, [selectedDays, mwStart, mwEnd, startAMPM, endAMPM]);
 
   return (

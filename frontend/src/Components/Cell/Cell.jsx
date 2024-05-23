@@ -41,7 +41,7 @@ export class Cell extends React.Component {
     super(props);
 
     // Cell Properties
-    this.id = this.props.id;
+    this.id = this.props ? this.props.id : uuid();
     this.cellRef = React.createRef();
     this.selectionRef = React.createRef();
     this.state = {

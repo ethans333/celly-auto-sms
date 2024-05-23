@@ -13,7 +13,7 @@ import * as api from "../../../api.jsx";
 import { HelpersContext } from "../../../Contexts/Helpers.jsx";
 
 export default function () {
-  const { saveWorkspace } = useContext(HelpersContext);
+  const { saveWorkspace, deployWorkspace } = useContext(HelpersContext);
   const { workspaceMetaData, setWorkspaceMetaData, setPopup } =
     useContext(WorkspaceContext);
 
@@ -42,15 +42,9 @@ export default function () {
         onClick={() => {
           // save current workspace
           saveWorkspace();
-          /// deploy current workspace
-          api.deployWorkspace(workspaceMetaData.id).then((res) => {
-            if (res.status === 200) {
-              setWorkspaceMetaData((p) => ({ ...p, is_deployed: true }));
-              setPopup(<WorkspaceLink />);
-              res.json().then((data) => {
-                console.log(data);
-              });
-            }
+          // deploy current workspace
+          deployWorkspace(() => {
+            setPopup(<WorkspaceLink />);
           });
         }}
       />

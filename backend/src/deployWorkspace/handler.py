@@ -1,5 +1,7 @@
+import inspect
 import json
 import os
+import sys
 
 import boto3
 import jwt
@@ -35,8 +37,8 @@ def handler(event, context):
         workspace_raw = json.loads(workspace_raw)
 
         # loop through all cell types
-        for cell in workspace_raw.keys():
-            cell_types.append(workspace_raw[cell]["type"])
+        for cell in workspace_raw:
+            cell_types.append(cell["type"])
 
         if "calendar" in cell_types:
             # check if user linked calendar
@@ -70,9 +72,13 @@ def handler(event, context):
         # )
 
     except Exception as e:
+        error_type, error_value, error_traceback = sys.exc_info()
+        error_line = error_traceback.tb_lineno
+        error_line_code = inspect.getframeinfo(error_traceback.tb_frame).code_line
+
         return {
             "statusCode": 500,
-            "body": str(e),
+            "body": f"{e}\nLine: {error_line}\nCode: {error_line_code}",
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",

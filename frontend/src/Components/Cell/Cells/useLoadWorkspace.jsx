@@ -55,6 +55,8 @@ export default function () {
 
       const objects = JSON.parse(res.workspace_raw);
 
+      console.log(objects);
+
       // Map objects
       setCells(() => objects.map(mapCell));
     });

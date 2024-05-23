@@ -7,24 +7,24 @@ export class Calendar extends Cell {
   description = "Calendar for scheduling events.";
   icon = calendar_icon;
 
-  start_time = 0;
-  end_time = 0;
-  blackout_days = [];
-
   toJSON() {
     return {
       ...super.toObject(),
-      start_time: this.start_time,
-      end_time: this.end_time,
-      blackout_days: this.blackout_days,
+      ...this.state,
     };
   }
 
   sidebar() {
-    return <Sidebar />;
+    return <Sidebar self={this} />;
   }
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      start_time: 0,
+      end_time: 0,
+      blackout_days: [0, 6],
+    };
   }
 }

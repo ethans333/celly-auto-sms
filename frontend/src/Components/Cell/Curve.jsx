@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
+import React from "react";
 import { WorkspaceContext } from "../../Contexts/Workspace";
-import uuid from "react-uuid";
 
 export class Curve extends React.Component {
   constructor(props) {
@@ -15,8 +14,10 @@ export class Curve extends React.Component {
   }
 
   render() {
-    const start = this.state.start.ref.current.getBoundingClientRect();
-    const end = this.state.end.ref.current.getBoundingClientRect();
+    let start = this.state.start.ref.current?.getBoundingClientRect();
+    let end = this.state.end.ref.current?.getBoundingClientRect();
+
+    if (!start || !end) return null;
 
     const a = {
       x: start.x < end.x ? 0 : start.x - end.x,

@@ -261,8 +261,7 @@ export async function deployWorkspace(id) {
     }
   );
 
-  if (response.status === 200) return response;
-
+  if (response.status === 200) return await response.json();
   return await response.text(); // error
 }
 

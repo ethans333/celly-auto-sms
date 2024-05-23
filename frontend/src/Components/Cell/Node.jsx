@@ -57,10 +57,12 @@ export class Node extends React.Component {
 
                 // Push Curve
                 const curveRef = React.createRef();
+                const cid = uuid();
                 context.setComponentsStack([
                   ...context.componentsStack,
                   <Curve
-                    key={uuid()}
+                    key={cid}
+                    id={cid}
                     ref={curveRef}
                     start={context.currentNode}
                     end={this}

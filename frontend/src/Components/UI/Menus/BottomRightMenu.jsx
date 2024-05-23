@@ -2,19 +2,18 @@ import plus from "../../../assets/plus-solid-white.svg";
 import { useContext } from "react";
 import { WorkspaceContext } from "../../../Contexts/Workspace.jsx";
 import * as api from "../../../api.jsx";
+import { HelpersContext } from "../../../Contexts/Helpers.jsx";
 
 export default function () {
-  const {
-    saveWorkspace,
-    setWorkspaceMetaData,
-    setWorkspace,
-    updateWorkspaceLists,
-  } = useContext(WorkspaceContext);
+  const { setWorkspaceMetaData, updateWorkspaceLists, setComponentsStack } =
+    useContext(WorkspaceContext);
+
+  const { saveWorkspace } = useContext(HelpersContext);
 
   const defaultWorkspace = {
     workspace_name: "My Workspace",
     workspace_description: "Lorem Ipsum",
-    workspace_raw: {},
+    workspace_raw: [],
     is_favorite: false,
     workspace_emoji: "👽",
     workspace_id: null,
@@ -42,7 +41,7 @@ export default function () {
             console.log(json);
 
             setWorkspaceMetaData(json.workspace_metadata);
-            setWorkspace({});
+            setComponentsStack([]);
             updateWorkspaceLists();
           }
         }}

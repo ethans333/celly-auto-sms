@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 export const WorkspaceContext = createContext();
 
 /**
@@ -26,6 +26,12 @@ export function WorkspaceProvider({ children }) {
     RegisteredNumbers: 1,
     Analytics: 2,
   };
+
+  useEffect(() => {
+    setDeltaX(0);
+    setDeltaY(0);
+    setScale(1);
+  }, [workspaceMetaData]);
 
   const [currentView, setCurrentView] = useState(Views.Project);
 

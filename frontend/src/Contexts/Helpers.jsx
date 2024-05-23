@@ -137,6 +137,18 @@ export function HelpersProvider({ children }) {
   }
 
   /**
+   *
+   *
+   */
+  async function deployWorkspace(callback) {
+    api.deployWorkspace(workspaceMetaData.id).then((res) => {
+      console.log(res);
+      callback();
+      setWorkspaceMetaData((p) => ({ ...p, is_deployed: true }));
+    });
+  }
+
+  /**
    * Updates the workspace lists by fetching all user workspaces from the API and updating the state variables accordingly.
    *
    * @return {void} This function does not return a value.
@@ -155,6 +167,7 @@ export function HelpersProvider({ children }) {
         validateToken,
         parseCode,
         saveWorkspace,
+        deployWorkspace,
         updateWorkspaceLists,
       }}
     >

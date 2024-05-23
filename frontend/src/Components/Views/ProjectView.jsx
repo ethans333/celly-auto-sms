@@ -5,7 +5,7 @@ import { WorkspaceContext } from "../../Contexts/Workspace.jsx";
 import ProjectViewController from "../UI/Controllers/ProjectViewController.jsx";
 
 export default function () {
-  const { componentsStack, deltaX, deltaY, popup, scale } =
+  const { componentsStack, deltaX, deltaY, popup, scale, setPopup } =
     useContext(WorkspaceContext);
 
   return (
