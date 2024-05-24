@@ -1,5 +1,6 @@
 import { useState, createContext, useEffect } from "react";
 export const WorkspaceContext = createContext();
+import Premium from "../Components/Popups/Premium";
 
 /**
  * Creates a WorkspaceProvider component that wraps its children with a WorkspaceContext.Provider.
@@ -13,7 +14,7 @@ export function WorkspaceProvider({ children }) {
   const [scale, setScale] = useState(1);
   const [deltaX, setDeltaX] = useState(0);
   const [deltaY, setDeltaY] = useState(0);
-  const [popup, setPopup] = useState(null);
+  const [popup, setPopup] = useState(<Premium />);
   const [sidebar, setSidebar] = useState(null);
   const [componentsStack, setComponentsStack] = useState([]);
   const [workspaceMetaData, setWorkspaceMetaData] = useState({});

@@ -24,6 +24,8 @@ export function HelpersProvider({ children }) {
     componentsStack,
     workspaceMetaData,
     setWorkspaceMetaData,
+    setComponentsStack,
+    setPopup,
   } = useContext(WorkspaceContext);
 
   /**
@@ -73,9 +75,10 @@ export function HelpersProvider({ children }) {
   }
 
   /**
+   * Saves the current workspace by extracting the JSON representation of all cells in the componentsStack,
+   * and updating the workspace with the extracted objects using the api.updateWorkspace function.
    *
-   * Write JS Doc Todo
-   *
+   * @return {Promise} A Promise that resolves when the workspace is successfully updated.
    */
   function saveWorkspace() {
     const objects = componentsStack
@@ -87,58 +90,13 @@ export function HelpersProvider({ children }) {
     api.updateWorkspace(workspaceMetaData, objects).then((res) => {
       console.log(res);
     });
-
-    // let metadata;
-
-    // if (override && !(override.constructor.name === "SyntheticBaseEvent")) {
-    //   metadata = override;
-    // } else {
-    //   metadata = workspaceMetaData;
-    // }
-
-    // if (!metadata.id) {
-    //   console.log("No workspace selected.");
-    //   return;
-    // }
-
-    // if (workspace === undefined || workspace === null || workspace === "") {
-    //   alert("Workspace is undefined");
-    // }
-
-    // api.updateWorkspace(metadata, workspace).then(async (res) => {
-    //   if (res.status === 200) {
-    //     const json = await res.json();
-    //     setMessageStack((p) => [
-    //       { message: json.message, type: "success" },
-    //       ...p,
-    //     ]);
-
-    //     setTimeout(() => {
-    //       setMessageStack((p) => {
-    //         p.pop();
-    //         return [...p];
-    //       });
-    //     }, 3000);
-    //     console.log(json);
-
-    //     updateWorkspaceLists();
-    //   } else {
-    //     setMessageStack((p) => [{ message: res, type: "error" }, ...p]);
-
-    //     setTimeout(() => {
-    //       setMessageStack((p) => {
-    //         p.pop();
-    //         return [...p];
-    //       });
-    //     }, 3000);
-    //     console.log(res);
-    //   }
-    // });
   }
 
   /**
+   * Deploys a workspace by calling the API and updating the state variables.
    *
-   *
+   * @param {function} callback - A callback function to be executed after the deployment is complete.
+   * @return {Promise<void>} A Promise that resolves when the deployment is complete.
    */
   async function deployWorkspace(callback) {
     api.deployWorkspace(workspaceMetaData.id).then((res) => {
@@ -161,6 +119,20 @@ export function HelpersProvider({ children }) {
     });
   }
 
+  /**
+   * Deletes a workspace by calling the API and updating the state variables.
+   *
+   * @return {Promise<void>} A Promise that resolves when the workspace is deleted.
+   */
+  function deleteWorkspace() {
+    api.deleteWorkspace(workspaceMetaData.id).then((res) => {
+      updateWorkspaceLists();
+      setPopup(null);
+      setWorkspaceMetaData({});
+      setComponentsStack([]);
+    });
+  }
+
   return (
     <HelpersContext.Provider
       value={{
@@ -169,6 +141,7 @@ export function HelpersProvider({ children }) {
         saveWorkspace,
         deployWorkspace,
         updateWorkspaceLists,
+        deleteWorkspace,
       }}
     >
       {children}

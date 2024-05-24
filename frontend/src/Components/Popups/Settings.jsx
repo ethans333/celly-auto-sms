@@ -3,17 +3,10 @@ import { WorkspaceContext } from "../../Contexts/Workspace";
 import toggle_on from "../../assets/toggle-on-solid.svg";
 import toggle_off from "../../assets/toggle-off-solid.svg";
 import * as api from "../../api";
+import { HelpersContext } from "../../Contexts/Helpers";
 
 export default function () {
-  const {
-    config,
-    setConfig,
-    workspaceMetaData,
-    setWorkspaceMetaData,
-    setWorkspace,
-    setPopup,
-    updateWorkspaceLists,
-  } = useContext(WorkspaceContext);
+  const { deleteWorkspace } = useContext(HelpersContext);
 
   return (
     <div className="space-y-5 pb-3">
@@ -29,30 +22,30 @@ export default function () {
           <div className="col-span-2 text-right space-y-3">
             {/* Placeholder */}
             <img
-              src={config.placeholder_1 ? toggle_on : toggle_off}
+              src={false ? toggle_on : toggle_off}
               alt="toggle"
               className="w-7 ml-auto py-auto cursor-pointer"
-              onClick={() =>
-                setConfig({ ...config, placeholder_1: !config.placeholder_1 })
-              }
+              // onClick={() =>
+              //   setConfig({ ...config, placeholder_1: !config.placeholder_1 })
+              // }
             />
             {/* Placeholder */}
             <img
-              src={config.placeholder_2 ? toggle_on : toggle_off}
+              src={false ? toggle_on : toggle_off}
               alt="toggle"
               className="w-7 ml-auto py-auto cursor-pointer"
-              onClick={() =>
-                setConfig({ ...config, placeholder_2: !config.placeholder_2 })
-              }
+              // onClick={() =>
+              //   setConfig({ ...config, placeholder_2: !config.placeholder_2 })
+              // }
             />
             {/* Auto Save */}
             <img
-              src={config.auto_save ? toggle_on : toggle_off}
+              src={false ? toggle_on : toggle_off}
               alt="toggle"
               className="w-7 ml-auto py-auto cursor-pointer"
-              onClick={() =>
-                setConfig({ ...config, auto_save: !config.auto_save })
-              }
+              // onClick={() =>
+              //   setConfig({ ...config, auto_save: !config.auto_save })
+              // }
             />
           </div>
         </div>
@@ -126,7 +119,7 @@ export default function () {
             </div>
             {/* Delete Phone Numbers */}
             <div className="flex justify-end ">
-              <button className="bg-yellow-300 text-black text-xs px-2 py-1 rounded-lg w-14 hover:opacity-50">
+              <button className="bg-yellow-300 text-black text-xs px-2 py-1 rounded-lg w-14 opacity-20">
                 Delete
               </button>
             </div>
@@ -157,20 +150,5 @@ export default function () {
         {k}
       </div>
     );
-  }
-
-  function deleteWorkspace() {
-    api.deleteWorkspace(workspaceMetaData.id).then((res) => {
-      if (res.status === 200) {
-        console.log("Workspace Deleted");
-        updateWorkspaceLists();
-      } else {
-        console.log(res);
-      }
-    });
-
-    setPopup(null);
-    setWorkspaceMetaData({});
-    setWorkspace({});
   }
 }

@@ -17,7 +17,7 @@ export default function ({ children, onClose }) {
       <div
         ref={popup}
         style={{
-          transform: `translateY(-${pHeight / 3}px`,
+          transform: `translateY(-${100}px`,
         }}
         className="bg-white p-6 rounded-lg shadow-lg z-10 w-fit"
       >

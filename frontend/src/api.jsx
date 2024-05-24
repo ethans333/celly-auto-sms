@@ -245,9 +245,8 @@ export async function deleteWorkspace(id) {
     }
   );
 
-  if (response.status === 200) return response;
-
-  return await response.text(); // error
+  if (response.status === 200) return await response.json();
+  throw new Error(await response.text());
 }
 
 export async function deployWorkspace(id) {

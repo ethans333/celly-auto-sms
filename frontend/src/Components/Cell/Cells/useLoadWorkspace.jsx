@@ -127,9 +127,11 @@ export default function () {
             prev: [...p.prev, curveRef],
           }));
 
+          const cid = uuid();
+
           setCurves((p) => [
             ...p,
-            <Curve key={uuid()} ref={curveRef} start={start} end={end} />,
+            <Curve key={cid} id={cid} ref={curveRef} start={start} end={end} />,
           ]);
           processed.push({
             start: id,
