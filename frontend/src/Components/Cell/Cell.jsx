@@ -117,8 +117,11 @@ export class Cell extends React.Component {
               onStop={(e) => {
                 const r = this.selectionRef.current.getBoundingClientRect();
 
+                const cid = uuid();
+
                 const el = this.newSelf({
-                  key: uuid(),
+                  key: cid,
+                  id: cid,
                   ref: React.createRef(),
                   x: r.x,
                   y: r.y,

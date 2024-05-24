@@ -14,7 +14,7 @@ export function WorkspaceProvider({ children }) {
   const [scale, setScale] = useState(1);
   const [deltaX, setDeltaX] = useState(0);
   const [deltaY, setDeltaY] = useState(0);
-  const [popup, setPopup] = useState(<Premium />);
+  const [popup, setPopup] = useState(null);
   const [sidebar, setSidebar] = useState(null);
   const [componentsStack, setComponentsStack] = useState([]);
   const [workspaceMetaData, setWorkspaceMetaData] = useState({});
