@@ -15,11 +15,20 @@ export default function () {
   const [selectedEndTime, setSelectedEndTime] = useState(null);
   const [isScheduled, setIsScheduled] = useState(false);
 
+  // constants
+  const [startHour, setStartHour] = useState(9);
+  const [endHour, setEndHour] = useState(17);
+  const [meetingDescription, setMeetingDescription] = useState("");
+
   let { user_id, id } = useParams();
 
   useEffect(() => {
     api.getMicrosoftCalendarEvents(user_id, id).then((res) => {
       res.json().then((data) => {
+        console.log(data);
+        setMeetingDescription(data["meeting_description"]);
+        setStartHour(data["start_time"]);
+        setEndHour(data["end_time"]);
         setEvents(data["events"]);
         setWorkspace(data["workspace"]);
       });
@@ -38,6 +47,9 @@ export default function () {
         workspace,
         id,
         user_id,
+        startHour,
+        endHour,
+        meetingDescription,
       }}
     >
       {isScheduled ? (

@@ -3,8 +3,6 @@ import arrow from "../../assets/chevron-solid.svg";
 import { SchedulingContext } from "../../Pages/Scheduling";
 
 export default function () {
-  const [startHour, setStartHour] = useState(9);
-  const [endHour, setEndHour] = useState(18);
   const [weekShift, setWeekShift] = useState(0);
   const [currentWeek, setCurrentWeek] = useState(getWeek(weekShift));
   const [hoverTime, setHoverTime] = useState(null);
@@ -16,14 +14,9 @@ export default function () {
     setSelectedEndTime,
     events,
     workspace,
+    startHour,
+    endHour,
   } = useContext(SchedulingContext);
-
-  useEffect(() => {
-    if (Object.keys(workspace).length == 0) return;
-
-    setStartHour(parseInt(workspace.meeting_window_start));
-    setEndHour(parseInt(workspace.meeting_window_end) + 1);
-  });
 
   return (
     <div className="w-full border-b xl:border border-gray-300 xl:shadow-lg rounded-lg px-10 pb-10">
@@ -86,12 +79,12 @@ export default function () {
           </div>
         </div>
         <div className="flex items-center tracking-wide">
-          <div className="w-3 h-3 bg-gray-50 border"></div>
+          <div className="w-3 h-3 bg-white border"></div>
           <div className="text-sm ml-2">Available</div>
+          <div className="w-3 h-3 ml-5 bg-gray-200 border"></div>
+          <div className="text-sm ml-2">Unavailable</div>
           <div className="w-3 h-3 ml-5 bg-green-200 border"></div>
           <div className="text-sm ml-2">Selected</div>
-          <div className="w-3 h-3 ml-5 bg-red-200 border"></div>
-          <div className="text-sm ml-2">Unavailable</div>
         </div>
       </div>
     </div>
@@ -99,7 +92,7 @@ export default function () {
 
   function getWeek(weekShift) {
     let today = new Date(Date.now());
-    today.setDate(today.getDate() + weekShift * 7);
+    today.setDate(today.getDate() + weekShift * 7 - today.getDay());
     const week = [];
 
     for (let i = 0; i < 7; i++) {
@@ -125,13 +118,16 @@ export default function () {
 
   // TimeCell
   function TimeCell({ Time, Available = true }) {
-    const [isSelected, setIsSelected] = useState(
+    let isSelected =
       selectedStartTime == Time.getTime() ||
-        selectedEndTime == Time.getTime() ||
-        (selectedStartTime <= Time.getTime() &&
-          selectedEndTime >= Time.getTime()) ||
-        (selectedStartTime <= Time.getTime() && hoverTime >= Time.getTime())
-    );
+      selectedEndTime == Time.getTime() ||
+      (selectedStartTime <= Time.getTime() &&
+        selectedEndTime >= Time.getTime()) ||
+      (selectedStartTime <= Time.getTime() && hoverTime >= Time.getTime());
+
+    if (selectedStartTime == null && selectedEndTime == null) {
+      isSelected = false;
+    }
 
     const h = Time.getHours();
     const m = Time.getMinutes();
@@ -166,7 +162,7 @@ export default function () {
         className={`w-full  ${m == 0 ? "border-t" : ""} ${
           Available
             ? `cursor-pointer  ${isSelected ? "bg-green-200" : "bg-white"}`
-            : "bg-rose-100 cursor-not-allowed"
+            : "bg-gray-200 cursor-not-allowed"
         }`}
       >
         <p className="opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm font-[550]">
@@ -225,6 +221,8 @@ export default function () {
   }
 
   function isAvailable(time) {
+    if (time < new Date().getTime()) return false;
+
     // Between busy times
     if (events.filter((e) => e.start <= time && e.end >= time).length > 0)
       return false;

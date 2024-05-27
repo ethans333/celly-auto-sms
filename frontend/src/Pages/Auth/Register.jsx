@@ -32,49 +32,53 @@ export default function () {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center mt-[10vw]">
-      <div>
-        <div className="text-3xl font-black mb-5 text-center">
-          Welcome To Celly 🤙
+    <div className="flex items-center justify-center mt-[8vw]">
+      <div className="border border-200 shadow-lg rounded-lg px-20 pt-32 pb-28">
+        <div className="text-3xl font-black mb-5">
+          Welcome To{" "}
+          <a
+            style={{
+              textShadow: "0px 0px 30px rgb(124, 58, 237, 0.4)",
+            }}
+            className="bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text"
+          >
+            Intwine
+          </a>{" "}
+          👋
         </div>
-
-        <div className="w-96 mt-16 space-y-4">
-          <div
+        <div className="w-96 mt-20 space-y-4">
+          {/*           <div
             onClick={handleLoginMsft}
             className="flex space-x-3 rounded-lg shadow w-full px-5 py-3 cursor-pointer hover:opacity-50"
           >
             <img src={microsoft} alt="microsoft-logo" className="w-5" />
             <div className="font-[400]">Sign up with Microsoft</div>
-          </div>
+          </div> */}
 
-          <div className="flex items-center py-3">
-            <hr className="flex-grow border-gray-300" />
-            <span className="px-2 text-gray-400">Or with email</span>
-            <hr className="flex-grow border-gray-300" />
-          </div>
-
-          <input
-            className="border px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-black rounded-lg"
-            placeholder="Email"
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <div className="w-full flex space-x-3">
+          <div className="px-5 space-y-3 mb-12">
             <input
               className="border px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-black rounded-lg"
-              placeholder="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <input
-              className="border px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-black rounded-lg"
-              placeholder="Confirm Password"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <div className="w-full flex space-x-3">
+              <input
+                className="border px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-black rounded-lg"
+                placeholder="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <input
+                className="border px-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-black rounded-lg"
+                placeholder="Confirm Password"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
           </div>
 
           <div className="flex justify-center">
@@ -82,7 +86,7 @@ export default function () {
               onClick={handleLogin}
               className="bg-black text-white w-fit px-3 rounded-lg py-1 hover:opacity-50 mt-3"
             >
-              Login
+              Sign Up
             </button>
           </div>
 

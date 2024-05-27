@@ -199,13 +199,24 @@ export class Cell extends React.Component {
                     }}
                     onDelete={() => {
                       // Remove associated curves
+
+                      // For each node in deleted cell
                       for (const node of Object.values(this.nodes)) {
+                        // For each next and prev curve in deleted cell node
                         for (const next of Object.values(
                           node.current.state.next
                         )) {
-                          next.current.state.end.setState({
-                            selected: false,
+                          next.current.state.end.setState((p) => {
+                            return {
+                              selected: p.next - 1 > 0,
+                              prev: p.next.filter(
+                                (c) =>
+                                  next.current.props.start !==
+                                  c.current.props.start
+                              ),
+                            };
                           });
+
                           context.setComponentsStack((p) =>
                             p.filter((c) => c.key !== next.current.id)
                           );
@@ -213,8 +224,14 @@ export class Cell extends React.Component {
                         for (const prev of Object.values(
                           node.current.state.prev
                         )) {
-                          prev.current.state.start.setState({
-                            selected: false,
+                          prev.current.state.start.setState((p) => {
+                            return {
+                              selected: p.prev - 1 > 0,
+                              next: p.next.filter(
+                                (c) =>
+                                  prev.current.props.end !== c.current.props.end
+                              ),
+                            };
                           });
                           context.setComponentsStack((p) =>
                             p.filter((c) => c.key !== prev.current.id)
@@ -240,6 +257,7 @@ export class Cell extends React.Component {
                 >
                   <Node
                     ref={this.nodes.top}
+                    cell={this}
                     id={this.props.nodes ? this.props.nodes.top.id : uuid()}
                     onMount={this.props.onNodeMount}
                   />
@@ -252,6 +270,7 @@ export class Cell extends React.Component {
                   >
                     <Node
                       ref={this.nodes.left}
+                      cell={this}
                       id={this.props.nodes ? this.props.nodes.left.id : uuid()}
                       onMount={this.props.onNodeMount}
                     />
@@ -262,6 +281,7 @@ export class Cell extends React.Component {
                   <div className="my-auto">
                     <Node
                       ref={this.nodes.right}
+                      cell={this}
                       id={this.props.nodes ? this.props.nodes.right.id : uuid()}
                       onMount={this.props.onNodeMount}
                     />
@@ -271,6 +291,7 @@ export class Cell extends React.Component {
                 <div className="flex justify-center">
                   <Node
                     ref={this.nodes.bottom}
+                    cell={this}
                     id={this.props.nodes ? this.props.nodes.bottom.id : uuid()}
                     onMount={this.props.onNodeMount}
                   />

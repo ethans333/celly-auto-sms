@@ -15,6 +15,7 @@ export default function ({ self }) {
   const [endAMPM, setEndAMPM] = useState("PM");
   const [mwStart, setMwStart] = useState(9);
   const [mwEnd, setMwEnd] = useState(5);
+  const [meetingDescription, setMeetingDescription] = useState("");
 
   const dow = [
     "Sunday",
@@ -27,6 +28,16 @@ export default function ({ self }) {
   ];
 
   useEffect(() => {
+    self.setState({
+      meeting_description: meetingDescription,
+    });
+    console.log(self);
+    console.log(self.state.meeting_description);
+  }, [meetingDescription]);
+
+  useEffect(() => {
+    setMeetingDescription(self.state.meeting_description);
+
     let s = workspaceMetaData.meeting_window_start;
     let e = workspaceMetaData.meeting_window_end;
 
@@ -88,6 +99,19 @@ export default function ({ self }) {
       )}
 
       <div className="pt-7 space-y-5">
+        <div>
+          <p className="font-bold">Meeting Notes</p>
+          <div className="mt-3 flex space-x-3">
+            <textarea
+              className="border border-gray-100 border-2 rounded-md px-3 py-3 text-sm w-full"
+              placeholder="Meeting Notes"
+              type="text"
+              rows={5}
+              value={meetingDescription}
+              onChange={(e) => setMeetingDescription(e.target.value)}
+            />
+          </div>
+        </div>
         <div>
           <p className="font-bold">Meeting Window</p>
           <div className="mt-3 flex space-x-3">

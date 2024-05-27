@@ -15,6 +15,26 @@ def handler(event, context):
         workspace_id = event["pathParameters"]["workspace_id"]
 
         bucket = boto3.resource("s3").Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
+
+        # get cells from bucket
+        bucket_raw = (
+            bucket.Object(f"{user_id}/{workspace_id}")
+            .get()["Body"]
+            .read()
+            .decode("utf-8")
+        )
+
+        bucket_raw = json.loads(bucket_raw)
+
+        # find calendar cell
+        calendar_cell = None
+
+        for cell in bucket_raw:
+            if cell["type"] == "Calendar":
+                calendar_cell = cell
+                break
+
+        # get workspace metadata
         metadata = bucket.Object(f"{user_id}/{workspace_id}").metadata
 
         # Get Microsoft tokens from Secrets Manager
@@ -55,7 +75,16 @@ def handler(event, context):
 
         return {
             "statusCode": 200,
-            "body": json.dumps({"workspace": metadata, "events": event_times}),
+            "body": json.dumps(
+                {
+                    "blackout_days": calendar_cell["blackout_days"],
+                    "start_time": calendar_cell["start_time"],
+                    "end_time": calendar_cell["end_time"],
+                    "meeting_description": calendar_cell["meeting_description"],
+                    "workspace": metadata,
+                    "events": event_times,
+                }
+            ),
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",
