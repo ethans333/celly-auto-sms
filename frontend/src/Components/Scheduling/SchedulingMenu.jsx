@@ -20,9 +20,9 @@ export default function () {
 
   return (
     <div className="mx-[7vw] space-x-14 xl:space-x-0 xl:space-y-7 flex xl:block xl:w-[400px] 2xl:w-[500px] xl:mx-5 xl:shadow-lg xl:border border-gray-300 rounded-lg py-10 px-8">
-      <div>
+      <div className="border-b pb-5">
         <div className="font-extrabold">Meeting Notes</div>
-        <div className="w-64 xl:96 xl:w-full max-h-44 mt-5 overflow-y-scroll">
+        <div className="w-64 xl:96 xl:w-full max-h-44 mt-3 overflow-y-scroll pr-5">
           {meetingDescription}
         </div>
       </div>
@@ -38,8 +38,8 @@ export default function () {
             }}
             placeholder={"Select a Method"}
             className="mb-5"
-            controlClassName="w-64 xl:w-60 border border-gray-300 shadow rounded-md p-2 px-3 cursor-pointer flex justify-between items-center"
-            menuClassName="w-64 xl:w-60 border border-gray-300 shadow rounded-md p-2 px-3 space-y-2 cursor-pointer absolute bg-white"
+            controlClassName="w-64 xl:w-72 border border-gray-300 shadow rounded-md p-2 px-3 cursor-pointer flex justify-between items-center"
+            menuClassName="w-64 xl:w-72 border border-gray-300 shadow rounded-md p-2 px-3 space-y-2 cursor-pointer absolute bg-white"
             arrowClosed={<img src={caret} className="w-2" />}
             arrowOpen={<img src={caret} className="w-2 rotate-180" />}
           />
@@ -50,7 +50,7 @@ export default function () {
                   type="number"
                   placeholder="Phone Number"
                   onChange={(e) => setContactValue(e.target.value)}
-                  className="w-64 xl:w-60 border border-gray-300 shadow rounded-md p-2 px-3"
+                  className="w-64 xl:w-72 border border-gray-300 shadow rounded-md p-2 px-3"
                 />
               ),
               Email: (
@@ -58,7 +58,7 @@ export default function () {
                   placeholder="Email"
                   type="text"
                   onChange={(e) => setContactValue(e.target.value)}
-                  className="w-64 xl:w-60 border border-gray-300 shadow rounded-md p-2 px-3"
+                  className="w-64 xl:w-72 border border-gray-300 shadow rounded-md p-2 px-3"
                 />
               ),
             }[method]
