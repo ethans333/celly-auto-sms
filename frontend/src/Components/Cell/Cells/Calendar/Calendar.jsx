@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import calendar_icon from "../../../../assets/calendar-solid.svg";
 
 export class Calendar extends Cell {
+  typename = "calendar";
   title = "Scheduling Cell";
   description = "Calendar for scheduling events.";
   icon = calendar_icon;

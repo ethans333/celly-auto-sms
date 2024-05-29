@@ -22,14 +22,12 @@ export class Cell extends React.Component {
   nodes = {};
 
   toObject() {
-    console.log(this);
-
     return {
       id: this.id,
       x: this.state.position.x,
       y: this.state.position.y,
       menuOffset: this.menuOffset.toObject(),
-      type: this.constructor.name,
+      typename: this.typename,
       nodes: {
         top: this.nodes.top.current.toObject(),
         left: this.nodes.left.current.toObject(),

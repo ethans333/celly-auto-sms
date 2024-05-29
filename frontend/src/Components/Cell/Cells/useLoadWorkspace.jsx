@@ -27,16 +27,15 @@ export default function () {
   const processed = [];
 
   function mapCell(c) {
-    let type = types.filter((t) => t.name == c.type);
+    let type = types.filter((t) => new t().typename == c.typename);
 
     if (type.length == 0) {
       // Type not found
       console.error(
-        "Unknown Cell Type: " +
-          c.type +
-          "Expected something from" +
-          JSON.stringify(types.map((t) => t.name)) +
-          "\n Perhaps you failed to add Cell Type to type array in useLoadWorkspace.jsx"
+        "No matching titles: " +
+          c.typename +
+          " not in " +
+          JSON.stringify(types.map((t) => new t().typename))
       );
       type = [Cell];
     }
