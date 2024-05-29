@@ -1,10 +1,13 @@
 import { useState, useContext } from "react";
 import { WorkspaceContext } from "../../../Contexts/Workspace";
+import { HelpersContext } from "../../../Contexts/Helpers";
 import Dropdown from "../../Dropdown";
 
 export default function () {
   const { workspaceMetaData, setWorkspaceMetaData } =
     useContext(WorkspaceContext);
+
+  const { saveWorkspace } = useContext(HelpersContext);
 
   const [titleTemp, setTitleTemp] = useState("");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -32,11 +35,17 @@ export default function () {
             }
             onBlur={() => {
               setIsEditingTitle((p) => !p);
-              if (workspaceMetaData.workspace_name == "")
+
+              if (workspaceMetaData.workspace_name == "") {
                 setWorkspaceMetaData((p) => ({
                   ...p,
                   workspace_name: titleTemp,
                 }));
+
+                return;
+              }
+
+              saveWorkspace();
             }}
             type="text"
             className="outline-none text-lg font-black bg-purple-200"

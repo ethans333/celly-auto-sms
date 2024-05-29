@@ -22,9 +22,7 @@ export class Calendar extends Cell {
     super(props);
 
     this.state = {
-      meeting_description: props.meeting_description
-        ? props.meeting_description
-        : "",
+      meeting_description: props ? props.meeting_description : "",
       start_time: 9,
       end_time: 17,
       blackout_days: [0, 6],

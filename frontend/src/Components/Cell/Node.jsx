@@ -66,6 +66,8 @@ export class Node extends React.Component {
                     ref={curveRef}
                     start={context.currentNode}
                     end={this}
+                    deltaX={context.deltaX}
+                    deltaY={context.deltaY}
                   />,
                 ]);
                 context.setCurrentNode(null);

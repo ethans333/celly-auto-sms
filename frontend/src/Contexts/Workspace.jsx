@@ -1,6 +1,7 @@
 import { useState, createContext, useEffect } from "react";
 export const WorkspaceContext = createContext();
 import Premium from "../Components/Popups/Premium";
+import { updateWorkspace } from "../api";
 
 /**
  * Creates a WorkspaceProvider component that wraps its children with a WorkspaceContext.Provider.

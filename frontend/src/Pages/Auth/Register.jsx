@@ -33,7 +33,7 @@ export default function () {
 
   return (
     <div className="flex items-center justify-center mt-[8vw]">
-      <div className="border border-200 shadow-lg rounded-lg px-20 pt-32 pb-28">
+      <div className="border border-200 shadow-lg rounded-xl px-20 pt-32 pb-28">
         <div className="text-3xl font-black mb-5">
           Welcome To{" "}
           <a

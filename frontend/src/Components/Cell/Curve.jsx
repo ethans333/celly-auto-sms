@@ -8,8 +8,8 @@ export class Curve extends React.Component {
     this.state = {
       start: this.props.start, // Node
       end: this.props.end, // Node
-      deltaX: 0,
-      deltaY: 0,
+      deltaX: props.deltaX,
+      deltaY: props.deltaY,
     };
   }
 

@@ -89,6 +89,7 @@ export function HelpersProvider({ children }) {
 
     api.updateWorkspace(workspaceMetaData, objects).then((res) => {
       console.log(res);
+      updateWorkspaceLists();
     });
   }
 

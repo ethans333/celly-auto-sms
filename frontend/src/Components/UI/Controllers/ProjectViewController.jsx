@@ -27,13 +27,14 @@ export default function () {
       }
     };
 
+    // Zoom In
     const handleWheel = (e) => {
-      if (e.ctrlKey) {
-        // If control key is pressed
-        e.preventDefault(); // Prevent default zoom behavior
-        const deltaScale = e.deltaY > 0 ? -0.1 : 0.1; // Increase or decrease scale
-        setScale((prevScale) => prevScale + deltaScale);
-      }
+      // if (e.ctrlKey) {
+      //   // If control key is pressed
+      //   e.preventDefault(); // Prevent default zoom behavior
+      //   const deltaScale = e.deltaY > 0 ? -0.1 : 0.1; // Increase or decrease scale
+      //   setScale((prevScale) => prevScale + deltaScale);
+      // }
     };
 
     document.addEventListener("mousedown", handleMouseDown);

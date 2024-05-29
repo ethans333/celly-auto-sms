@@ -117,14 +117,16 @@ export class Cell extends React.Component {
               onStop={(e) => {
                 const r = this.selectionRef.current.getBoundingClientRect();
 
+                console.log(context);
+
                 const cid = uuid();
 
                 const el = this.newSelf({
                   key: cid,
                   id: cid,
                   ref: React.createRef(),
-                  x: r.x,
-                  y: r.y,
+                  x: r.x - context.deltaX,
+                  y: r.y - context.deltaY,
                 });
 
                 context.setComponentsStack([...context.componentsStack, el]);

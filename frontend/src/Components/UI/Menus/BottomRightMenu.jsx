@@ -5,10 +5,10 @@ import * as api from "../../../api.jsx";
 import { HelpersContext } from "../../../Contexts/Helpers.jsx";
 
 export default function () {
-  const { setWorkspaceMetaData, updateWorkspaceLists, setComponentsStack } =
+  const { setWorkspaceMetaData, setComponentsStack } =
     useContext(WorkspaceContext);
 
-  const { saveWorkspace } = useContext(HelpersContext);
+  const { saveWorkspace, updateWorkspaceLists } = useContext(HelpersContext);
 
   const defaultWorkspace = {
     workspace_name: "My Workspace",
