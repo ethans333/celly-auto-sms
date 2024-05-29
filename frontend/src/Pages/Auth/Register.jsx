@@ -36,12 +36,7 @@ export default function () {
       <div className="border border-200 shadow-lg rounded-xl px-20 pt-32 pb-28">
         <div className="text-3xl font-black mb-5">
           Welcome To{" "}
-          <a
-            style={{
-              textShadow: "0px 0px 30px rgb(124, 58, 237, 0.4)",
-            }}
-            className="bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text"
-          >
+          <a className="bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text">
             Intwine
           </a>{" "}
           👋

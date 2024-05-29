@@ -85,10 +85,9 @@ export default function () {
           </div>
 
           {/* Workspaces List */}
-          {favoriteWorkspaceList.length > 0 ||
-            (loadingWorkspaceList && (
-              <p className="font-extrabold mt-8">Favorites</p>
-            ))}
+          {(favoriteWorkspaceList.length > 0 || loadingWorkspaceList) && (
+            <p className="font-extrabold mt-8">Favorites</p>
+          )}
           {/* Favorite Projects */}
           <div className="space-y-3 mt-3 ml-1">
             {loadingWorkspaceList ? (

@@ -2,6 +2,8 @@ import microsoft from "../../assets/microsoft.svg";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import * as api from "../../api";
+import blob from "../../assets/blobs/blob.svg";
+import blob1 from "../../assets/blobs/blob1.svg";
 
 export default function () {
   const [email, setEmail] = useState("");
@@ -26,15 +28,10 @@ export default function () {
 
   return (
     <div className="flex items-center justify-center mt-[8vw]">
-      <div className="border border-200 shadow-lg rounded-xl px-20 pt-32 pb-28">
+      <div className="border border-200 shadow-lg rounded-xl px-20 pt-32 pb-28 ">
         <div className="text-3xl font-black mb-5">
           Welcome Back To{" "}
-          <a
-            style={{
-              textShadow: "0px 0px 30px rgb(124, 58, 237, 0.4)",
-            }}
-            className="bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text"
-          >
+          <a className="bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text">
             Intwine
           </a>{" "}
           👋

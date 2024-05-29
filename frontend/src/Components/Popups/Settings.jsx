@@ -2,6 +2,8 @@ import { useContext } from "react";
 import { WorkspaceContext } from "../../Contexts/Workspace";
 import toggle_on from "../../assets/toggle-on-solid.svg";
 import toggle_off from "../../assets/toggle-off-solid.svg";
+import danger_icon from "../../assets/triangle-exclamation-solid.svg";
+import gamepad from "../../assets/gamepad-solid.svg";
 import * as api from "../../api";
 import { HelpersContext } from "../../Contexts/Helpers";
 
@@ -15,8 +17,8 @@ export default function () {
         <h1 className="font-extrabold">Settings</h1>
         <div className="grid grid-cols-3 w-96 mt-2">
           <div className="text-gray-500 space-y-3">
-            <p>Lorem Ipsum</p>
-            <p>Reprehenderit</p>
+            <p>Coming Soon</p>
+            <p>Coming Soon</p>
             <p>Auto Save</p>
           </div>
           <div className="col-span-2 text-right space-y-3">
@@ -52,7 +54,10 @@ export default function () {
       </div>
       {/* Controls */}
       <div className="border-t pt-3">
-        <h1 className="font-extrabold">Controls</h1>
+        <div className="flex space-x-3">
+          <h1 className="font-extrabold">Controls</h1>
+          <img src={gamepad} className="w-5" />
+        </div>
         <div className="grid grid-cols-3 w-96 mt-2">
           <div className="text-gray-500 space-y-3">
             <p>Save</p>
@@ -92,11 +97,13 @@ export default function () {
       </div>
       {/* Danger Zone */}
       <div className="border-t pt-3">
-        <h1 className="font-extrabold">Danger Zone</h1>
+        <div className="flex space-x-3">
+          <h1 className="font-extrabold">Danger Zone</h1>
+          <img src={danger_icon} className="w-4" />
+        </div>
         <div className="grid grid-cols-2 w-96 mt-2">
           <div className="text-gray-500 space-y-3">
             <p>Delete Workspace</p>
-            <p>Delete Numbers</p>
             <p>Unlink External Services</p>
           </div>
           <div className="space-y-3">
@@ -114,12 +121,6 @@ export default function () {
                 }}
                 className="bg-red-500 text-white text-xs px-2 py-1 rounded-lg w-14 hover:opacity-50"
               >
-                Delete
-              </button>
-            </div>
-            {/* Delete Phone Numbers */}
-            <div className="flex justify-end ">
-              <button className="bg-yellow-300 text-black text-xs px-2 py-1 rounded-lg w-14 opacity-20">
                 Delete
               </button>
             </div>
