@@ -22,10 +22,12 @@ export function WorkspaceProvider({ children }) {
   const [currentNode, setCurrentNode] = useState(null);
   const [workspaceList, setWorkspaceList] = useState([]);
   const [favoriteWorkspaceList, setFavoriteWorkspaceList] = useState([]);
+  const [loadingWorkspaceList, setLoadingWorkspaceList] = useState(true);
+  const [noWorkspaces, setNoWorkspaces] = useState(false);
 
   const Views = {
     Project: 0,
-    RegisteredNumbers: 1,
+    ScheduledMeetings: 1,
     Analytics: 2,
   };
 
@@ -63,6 +65,10 @@ export function WorkspaceProvider({ children }) {
         Views,
         scale,
         setScale,
+        loadingWorkspaceList,
+        setLoadingWorkspaceList,
+        noWorkspaces,
+        setNoWorkspaces,
       }}
     >
       {children}

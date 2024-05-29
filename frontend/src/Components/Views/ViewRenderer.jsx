@@ -4,7 +4,7 @@ import { useContext } from "react";
 // Views
 import ProjectView from "../Views/ProjectView";
 import Analytics from "../Views/Analytics";
-import RegisteredNumbers from "../Views/RegisteredNumbers";
+import ScheduledMeetings from "../Views/ScheduledMeetings";
 
 export default function () {
   const { currentView, Views } = useContext(WorkspaceContext);
@@ -12,8 +12,8 @@ export default function () {
   switch (currentView) {
     case Views.Project:
       return <ProjectView />;
-    case Views.RegisteredNumbers:
-      return <RegisteredNumbers />;
+    case Views.ScheduledMeetings:
+      return <ScheduledMeetings />;
     case Views.Analytics:
       return <Analytics />;
     default:

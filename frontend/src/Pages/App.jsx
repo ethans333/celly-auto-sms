@@ -26,6 +26,7 @@ export default function () {
 
   // Load Workspace
   useEffect(() => {
+    console.log(curves);
     setComponentsStack([...cells, ...curves]);
   }, [workspaceMetaData.id, cells, curves]);
 

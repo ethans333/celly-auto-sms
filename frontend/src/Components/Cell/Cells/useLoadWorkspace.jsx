@@ -18,13 +18,13 @@ import { Calendar } from "./Calendar/Calendar";
 const types = [Calendar];
 
 export default function () {
-  const nodes = {};
-  const processed = [];
-
   const [cells, setCells] = useState([]);
   const [curves, setCurves] = useState([]);
 
-  const { workspaceMetaData } = useContext(WorkspaceContext);
+  const { workspaceMetaData, deltaX, deltaY } = useContext(WorkspaceContext);
+
+  const nodes = {};
+  const processed = [];
 
   function mapCell(c) {
     let type = types.filter((t) => t.name == c.type);
@@ -49,13 +49,14 @@ export default function () {
 
   // Build Cells
   useEffect(() => {
+    setCells([]);
+    setCurves([]);
+
     // Fetch workspace data
     api.getWorkspace(workspaceMetaData.id).then((res) => {
       if (!res.workspace_raw) return; // Error
 
       const objects = JSON.parse(res.workspace_raw);
-
-      console.log(objects);
 
       // Map objects
       setCells(() => objects.map(mapCell));
@@ -94,7 +95,15 @@ export default function () {
 
           setCurves((p) => [
             ...p,
-            <Curve key={cid} id={cid} ref={curveRef} start={start} end={end} />,
+            <Curve
+              key={cid}
+              id={cid}
+              ref={curveRef}
+              start={start}
+              end={end}
+              deltaX={deltaX}
+              deltaY={deltaY}
+            />,
           ]);
 
           processed.push({
@@ -131,7 +140,15 @@ export default function () {
 
           setCurves((p) => [
             ...p,
-            <Curve key={cid} id={cid} ref={curveRef} start={start} end={end} />,
+            <Curve
+              key={cid}
+              id={cid}
+              ref={curveRef}
+              start={start}
+              end={end}
+              deltaX={deltaX}
+              deltaY={deltaY}
+            />,
           ]);
           processed.push({
             start: id,

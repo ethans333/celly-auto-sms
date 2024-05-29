@@ -9,7 +9,6 @@ import LabeledSquareButton from "../../LabeledSquareButton.jsx";
 import { useContext } from "react";
 import Settings from "../../Popups/Settings.jsx";
 import WorkspaceLink from "../../Popups/WorkspaceLink.jsx";
-import * as api from "../../../api.jsx";
 import { HelpersContext } from "../../../Contexts/Helpers.jsx";
 
 export default function () {
@@ -18,7 +17,13 @@ export default function () {
     useContext(WorkspaceContext);
 
   return (
-    <div className="flex pr-5 mt-3.5 h-fit space-x-2.5">
+    <div
+      style={{
+        visibility:
+          Object.keys(workspaceMetaData).length > 0 ? "visible" : "hidden",
+      }}
+      className="flex pr-5 mt-3.5 h-fit space-x-2.5"
+    >
       {/* Save */}
       <LabeledSquareButton icon={floppy} label="Save" onClick={saveWorkspace} />
       {/* Favorite */}

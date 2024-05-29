@@ -93,7 +93,9 @@ export class Cell extends React.Component {
       <div className="rounded-lg shadow p-6 min-w-72 max-w-96 cursor-move bg-white w-fit">
         <div className="flex">
           <img src={this.icon} className="w-8 p-2 mb-auto" />
-          <h1 className="pt-1.5 font-bold text-[15px] pl-1.5">{this.title}</h1>
+          <h1 className="pt-[6px] font-bold text-[15px] pl-1.5">
+            {this.title}
+          </h1>
           <img
             src={ellipsis}
             className="w-1 ml-auto cursor-pointer hover:opacity-50 mb-auto invisible"

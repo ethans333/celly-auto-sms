@@ -8,6 +8,7 @@ export default function ({ children, topChildren }) {
   const { setSidebar, currentView, Views } = useContext(WorkspaceContext);
 
   return children != null ? (
+    // Open Sidebar
     <div className="absolute right-0 z-20 animate-shiftRL">
       <div className="flex h-screen overflow-y-clip">
         <div>
@@ -29,6 +30,7 @@ export default function ({ children, topChildren }) {
       </div>
     </div>
   ) : (
+    // Closed Sidebar
     <div className="absolute right-0 h-screen">
       {currentView === Views.Project && <TopMenu />}
       {currentView === Views.Project && <BottomMenu />}

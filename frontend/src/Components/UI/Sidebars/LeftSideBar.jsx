@@ -4,12 +4,22 @@ import { useContext, useEffect, useState } from "react";
 import { WorkspaceContext } from "../../../Contexts/Workspace.jsx";
 import TopLeftMenu from "../Menus/TopLeftMenu.jsx";
 import BottomLeftMenu from "../Menus/BottomLeftMenu.jsx";
-import { AccountTree, TableChart, SsidChart } from "@mui/icons-material";
+import diagram_project from "../../../assets/diagram-project-solid.svg";
+import clock_regular from "../../../assets/clock-regular.svg";
+import chart_simple from "../../../assets/chart-simple-solid.svg";
 import { HelpersContext } from "../../../Contexts/Helpers.jsx";
+import uuid from "react-uuid";
 
 export default function () {
-  const { setCurrentView, workspaceList, favoriteWorkspaceList, Views } =
-    useContext(WorkspaceContext);
+  const {
+    setCurrentView,
+    workspaceList,
+    favoriteWorkspaceList,
+    Views,
+    loadingWorkspaceList,
+    setWorkspaceMetaData,
+    workspaceMetaData,
+  } = useContext(WorkspaceContext);
   const { updateWorkspaceLists } = useContext(HelpersContext);
 
   const [showSideBar, setShowSideBar] = useState(true);
@@ -30,46 +40,75 @@ export default function () {
             className="x-button"
             onClick={() => setShowSideBar(false)}
           />
-          <p className="font-extrabold mt-7">This Project</p>
-          <div className="space-y-3 mt-3 ml-1">
-            <ProjectLabel
-              icon={
-                <AccountTree
-                  sx={{ fontSize: 20, paddingTop: 0.4, marginRight: 0.5 }}
-                />
-              }
-              name="Project View"
-              onClick={() => setCurrentView(Views.Project)}
-            />
-            <ProjectLabel
-              icon={
-                <TableChart
-                  sx={{ fontSize: 20, paddingTop: 0.4, marginRight: 0.5 }}
-                />
-              }
-              name="Registered Numbers"
-              onClick={() => setCurrentView(Views.RegisteredNumbers)}
-            />
-            <ProjectLabel
-              icon={
-                <SsidChart
-                  sx={{ fontSize: 20, paddingTop: 0.4, marginRight: 0.5 }}
-                />
-              }
-              name="Analytics"
-              onClick={() => setCurrentView(Views.RegisteredNumbers)}
-            />
+          <div
+            style={{
+              display:
+                Object.keys(workspaceMetaData).length > 0 ? "block" : "none",
+            }}
+          >
+            <p className="font-extrabold mt-7">This Project</p>
+            <div className="space-y-3 mt-3 ml-1">
+              <ProjectLabel
+                icon={
+                  <img
+                    src={diagram_project}
+                    alt="project"
+                    className="ml-[1.7px] w-[15px] padding-top-[0.4rem] mr-[0.5rem]"
+                  />
+                }
+                name="Project View"
+                onClick={() => setCurrentView(Views.Project)}
+              />
+              <ProjectLabel
+                icon={
+                  <img
+                    src={clock_regular}
+                    alt="scheduled meetings"
+                    className="ml-[1.7px] w-[15px] padding-top-[0.4rem] mr-[0.5rem]"
+                  />
+                }
+                name="Scheduled Meetings"
+                onClick={() => setCurrentView(Views.ScheduledMeetings)}
+              />
+              <ProjectLabel
+                icon={
+                  <img
+                    src={chart_simple}
+                    alt="analytics"
+                    className="ml-[1.7px] w-[15px] padding-top-[0.4rem] mr-[0.5rem]"
+                  />
+                }
+                name="Analytics"
+                onClick={() => setCurrentView(Views.Analytics)}
+              />
+            </div>
           </div>
 
-          <p className="font-extrabold mt-8">Favorites</p>
+          {/* Workspaces List */}
+          {favoriteWorkspaceList.length > 0 ||
+            (loadingWorkspaceList && (
+              <p className="font-extrabold mt-8">Favorites</p>
+            ))}
           {/* Favorite Projects */}
           <div className="space-y-3 mt-3 ml-1">
-            {mapWorkspaces(favoriteWorkspaceList)}
+            {loadingWorkspaceList ? (
+              <WorkspacesListLoading n={3} />
+            ) : (
+              mapWorkspaces(favoriteWorkspaceList)
+            )}
           </div>
           <p className="font-extrabold mt-8">Projects</p>
           {/* All Projects */}
           <div className="space-y-3 mt-3 ml-1">
-            {mapWorkspaces(workspaceList)}
+            {loadingWorkspaceList ? (
+              <WorkspacesListLoading />
+            ) : workspaceList.length > 0 ? (
+              mapWorkspaces(workspaceList)
+            ) : (
+              <p className="text-gray-500 text-center text-sm mt-16">
+                No Projects Yet
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -96,6 +135,19 @@ export default function () {
       </div>
     </div>
   );
+
+  function mapWorkspaces(w) {
+    return w.map((ws) => {
+      return (
+        <ProjectLabel
+          key={ws.id}
+          icon={<div className="text-xs pt-1 mr-2">{ws.workspace_emoji}</div>}
+          name={ws.workspace_name}
+          onClick={() => setWorkspaceMetaData(ws)}
+        />
+      );
+    });
+  }
 }
 
 function ProjectLabel({ icon, name, onClick }) {
@@ -110,17 +162,20 @@ function ProjectLabel({ icon, name, onClick }) {
   );
 }
 
-function mapWorkspaces(w) {
-  const { setWorkspaceMetaData } = useContext(WorkspaceContext);
+function WorkspacesListLoading({ n = 5 }) {
+  const pills = [];
 
-  return w.map((ws) => {
-    return (
-      <ProjectLabel
-        key={ws.id}
-        icon={<div className="text-xs pt-1 mr-2">{ws.workspace_emoji}</div>}
-        name={ws.workspace_name}
-        onClick={() => setWorkspaceMetaData(ws)}
+  for (let i = 0; i < n; i++) {
+    pills.push(
+      <div
+        key={uuid()}
+        style={{
+          width: `${Math.max(256 * Math.random(), 64)}px`,
+        }}
+        className="h-3 bg-gray-200 animate-pulse rounded-md"
       />
     );
-  });
+  }
+
+  return pills;
 }

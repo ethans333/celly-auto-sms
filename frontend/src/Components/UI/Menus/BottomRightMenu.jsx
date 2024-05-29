@@ -3,9 +3,10 @@ import { useContext } from "react";
 import { WorkspaceContext } from "../../../Contexts/Workspace.jsx";
 import * as api from "../../../api.jsx";
 import { HelpersContext } from "../../../Contexts/Helpers.jsx";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 export default function () {
-  const { setWorkspaceMetaData, setComponentsStack } =
+  const { setWorkspaceMetaData, setComponentsStack, noWorkspaces } =
     useContext(WorkspaceContext);
 
   const { saveWorkspace, updateWorkspaceLists } = useContext(HelpersContext);
@@ -20,35 +21,60 @@ export default function () {
     is_deployed: false,
   };
 
+  async function addWorkspace() {
+    // Save current workspace
+    saveWorkspace();
+    // Create new workspace with default values
+    const res = await api.addWorkspace(
+      defaultWorkspace.workspace_name,
+      defaultWorkspace.workspace_description,
+      defaultWorkspace.workspace_raw,
+      defaultWorkspace.is_favorite
+    );
+
+    if (res.status === 200) {
+      const json = await res.json();
+
+      console.log(json);
+
+      setWorkspaceMetaData(json.workspace_metadata);
+      setComponentsStack([]);
+      updateWorkspaceLists();
+    }
+  }
+
   return (
-    <div className="pl-20">
-      {/* Add Button */}
+    <div className="absolute bottom-10">
+      {noWorkspaces ? <NoWorkspacesAddButton /> : <AddButton />}
+    </div>
+  );
+
+  function NoWorkspacesAddButton() {
+    return (
+      <div>
+        <div className="animate-bounce">
+          <div className="text-sm ml-[32px] w-32 text-center font-semibold">
+            Create a New Project
+          </div>
+
+          <div className="ml-[85.5px] mt-1 mb-5">
+            <ArrowDownwardIcon />
+          </div>
+        </div>
+
+        <AddButton />
+      </div>
+    );
+  }
+
+  function AddButton() {
+    return (
       <div
-        onClick={async () => {
-          // Save current workspace
-          saveWorkspace();
-          // Create new workspace with default values
-          const res = await api.addWorkspace(
-            defaultWorkspace.workspace_name,
-            defaultWorkspace.workspace_description,
-            defaultWorkspace.workspace_raw,
-            defaultWorkspace.is_favorite
-          );
-
-          if (res.status === 200) {
-            const json = await res.json();
-
-            console.log(json);
-
-            setWorkspaceMetaData(json.workspace_metadata);
-            setComponentsStack([]);
-            updateWorkspaceLists();
-          }
-        }}
-        className="bg-black p-3 rounded-lg h-fit cursor-pointer hover:opacity-50 w-fit absolute bottom-10"
+        onClick={addWorkspace}
+        className="ml-20 bg-black p-3 rounded-lg h-fit cursor-pointer hover:opacity-50 w-fit"
       >
         <img src={plus} className="w-3" alt="plus" />
       </div>
-    </div>
-  );
+    );
+  }
 }

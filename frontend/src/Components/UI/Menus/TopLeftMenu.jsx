@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { WorkspaceContext } from "../../../Contexts/Workspace";
 import { HelpersContext } from "../../../Contexts/Helpers";
 import Dropdown from "../../Dropdown";
@@ -12,8 +12,18 @@ export default function () {
   const [titleTemp, setTitleTemp] = useState("");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
+  useEffect(() => {
+    saveWorkspace();
+  }, [workspaceMetaData.workspace_emoji]);
+
   return (
-    <div className="mt-5 z-50">
+    <div
+      style={{
+        visibility:
+          Object.keys(workspaceMetaData).length > 0 ? "visible" : "hidden",
+      }}
+      className="mt-5 z-50"
+    >
       <div className="flex gap-x-3">
         {/* Emoji Dropdown */}
         <Dropdown

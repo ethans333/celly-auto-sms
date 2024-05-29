@@ -26,6 +26,8 @@ export function HelpersProvider({ children }) {
     setWorkspaceMetaData,
     setComponentsStack,
     setPopup,
+    setLoadingWorkspaceList,
+    setNoWorkspaces,
   } = useContext(WorkspaceContext);
 
   /**
@@ -85,11 +87,8 @@ export function HelpersProvider({ children }) {
       .filter((c) => c.ref.current.constructor.prototype instanceof Cell)
       .map((c) => c.ref.current.toJSON());
 
-    console.log(objects);
-
     api.updateWorkspace(workspaceMetaData, objects).then((res) => {
-      console.log(res);
-      updateWorkspaceLists();
+      updateWorkspaceLists(false);
     });
   }
 
@@ -110,13 +109,23 @@ export function HelpersProvider({ children }) {
   /**
    * Updates the workspace lists by fetching all user workspaces from the API and updating the state variables accordingly.
    *
+   * @param {boolean} setWorkspace - Indicates whether to set the first workspace as the workspace metadata. Defaults to true.
    * @return {void} This function does not return a value.
    */
-  function updateWorkspaceLists() {
+  function updateWorkspaceLists(setWorkspace = true) {
+    setLoadingWorkspaceList(true);
+
     api.getAllUserWorkspaces().then((res) => {
+      setLoadingWorkspaceList(false);
       setWorkspaceList(res.workspaces);
       setFavoriteWorkspaceList(res.workspaces.filter((ws) => ws.is_favorite));
-      if (res.workspaces.length > 0) setWorkspaceMetaData(res.workspaces[0]);
+      if (res.workspaces.length == 0) {
+        setNoWorkspaces(true);
+        console.log(workspaceMetaData);
+        return;
+      }
+      if (setWorkspace) setWorkspaceMetaData(res.workspaces[0]);
+      setNoWorkspaces(false);
     });
   }
 
