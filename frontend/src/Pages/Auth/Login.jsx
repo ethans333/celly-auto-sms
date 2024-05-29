@@ -27,8 +27,8 @@ export default function () {
   };
 
   return (
-    <div className="flex items-center justify-center mt-[8vw]">
-      <div className="border border-200 shadow-lg rounded-xl px-20 pt-32 pb-28 ">
+    <div className="bg-gradient-to-t from-[rgba(168,85,247,0.07)] flex items-center justify-center pb-[25vh] h-screen">
+      <div className="border border-200 shadow-lg rounded-xl px-20 pt-32 pb-28 bg-white">
         <div className="text-3xl font-black mb-5">
           Welcome Back To{" "}
           <a className="bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text">
@@ -81,7 +81,7 @@ export default function () {
             Don't have an account?{" "}
             <a
               onClick={() => navigate("/register")}
-              className="font-semibold cursor-pointer hover:opacity-50"
+              className="text-indigo-600 font-semibold cursor-pointer hover:opacity-50"
             >
               Sign Up
             </a>

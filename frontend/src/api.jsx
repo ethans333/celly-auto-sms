@@ -186,8 +186,6 @@ export async function getWorkspace(id) {
  * @returns {Object} Message and workspace id
  */
 export async function updateWorkspace(metadata, workspace_raw) {
-  console.log(metadata);
-
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + metadata.id,
     {

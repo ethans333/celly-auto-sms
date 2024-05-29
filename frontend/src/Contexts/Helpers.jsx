@@ -83,6 +83,8 @@ export function HelpersProvider({ children }) {
    * @return {Promise} A Promise that resolves when the workspace is successfully updated.
    */
   function saveWorkspace() {
+    console.log(componentsStack);
+
     const objects = componentsStack
       .filter((c) => c.ref.current.constructor.prototype instanceof Cell)
       .map((c) => c.ref.current.toJSON());

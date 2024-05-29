@@ -30,10 +30,9 @@ export default function () {
   };
 
   const navigate = useNavigate();
-
   return (
-    <div className="flex items-center justify-center mt-[8vw]">
-      <div className="border border-200 shadow-lg rounded-xl px-20 pt-32 pb-28">
+    <div className="bg-gradient-to-t from-[rgba(168,85,247,0.07)] flex items-center justify-center pb-[25vh] h-screen">
+      <div className="border border-200 shadow-lg rounded-xl px-20 pt-32 pb-28 bg-white">
         <div className="text-3xl font-black mb-5">
           Welcome To{" "}
           <a className="bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text">
@@ -88,7 +87,7 @@ export default function () {
           <div className="text-center pt-7">
             Already have an account?{" "}
             <a
-              className="font-semibold cursor-pointer hover:opacity-50"
+              className="font-semibold cursor-pointer hover:opacity-50 text-indigo-600"
               onClick={() => navigate("/login")}
             >
               Login

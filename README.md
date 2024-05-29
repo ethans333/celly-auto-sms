@@ -42,6 +42,7 @@ To Do:
 - [ ] Redirection
 - [ ] When view scaled and cells moved curves dont properly align
 - [ ] Make it so when you build a new cell it sets its default state to prop values if they exist
+- [ ] BUG: When you refresh page workspace_raw is cleared.
 
 
 

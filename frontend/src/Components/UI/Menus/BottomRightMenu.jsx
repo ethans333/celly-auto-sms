@@ -53,12 +53,12 @@ export default function () {
     return (
       <div>
         <div className="animate-bounce">
-          <div className="text-sm ml-[32px] w-32 text-center font-semibold">
+          <div className="text-sm ml-[32px] w-32 text-center font-semibold text-indigo-600">
             Create a New Project
           </div>
 
           <div className="ml-[85.5px] mt-1 mb-5">
-            <ArrowDownwardIcon />
+            <ArrowDownwardIcon sx={{ fill: "#4F46E5" }} />
           </div>
         </div>
 
