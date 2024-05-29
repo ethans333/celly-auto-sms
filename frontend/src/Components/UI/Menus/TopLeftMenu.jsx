@@ -12,9 +12,9 @@ export default function () {
   const [titleTemp, setTitleTemp] = useState("");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
-  useEffect(() => {
-    saveWorkspace();
-  }, [workspaceMetaData.workspace_emoji]);
+  // useEffect(() => { // Clearing workspace raw for some reason on refresh?
+  //   saveWorkspace();
+  // }, [workspaceMetaData.workspace_emoji]);
 
   return (
     <div
