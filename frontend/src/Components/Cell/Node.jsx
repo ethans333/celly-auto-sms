@@ -18,6 +18,7 @@ export class Node extends React.Component {
 
     if (!props) return;
     this.id = this.props.id;
+    this.side = this.props.side;
   }
 
   componentDidMount() {

@@ -6,7 +6,7 @@ import { HelpersContext } from "../../../Contexts/Helpers.jsx";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 export default function () {
-  const { setWorkspaceMetaData, setComponentsStack, noWorkspaces } =
+  const { setWorkspaceMetaData, setComponentsStack, noWorkspaces, setSidebar } =
     useContext(WorkspaceContext);
 
   const { saveWorkspace, updateWorkspaceLists } = useContext(HelpersContext);
@@ -37,6 +37,7 @@ export default function () {
 
       console.log(json);
 
+      setSidebar(null);
       setWorkspaceMetaData(json.workspace_metadata);
       setComponentsStack([]);
       updateWorkspaceLists();

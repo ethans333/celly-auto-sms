@@ -27,14 +27,10 @@ def handler(event, context):
         workspace_metadata = {
             "workspace_emoji": "U+{:X}".format(ord(workspace_emoji)),
             "workspace_name": workspace_name,
-            "workspace_description": workspace_description,
             "user_id": user_id,
             "id": workspace_id,
             "is_deployed": "False",
             "is_favorite": "False",
-            "meeting_window_start": "9",
-            "meeting_window_end": "17",
-            "blackout_days": str([0, 6]),
         }
 
         # Add workspace to bucket

@@ -104,7 +104,7 @@ export default function ({ self }) {
           <div className="mt-3 flex space-x-3">
             <textarea
               className="border border-gray-100 border-2 rounded-md px-3 py-3 text-sm w-full"
-              placeholder="Meeting Notes"
+              placeholder="Optional"
               type="text"
               rows={5}
               value={meetingDescription}

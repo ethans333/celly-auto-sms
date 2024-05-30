@@ -81,7 +81,7 @@ export default function () {
         <div className="flex items-center tracking-wide">
           <div className="w-3 h-3 bg-white border"></div>
           <div className="text-sm ml-2">Available</div>
-          <div className="w-3 h-3 ml-5 bg-gray-200 border"></div>
+          <div className="w-3 h-3 ml-5 bg-gray-100 border"></div>
           <div className="text-sm ml-2">Unavailable</div>
           <div className="w-3 h-3 ml-5 bg-green-200 border"></div>
           <div className="text-sm ml-2">Selected</div>
@@ -162,10 +162,13 @@ export default function () {
         className={`w-full  ${m == 0 ? "border-t" : ""} ${
           Available
             ? `cursor-pointer  ${isSelected ? "bg-green-200" : "bg-white"}`
-            : "bg-gray-200 cursor-not-allowed"
+            : "bg-gray-50 cursor-not-allowed"
         }`}
       >
-        <p className="opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm font-[550]">
+        <p
+          style={{ visibility: Available ? "visible" : "hidden" }}
+          className="opacity-0 hover:opacity-100 text-gray-400 ml-2 text-sm font-[550]"
+        >
           {`${h > 12 ? h % 12 : h}:${!m ? "00" : m} ${h >= 12 ? "PM" : "AM"}`}
         </p>
       </div>

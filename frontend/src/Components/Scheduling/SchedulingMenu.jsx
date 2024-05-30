@@ -20,12 +20,14 @@ export default function () {
 
   return (
     <div className="mx-[7vw] space-x-14 xl:space-x-0 xl:space-y-7 flex xl:block xl:w-[400px] 2xl:w-[500px] xl:mx-5 xl:shadow-lg xl:border border-gray-300 rounded-lg py-10 px-8">
-      <div className="border-b pb-5">
-        <div className="font-extrabold">Meeting Notes</div>
-        <div className="w-64 xl:96 xl:w-full max-h-44 mt-3 overflow-y-scroll pr-5">
-          {meetingDescription}
+      {meetingDescription.length > 0 && (
+        <div className="border-b pb-5">
+          <div className="font-extrabold">Meeting Notes</div>
+          <div className="w-64 xl:96 xl:w-full max-h-44 mt-3 overflow-y-scroll pr-5">
+            {meetingDescription}
+          </div>
         </div>
-      </div>
+      )}
       <div>
         <div className="font-extrabold">Remind Me Via</div>
         <div className="mt-5">

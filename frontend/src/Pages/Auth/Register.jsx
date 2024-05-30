@@ -87,7 +87,7 @@ export default function () {
           <div className="text-center pt-7">
             Already have an account?{" "}
             <a
-              className="font-semibold cursor-pointer hover:opacity-50 text-indigo-600"
+              className="font-bold cursor-pointer hover:opacity-50 text-indigo-600"
               onClick={() => navigate("/login")}
             >
               Login

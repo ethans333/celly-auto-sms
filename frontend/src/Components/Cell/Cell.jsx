@@ -264,6 +264,7 @@ export class Cell extends React.Component {
                     cell={this}
                     id={this.props.nodes ? this.props.nodes.top.id : uuid()}
                     onMount={this.props.onNodeMount}
+                    side="top"
                   />
                 </div>
                 <div className="flex">
@@ -277,6 +278,7 @@ export class Cell extends React.Component {
                       cell={this}
                       id={this.props.nodes ? this.props.nodes.left.id : uuid()}
                       onMount={this.props.onNodeMount}
+                      side="left"
                     />
                   </div>
                   {/* Inner */}
@@ -288,6 +290,7 @@ export class Cell extends React.Component {
                       cell={this}
                       id={this.props.nodes ? this.props.nodes.right.id : uuid()}
                       onMount={this.props.onNodeMount}
+                      side="right"
                     />
                   </div>
                 </div>
@@ -298,6 +301,7 @@ export class Cell extends React.Component {
                     cell={this}
                     id={this.props.nodes ? this.props.nodes.bottom.id : uuid()}
                     onMount={this.props.onNodeMount}
+                    side="bottom"
                   />
                 </div>
               </div>

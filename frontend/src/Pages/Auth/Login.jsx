@@ -81,7 +81,7 @@ export default function () {
             Don't have an account?{" "}
             <a
               onClick={() => navigate("/register")}
-              className="text-indigo-600 font-semibold cursor-pointer hover:opacity-50"
+              className="text-indigo-600 font-bold cursor-pointer hover:opacity-50"
             >
               Sign Up
             </a>
