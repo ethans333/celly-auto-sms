@@ -38,8 +38,8 @@ export default function ({ self }) {
   useEffect(() => {
     setMeetingDescription(self.state.meeting_description);
 
-    let s = workspaceMetaData.meeting_window_start;
-    let e = workspaceMetaData.meeting_window_end;
+    let s = self.state.start_time;
+    let e = self.state.end_time;
 
     setStartAMPM(s < 12 ? "AM" : "PM");
     setEndAMPM(e < 12 ? "AM" : "PM");
@@ -47,13 +47,7 @@ export default function ({ self }) {
     setMwStart(s < 12 ? s : s - 12);
     setMwEnd(e < 12 ? e : e - 12);
 
-    let bdays;
-
-    if (Array.isArray(workspaceMetaData.blackout_days)) {
-      bdays = workspaceMetaData.blackout_days;
-    } else {
-      bdays = JSON.parse(workspaceMetaData.blackout_days);
-    }
+    let bdays = self.state.blackout_days;
 
     setSelectedDays(bdays.map((day) => dow[day]));
   }, []);

@@ -56,6 +56,19 @@ export class Node extends React.Component {
                   return { prev: [...p.prev, curveRef] };
                 });
 
+                if (
+                  !(
+                    (context.currentNode.side == "top" &&
+                      this.side == "bottom") ||
+                    (context.currentNode.side == "bottom" &&
+                      this.side == "top") ||
+                    (context.currentNode.side == "left" &&
+                      this.side == "right") ||
+                    (context.currentNode.side == "right" && this.side == "left")
+                  )
+                )
+                  return;
+
                 // Push Curve
                 const curveRef = React.createRef();
                 const cid = uuid();

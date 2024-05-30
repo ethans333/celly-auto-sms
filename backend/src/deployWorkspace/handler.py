@@ -38,7 +38,7 @@ def handler(event, context):
 
         # loop through all cell types
         for cell in workspace_raw:
-            cell_types.append(cell["type"])
+            cell_types.append(cell["typename"])
 
         if "calendar" in cell_types:
             # check if user linked calendar
@@ -72,13 +72,9 @@ def handler(event, context):
         # )
 
     except Exception as e:
-        error_type, error_value, error_traceback = sys.exc_info()
-        error_line = error_traceback.tb_lineno
-        error_line_code = inspect.getframeinfo(error_traceback.tb_frame).code_line
-
         return {
             "statusCode": 500,
-            "body": f"{e}\nLine: {error_line}\nCode: {error_line_code}",
+            "body": f"{e}",
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",
