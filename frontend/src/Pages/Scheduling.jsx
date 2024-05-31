@@ -19,6 +19,7 @@ export default function () {
   const [startHour, setStartHour] = useState(9);
   const [endHour, setEndHour] = useState(17);
   const [meetingDescription, setMeetingDescription] = useState("");
+  const [blackoutDays, setBlackoutDays] = useState([0, 6]);
 
   let { user_id, id } = useParams();
 
@@ -27,10 +28,11 @@ export default function () {
       res.json().then((data) => {
         console.log(data);
         setMeetingDescription(data["meeting_description"]);
-        setStartHour(data["start_time"]);
-        setEndHour(data["end_time"]);
+        setStartHour(parseInt(data["start_time"]));
+        setEndHour(parseInt(data["end_time"]));
         setEvents(data["events"]);
         setWorkspace(data["workspace"]);
+        setBlackoutDays(data["blackout_days"]);
       });
     });
   }, []);
@@ -50,6 +52,7 @@ export default function () {
         startHour,
         endHour,
         meetingDescription,
+        blackoutDays,
       }}
     >
       {isScheduled ? (

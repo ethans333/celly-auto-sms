@@ -43,6 +43,7 @@ To Do:
 - [ ] When view scaled and cells moved curves dont properly align
 - [ ] Make it so when you build a new cell it sets its default state to prop values if they exist
 - [ ] When you change emoji workspace saves and list updated
+- [ ] When you change values in sidebar of calendar they arent displyed properly.
 
 
 

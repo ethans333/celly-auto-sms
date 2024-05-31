@@ -16,6 +16,7 @@ export default function () {
     workspace,
     startHour,
     endHour,
+    blackoutDays,
   } = useContext(SchedulingContext);
 
   return (
@@ -232,7 +233,6 @@ export default function () {
 
     if (Object.keys(workspace).length != 0) {
       const dow = new Date(time).getDay();
-      const blackoutDays = JSON.parse(workspace.blackout_days);
 
       if (blackoutDays.includes(dow)) return false;
     }

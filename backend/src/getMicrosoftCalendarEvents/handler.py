@@ -30,7 +30,7 @@ def handler(event, context):
         calendar_cell = None
 
         for cell in bucket_raw:
-            if cell["type"] == "Calendar":
+            if cell["typename"] == "calendar":
                 calendar_cell = cell
                 break
 

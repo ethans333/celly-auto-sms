@@ -123,6 +123,10 @@ export default function ({ self }) {
                 )
                   return;
 
+                self.setState({
+                  start_time: value,
+                });
+
                 setMwStart(e.target.value);
               }}
               className="w-[64px] border border-gray-100 border-2 rounded-md px-3 text-sm"
@@ -146,6 +150,10 @@ export default function ({ self }) {
                   value < 1
                 )
                   return;
+
+                self.setState({
+                  end_time: value + 12,
+                });
 
                 setMwEnd(e.target.value);
               }}
