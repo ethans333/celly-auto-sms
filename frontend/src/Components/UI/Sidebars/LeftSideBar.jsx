@@ -96,13 +96,7 @@ export default function () {
               mapWorkspaces(favoriteWorkspaceList)
             )}
           </div>
-          <p
-            className={`font-extrabold ${
-              favoriteWorkspaceList.length > 0 && "mt-8"
-            }`}
-          >
-            Projects
-          </p>
+          <p className={`font-extrabold mt-8`}>Projects</p>
           {/* All Projects */}
           <div className="space-y-3 mt-3 ml-1">
             {loadingWorkspaceList ? (

@@ -11,8 +11,13 @@ import ViewRenderer from "../Components/Views/ViewRenderer.jsx";
 import useLoadWorkspace from "../Components/Cell/Cells/useLoadWorkspace.jsx";
 
 export default function () {
-  const { sidebar, workspaceMetaData, setComponentsStack } =
-    useContext(WorkspaceContext);
+  const {
+    sidebar,
+    workspaceMetaData,
+    setComponentsStack,
+    setDeltaX,
+    setDeltaY,
+  } = useContext(WorkspaceContext);
   const { parseCode, validateToken, updateWorkspaceLists } =
     useContext(HelpersContext);
 
@@ -27,6 +32,8 @@ export default function () {
   // Load Workspace
   useEffect(() => {
     setComponentsStack([...cells, ...curves]);
+    setDeltaX(parseInt(workspaceMetaData.delta_x));
+    setDeltaY(parseInt(workspaceMetaData.delta_y));
   }, [workspaceMetaData.id, cells, curves]);
 
   return (

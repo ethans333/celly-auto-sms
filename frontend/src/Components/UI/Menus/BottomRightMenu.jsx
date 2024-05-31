@@ -11,26 +11,11 @@ export default function () {
 
   const { saveWorkspace, updateWorkspaceLists } = useContext(HelpersContext);
 
-  const defaultWorkspace = {
-    workspace_name: "My Workspace",
-    workspace_description: "Lorem Ipsum",
-    workspace_raw: [],
-    is_favorite: false,
-    workspace_emoji: "👽",
-    workspace_id: null,
-    is_deployed: false,
-  };
-
   async function addWorkspace() {
     // Save current workspace
     saveWorkspace();
     // Create new workspace with default values
-    const res = await api.addWorkspace(
-      defaultWorkspace.workspace_name,
-      defaultWorkspace.workspace_description,
-      defaultWorkspace.workspace_raw,
-      defaultWorkspace.is_favorite
-    );
+    const res = await api.addWorkspace("My Workspace", []);
 
     if (res.status === 200) {
       const json = await res.json();

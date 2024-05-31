@@ -31,11 +31,12 @@ export function WorkspaceProvider({ children }) {
     Analytics: 2,
   };
 
-  useEffect(() => {
-    setDeltaX(0);
-    setDeltaY(0);
-    setScale(1);
-  }, [workspaceMetaData]);
+  // useEffect(() => {
+  //   console.log(workspaceMetaData);
+  //   setDeltaX(0);
+  //   setDeltaY(0);
+  //   setScale(1);
+  // }, [workspaceMetaData]);
 
   const [currentView, setCurrentView] = useState(Views.Project);
 

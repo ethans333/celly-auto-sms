@@ -21,7 +21,7 @@ export default function () {
   const [cells, setCells] = useState([]);
   const [curves, setCurves] = useState([]);
 
-  const { workspaceMetaData, deltaX, deltaY } = useContext(WorkspaceContext);
+  const { workspaceMetaData } = useContext(WorkspaceContext);
 
   const nodes = {};
   const processed = [];
@@ -102,8 +102,8 @@ export default function () {
               ref={curveRef}
               start={start}
               end={end}
-              deltaX={deltaX}
-              deltaY={deltaY}
+              deltaX={parseInt(workspaceMetaData.delta_x)}
+              deltaY={parseInt(workspaceMetaData.delta_y)}
             />,
           ]);
 
@@ -147,8 +147,8 @@ export default function () {
               ref={curveRef}
               start={start}
               end={end}
-              deltaX={deltaX}
-              deltaY={deltaY}
+              deltaX={parseInt(workspaceMetaData.delta_x)}
+              deltaY={parseInt(workspaceMetaData.delta_y)}
             />,
           ]);
           processed.push({

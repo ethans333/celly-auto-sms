@@ -465,46 +465,38 @@ export class Curve extends React.Component {
               fill="white"
               stroke="black"
               strokeWidth={5}
-              className="absolute -z-50"
+              className="absolute -z-50 hover:opacity-50 cursor-pointer"
               style={{
                 position: "absolute",
                 top: Math.min(start.y, end.y) - this.state.deltaY,
                 left: Math.min(start.x, end.x) - this.state.deltaX,
                 overflow: "visible",
               }}
+              onClick={() => {
+                // Delete curve
+                this.state.start.setState((p) => {
+                  return {
+                    selected: p.next.length + p.prev.length - 1 > 0,
+                    next: p.next.filter((e) => e.current != this),
+                    prev: p.prev.filter((e) => e.current != this),
+                  };
+                });
+
+                this.state.end.setState((p) => {
+                  return {
+                    selected: p.next.length + p.prev.length - 1 > 0,
+                    next: p.next.filter((e) => e.current != this),
+                    prev: p.prev.filter((e) => e.current != this),
+                  };
+                });
+
+                context.setComponentsStack((p) =>
+                  p.filter((e) => {
+                    return e.ref?.current.id != this.id;
+                  })
+                );
+              }}
             >
-              {/* <path
-                onClick={() => {
-                  // Delete curve
-                  this.state.start.setState((p) => {
-                    return {
-                      selected: p.next.length + p.prev.length - 1 > 0,
-                      next: p.next.filter((e) => e.current != this),
-                      prev: p.prev.filter((e) => e.current != this),
-                    };
-                  });
-
-                  this.state.end.setState((p) => {
-                    return {
-                      selected: p.next.length + p.prev.length - 1 > 0,
-                      next: p.next.filter((e) => e.current != this),
-                      prev: p.prev.filter((e) => e.current != this),
-                    };
-                  });
-
-                  context.setComponentsStack((p) =>
-                    p.filter((e) => {
-                      return e.ref?.current.id != this.id;
-                    })
-                  );
-                }}
-                className="hover:opacity-30 cursor-pointer"
-                d={`M${a.x},${a.y} C${c1.x},${c1.y} ${c2.x},${c2.y} ${b.x},${b.y}`}
-                style={{
-                  strokeDasharray: "20,1",
-                  strokeDashoffset: 0, // Change over time
-                }}
-              /> */}
               {paths}
             </svg>
           </div>

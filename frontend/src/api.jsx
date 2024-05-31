@@ -122,16 +122,11 @@ export async function getUser() {
  * Adds a workspace
  *
  * @param {String} workspace_name Name of the workspace
- * @param {String} workspace_description Description of the workspace
  * @param {String} workspace_raw Raw data of the workspace
  * @param {String} workspace_emoji Emoji of the workspace
  * @returns {Object} Message and workspace id
  */
-export async function addWorkspace(
-  workspace_name,
-  workspace_description,
-  workspace_raw
-) {
+export async function addWorkspace(workspace_name, workspace_raw) {
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace",
     {
@@ -142,7 +137,6 @@ export async function addWorkspace(
       },
       body: JSON.stringify({
         workspace_name: workspace_name,
-        workspace_description: workspace_description,
         workspace_raw: JSON.stringify(workspace_raw),
         workspace_emoji: "👽",
       }),

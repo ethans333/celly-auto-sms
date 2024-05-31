@@ -58,7 +58,7 @@ export default function () {
               saveWorkspace();
             }}
             type="text"
-            className="outline-none text-lg font-black bg-purple-200"
+            className="outline-none text-xl font-extrabold bg-purple-100 px-1 py-0.5"
             placeholder="Project Title"
           />
         ) : (
@@ -68,7 +68,7 @@ export default function () {
                 setIsEditingTitle((p) => !p);
                 setTitleTemp(workspaceMetaData.workspace_name);
               }}
-              className="text-lg font-black hover:bg-purple-200 p-1"
+              className="text-xl font-extrabold hover:bg-purple-100 px-1 py-0.5 cursor-pointer"
             >
               {workspaceMetaData.workspace_name}
             </h1>

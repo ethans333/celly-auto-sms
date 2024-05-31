@@ -10,7 +10,6 @@ def handler(event, context):
     body = json.loads(event["body"])
 
     workspace_name = body["workspace_name"]
-    workspace_description = body["workspace_description"]
     workspace_raw = body["workspace_raw"]
     workspace_emoji = body["workspace_emoji"]
 
@@ -31,6 +30,8 @@ def handler(event, context):
             "id": workspace_id,
             "is_deployed": "False",
             "is_favorite": "False",
+            "delta_x": "0",
+            "delta_y": "0",
         }
 
         # Add workspace to bucket

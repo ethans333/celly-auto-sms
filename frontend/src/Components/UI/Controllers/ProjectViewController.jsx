@@ -2,7 +2,14 @@ import { useContext, useState, useEffect } from "react";
 import { WorkspaceContext } from "../../../Contexts/Workspace";
 
 export default function () {
-  const { setDeltaX, setDeltaY, setScale } = useContext(WorkspaceContext);
+  const {
+    setDeltaX,
+    setDeltaY,
+    setScale,
+    deltaX,
+    deltaY,
+    setWorkspaceMetaData,
+  } = useContext(WorkspaceContext);
   const [buttonDown, setButtonDown] = useState(false);
 
   // View Controller

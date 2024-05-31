@@ -63,7 +63,7 @@ def handler(event, context):
                     "subject": f"{workspace_name} meeting",
                     "body": {
                         "contentType": "HTML",
-                        "content": f"{workspace_name} meeting. Scheduled via Celly.",
+                        "content": f"{workspace_name} meeting. Scheduled via Intwine.",
                     },
                     "start": {
                         "dateTime": start_time,
@@ -75,13 +75,13 @@ def handler(event, context):
                     },
                     "location": {"displayName": "Online Meeting"},
                     "attendees": [
-                        {
-                            "emailAddress": {
-                                "address": "jdoe@contoso.com",
-                                "name": "John Doe",
-                            },
-                            "type": "required",
-                        }
+                        # {
+                        #     "emailAddress": {
+                        #         "address": "jdoe@contoso.com",
+                        #         "name": "John Doe",
+                        #     },
+                        #     "type": "required",
+                        # }
                     ],
                 }
             ),
@@ -156,4 +156,25 @@ def send_text(phone, message):
         OriginationIdentity=originator_id,
         MessageBody=message,
         MessageType="TRANSACTIONAL",
+    )
+
+
+def send_email(email, message):
+    ses = boto3.client("ses")
+
+    ses.send_email(
+        Source="jdoe@contoso.com",
+        Destination={
+            "ToAddresses": [email],
+        },
+        Message={
+            "Subject": {
+                "Data": "Celly Meeting",
+            },
+            "Body": {
+                "Text": {
+                    "Data": message,
+                },
+            },
+        },
     )

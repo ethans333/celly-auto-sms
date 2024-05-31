@@ -48,14 +48,7 @@ export class Node extends React.Component {
               if (!context.currentNode) {
                 context.setCurrentNode(this);
               } else {
-                context.currentNode.setState((p) => {
-                  return { next: [...p.next, curveRef] };
-                });
-
-                this.setState((p) => {
-                  return { prev: [...p.prev, curveRef] };
-                });
-
+                // Check if invalid connection
                 if (
                   !(
                     (context.currentNode.side == "top" &&
@@ -66,8 +59,23 @@ export class Node extends React.Component {
                       this.side == "right") ||
                     (context.currentNode.side == "right" && this.side == "left")
                   )
-                )
+                ) {
+                  this.setState({
+                    selected: false,
+                  });
+                  context.currentNode.setState({ selected: false });
+                  context.setCurrentNode(null);
+
                   return;
+                }
+
+                context.currentNode.setState((p) => {
+                  return { next: [...p.next, curveRef] };
+                });
+
+                this.setState((p) => {
+                  return { prev: [...p.prev, curveRef] };
+                });
 
                 // Push Curve
                 const curveRef = React.createRef();

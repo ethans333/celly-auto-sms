@@ -28,6 +28,8 @@ export function HelpersProvider({ children }) {
     setPopup,
     setLoadingWorkspaceList,
     setNoWorkspaces,
+    deltaX,
+    deltaY,
   } = useContext(WorkspaceContext);
 
   /**
@@ -83,13 +85,17 @@ export function HelpersProvider({ children }) {
    * @return {Promise} A Promise that resolves when the workspace is successfully updated.
    */
   function saveWorkspace() {
-    console.log(componentsStack);
+    const metadata = workspaceMetaData;
+
+    metadata["delta_x"] = deltaX.toString();
+    metadata["delta_y"] = deltaY.toString();
+    console.log(metadata);
 
     const objects = componentsStack
       .filter((c) => c.ref.current.constructor.prototype instanceof Cell)
       .map((c) => c.ref.current.toJSON());
 
-    api.updateWorkspace(workspaceMetaData, objects).then((res) => {
+    api.updateWorkspace(metadata, objects).then((res) => {
       updateWorkspaceLists(false);
     });
   }
