@@ -14,8 +14,9 @@ export default function ({ self }) {
   const [startAMPM, setStartAMPM] = useState("AM");
   const [endAMPM, setEndAMPM] = useState("PM");
   const [mwStart, setMwStart] = useState(9);
-  const [mwEnd, setMwEnd] = useState(5);
+  const [mwEnd, setMwEnd] = useState(17);
   const [meetingDescription, setMeetingDescription] = useState("");
+  const [meetingTitle, setMeetingTitle] = useState("");
 
   const dow = [
     "Sunday",
@@ -30,12 +31,12 @@ export default function ({ self }) {
   useEffect(() => {
     self.setState({
       meeting_description: meetingDescription,
+      meeting_title: meetingTitle,
     });
-    console.log(self);
-    console.log(self.state.meeting_description);
-  }, [meetingDescription]);
+  }, [meetingDescription, meetingTitle]);
 
   useEffect(() => {
+    setMeetingTitle(self.state.meeting_title);
     setMeetingDescription(self.state.meeting_description);
 
     let s = self.state.start_time;
@@ -65,20 +66,18 @@ export default function ({ self }) {
   }, [self]);
 
   useEffect(() => {
-    if (mwStart == "" || mwEnd == "") return;
+    // if (mwStart == "" || mwEnd == "") return;
 
-    const s = parseInt(mwStart) + (startAMPM == "AM" ? 0 : 12);
-    const e = parseInt(mwEnd) + (endAMPM == "AM" ? 0 : 12);
+    // const s = parseInt(mwStart) + (startAMPM == "AM" ? 0 : 12);
+    // const e = parseInt(mwEnd) + (endAMPM == "AM" ? 0 : 12);
 
-    if (s >= e) return;
+    // if (s >= e) return;
 
     const days = selectedDays.map((day) => dow.indexOf(day));
 
-    self.setState((p) => ({
-      meeting_window_start: s,
-      meeting_window_end: e,
+    self.setState({
       blackout_days: days,
-    }));
+    });
   }, [selectedDays, mwStart, mwEnd, startAMPM, endAMPM]);
 
   return (
@@ -93,6 +92,20 @@ export default function ({ self }) {
       )}
 
       <div className="pt-7 space-y-5">
+        <div>
+          <p className="font-bold">Meeting Title</p>
+          <div className="mt-3 flex space-x-3">
+            <input
+              placeholder="Title"
+              type="text"
+              value={meetingTitle}
+              onChange={(e) => {
+                setMeetingTitle(e.target.value);
+              }}
+              className="w-full border border-gray-100 border-2 rounded-md px-3 py-1.5 text-sm"
+            />
+          </div>
+        </div>
         <div>
           <p className="font-bold">Meeting Notes</p>
           <div className="mt-3 flex space-x-3">
@@ -115,6 +128,8 @@ export default function ({ self }) {
               value={mwStart}
               onChange={(e) => {
                 let value = parseInt(e.target.value);
+
+                console.log(value);
 
                 if (
                   (isNaN(value) && e.target.value !== "") ||

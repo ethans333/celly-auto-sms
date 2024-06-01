@@ -17,6 +17,7 @@ export default function () {
     startHour,
     endHour,
     blackoutDays,
+    title,
   } = useContext(SchedulingContext);
 
   return (
@@ -25,7 +26,7 @@ export default function () {
         <div className="w-full">
           <div className="flex justify-between pt-5 xl:pt-12 pb-12">
             <div className="font-black text-2xl">
-              {workspace["workspace_name"]}
+              {title === "" ? workspace["workspace_name"] : title}
             </div>
             <div className="flex space-x-2">
               <div

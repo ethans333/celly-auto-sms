@@ -16,6 +16,7 @@ export default function () {
   const [isScheduled, setIsScheduled] = useState(false);
 
   // constants
+  const [title, setTitle] = useState("");
   const [startHour, setStartHour] = useState(9);
   const [endHour, setEndHour] = useState(17);
   const [meetingDescription, setMeetingDescription] = useState("");
@@ -33,6 +34,7 @@ export default function () {
         setEvents(data["events"]);
         setWorkspace(data["workspace"]);
         setBlackoutDays(data["blackout_days"]);
+        setTitle(data["meeting_title"]);
       });
     });
   }, []);
@@ -53,6 +55,7 @@ export default function () {
         endHour,
         meetingDescription,
         blackoutDays,
+        title,
       }}
     >
       {isScheduled ? (

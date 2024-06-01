@@ -40,6 +40,8 @@ export class Cell extends React.Component {
   constructor(props) {
     super(props);
 
+    this.typename = this.constructor.name.toLocaleLowerCase();
+
     // Cell Properties
     this.id = this.props ? this.props.id : uuid();
     this.cellRef = React.createRef();
@@ -54,6 +56,17 @@ export class Cell extends React.Component {
     this.nodes.left = React.createRef();
     this.nodes.right = React.createRef();
     this.nodes.bottom = React.createRef();
+  }
+
+  initState(props) {
+    // Set inital state values to passed in prop values
+    console.log(this.state, props);
+
+    for (const [key, value] of Object.entries(this.state)) {
+      if (props && props[key]) {
+        this.state[key] = props[key];
+      }
+    }
   }
 
   componentDidMount() {
@@ -144,6 +157,13 @@ export class Cell extends React.Component {
         )}
       </WorkspaceContext.Consumer>
     );
+  }
+
+  toJSON() {
+    return {
+      ...this.toObject(),
+      ...this.state,
+    };
   }
 
   render() {

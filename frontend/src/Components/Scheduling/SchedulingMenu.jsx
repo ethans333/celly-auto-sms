@@ -23,9 +23,14 @@ export default function () {
       {meetingDescription.length > 0 && (
         <div className="border-b pb-5">
           <div className="font-extrabold">Meeting Notes</div>
-          <div className="w-64 xl:96 xl:w-full max-h-44 mt-3 overflow-y-scroll pr-5">
+          <p
+            style={{
+              whiteSpace: "pre-wrap",
+            }}
+            className="w-64 xl:96 xl:w-full max-h-44 mt-3 overflow-y-scroll pr-5"
+          >
             {meetingDescription}
-          </div>
+          </p>
         </div>
       )}
       <div>

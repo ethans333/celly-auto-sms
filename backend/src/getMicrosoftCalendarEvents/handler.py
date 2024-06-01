@@ -83,6 +83,7 @@ def handler(event, context):
                     "meeting_description": calendar_cell["meeting_description"],
                     "workspace": metadata,
                     "events": event_times,
+                    "meeting_title": calendar_cell["meeting_title"],
                 }
             ),
             "headers": {
