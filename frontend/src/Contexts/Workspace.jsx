@@ -38,7 +38,7 @@ export function WorkspaceProvider({ children }) {
   //   setScale(1);
   // }, [workspaceMetaData]);
 
-  const [currentView, setCurrentView] = useState(Views.ScheduledMeetings);
+  const [currentView, setCurrentView] = useState(Views.Project);
 
   return (
     <WorkspaceContext.Provider
