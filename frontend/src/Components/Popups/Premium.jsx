@@ -3,7 +3,9 @@ export default function () {
     <>
       <div className="flex space-x-5 w-[900px] grid grid-cols-2 p-5 py-14">
         <div className="shadow-lg border px-10 py-5 rounded-lg">
-          <div className="font-bold text-2xl mt-5 py-1.5">Regular</div>
+          <div className="font-bold text-2xl mt-5 px-3 py-1.5 rounded w-fit">
+            Regular
+          </div>
           <div className="space-y-2 text-gray-800 pt-8 pb-16">
             <p>• Nostrud non nulla in sunt voluptate tempor.</p>
             <p>• Cillum fugiat sit eu enim.</p>
