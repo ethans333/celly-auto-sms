@@ -37,33 +37,6 @@ manifest_hash = "b7583518ec701cb8d72af5f1019b6dab"
 packagetype = "Zip"
 functions = ["deleteWorkspace"]
 
-[function_build_definitions.be0b0455-c0c2-4e4f-9906-1c19d49bd08c]
-codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\getConversation"
-runtime = "python3.9"
-architecture = "x86_64"
-handler = "handler.handler"
-manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
-packagetype = "Zip"
-functions = ["getConversation"]
-
-[function_build_definitions.d16df92a-ac96-44e9-a762-b519262bf6ad]
-codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\getAllConversations"
-runtime = "python3.9"
-architecture = "x86_64"
-handler = "handler.handler"
-manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
-packagetype = "Zip"
-functions = ["getAllConversations"]
-
-[function_build_definitions.1dcdbf20-5efc-4572-8a85-1b66d1711605]
-codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\addDummyConversationData"
-runtime = "python3.9"
-architecture = "x86_64"
-handler = "handler.handler"
-manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
-packagetype = "Zip"
-functions = ["addDummyConversationData"]
-
 [function_build_definitions.f603ee27-5d40-4d2c-8860-fd7175c78252]
 codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\getUser"
 runtime = "python3.9"
@@ -234,5 +207,14 @@ handler = "handler.handler"
 manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
 packagetype = "Zip"
 functions = ["hideDemo"]
+
+[function_build_definitions.029b0984-72b4-40ba-aff2-561c3673dfff]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\getScheduledMeetings"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["getScheduledMeetings"]
 
 [layer_build_definitions]

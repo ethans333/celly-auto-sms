@@ -168,6 +168,12 @@ export function HelpersProvider({ children }) {
     });
   }
 
+  async function getScheduledMeetings() {
+    const res = await api.getScheduledMeetings();
+    console.log(res.meetings);
+    return res.meetings;
+  }
+
   return (
     <HelpersContext.Provider
       value={{
@@ -179,6 +185,7 @@ export function HelpersProvider({ children }) {
         deleteWorkspace,
         showTutorial,
         hideTutorial,
+        getScheduledMeetings,
       }}
     >
       {children}

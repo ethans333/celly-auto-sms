@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import uuid
 from datetime import datetime
 
 import boto3
@@ -104,6 +105,24 @@ def handler(event, context):
             message = f"{workspace_name} is scheduled for {day_of_week}, {month_day} at {time}"
 
             send_text(body["contact_value"], message)
+
+        # add scheduled event to scheduled table
+        ddb = boto3.client("dynamodb")
+
+        ddb.put_item(
+            TableName=os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"],
+            Item={
+                "id": {"S": uuid.uuid4().hex},
+                "user_id": {"S": user_id},
+                "workspace_id": {"S": workspace_id},
+                "workspace_name": {"S": workspace_name},
+                "event_id": {"S": events_response["id"]},
+                "start_time": {"S": start_time},
+                "end_time": {"S": end_time},
+                "contact_method": {"S": body["contact_method"]},
+                "contact_value": {"S": body["contact_value"]},
+            },
+        )
 
         return {
             "statusCode": 200,

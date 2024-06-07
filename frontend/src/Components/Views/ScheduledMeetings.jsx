@@ -3,34 +3,48 @@ import square from "../../assets/square-regular.svg";
 import numbers from "../../assets/numbers.json";
 import { useEffect, useState, useContext } from "react";
 import { WorkspaceContext } from "../../Contexts/Workspace";
+import { HelpersContext } from "../../Contexts/Helpers";
+
 export default function () {
+  const { workspaceMetaData } = useContext(WorkspaceContext);
+  const { getScheduledMeetings } = useContext(HelpersContext);
+
+  const [meetings, setMeetings] = useState([]);
+
+  useEffect(() => {
+    getScheduledMeetings().then((m) => setMeetings(m));
+  }, []);
+
   return (
     <div>
       <div className="flex justify-center">
-        <div className="mt-[10vh] overflow-y-scroll max-h-[80vh] p-5">
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div className="mt-[15vh] overflow-y-scroll max-h-[80vh] p-5">
+          <div className="relative overflow-x-auto shadow-md border pt-5 sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500">
               <thead className="text-sm text-black">
                 <tr>
                   <th scope="col" className="px-6 py-3 tracking-wide"></th>
                   <th scope="col" className="px-6 py-3 tracking-wide">
-                    Phone Number
+                    Meeting
+                  </th>
+                  <th scope="col" className="px-6 py-3 tracking-wide">
+                    Contact
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Date Registered
+                    Time
                   </th>
                   <th scope="col" className="px-6 py-3 tracking-wide">
-                    Last Contacted
+                    Length
                   </th>
                   <th scope="col" className="px-6 py-3 tracking-wide">
-                    Location
+                    Date
                   </th>
                   <th scope="col" className="px-6 py-3 tracking-wide"></th>
                 </tr>
               </thead>
               <tbody>
-                {numbers.map((number, i) => (
-                  <Row key={i} background={i % 2 == 0} {...number} />
+                {meetings.map((m, i) => (
+                  <Row key={i} background={i % 2 == 0} {...m} />
                 ))}
               </tbody>
             </table>
@@ -42,17 +56,17 @@ export default function () {
 }
 
 function Row({
-  phone,
-  date_registered,
-  date_last_contacted,
-  location,
   background,
+  workspace_name,
+  contact_value,
+  start_time,
+  end_time,
 }) {
   const { setSidebar } = useContext(WorkspaceContext);
 
   return (
-    <tr className={`${background && "bg-gray-50"}`}>
-      <td className="px-6 py-4">
+    <tr className={`${background && "bg-[#fdfdfd]"}`}>
+      <td className="px-6 py-4 w-16">
         <img
           src={square}
           className="w-4 h-4 mx-auto cursor-pointer hover:opacity-50"
@@ -60,92 +74,29 @@ function Row({
       </td>
       <th
         scope="row"
-        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+        className="px-6 py-4 w-16 font-medium text-gray-900 whitespace-nowrap"
       >
-        {phone}
+        {workspace_name}
       </th>
-      <td className="px-6 py-4">{date_registered}</td>
-      <td className="px-6 py-4">{date_last_contacted}</td>
-      <td className="px-6 py-4">{location}</td>
       <td className="px-6 py-4">
+        <div className="truncate w-32">{contact_value}</div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="truncate w-32">{start_time}</div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="truncate w-32">{end_time}</div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="truncate w-32">{end_time}</div>
+      </td>
+      <td className="px-6 py-4 w-16">
         <img
           src={eye}
           className="w-4 h-4 mx-auto cursor-pointer hover:opacity-50"
-          onClick={() =>
-            setSidebar(
-              <div>
-                <div className="max-w-96 space-y-5 mt-10 overflow-y-scroll pr-5 max-h-[90vh]">
-                  <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
-                  <BubbleClient text="Lsunt dolor proident cupidatat." />
-                  <BubbleServer text="Exercitation ullamco laboris." />
-                  <BubbleClient text="Laboris adipisicing sunt." />
-                  <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
-                  <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
-                  <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
-                  <BubbleClient text="Lsunt dolor proident cupidatat." />
-                  <BubbleServer text="Exercitation ullamco laboris." />
-                  <BubbleClient text="Laboris adipisicing sunt." />
-                  <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
-                  <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
-                  <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
-                  <BubbleClient text="Lsunt dolor proident cupidatat." />
-                  <BubbleServer text="Exercitation ullamco laboris." />
-                  <BubbleClient text="Laboris adipisicing sunt." />
-                  <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
-                  <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
-                  <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
-                  <BubbleClient text="Lsunt dolor proident cupidatat." />
-                  <BubbleServer text="Exercitation ullamco laboris." />
-                  <BubbleClient text="Laboris adipisicing sunt." />
-                  <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
-                  <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
-                  <BubbleServer text="Reprehenderit quis reprehenderit irure in occaecat ipsum aliqua aliqua" />
-                  <BubbleClient text="Lsunt dolor proident cupidatat." />
-                  <BubbleServer text="Exercitation ullamco laboris." />
-                  <BubbleClient text="Laboris adipisicing sunt." />
-                  <BubbleServer text="Dolore culpa sunt ullamco occaecat nostrud nisi non ipsum amet dolor sint ipsum pariatur." />
-                  <BubbleClient text="Esse Lorem nostrud nisi sint veniam sit. Ipsum elit eiusmod nulla id irure. Excepteur duis culpa sunt proident est irure proident ad pariatur in ut deserunt. Sint culpa laborum mollit quis." />
-                </div>
-                <div className="flex mt-4 space-x-3 justify-end mr-8">
-                  <LegendLabel text="Server" color="#d1d5db" />
-                  <LegendLabel text="Client" color="black" />
-                </div>
-              </div>
-            )
-          }
+          onClick={() => setSidebar(<div>More Info</div>)}
         />
       </td>
     </tr>
-  );
-}
-
-function BubbleServer({ text }) {
-  return (
-    <div className="mr-5">
-      <div className="text-sm bg-gray-100 px-5 py-2 mr-auto rounded-lg w-fit">
-        {text}
-      </div>
-    </div>
-  );
-}
-
-function BubbleClient({ text }) {
-  return (
-    <div className="ml-5">
-      <div className="text-sm bg-black text-white px-5 py-2 rounded-lg ml-auto w-fit">
-        {text}
-      </div>
-    </div>
-  );
-}
-
-function LegendLabel({ text, color }) {
-  return (
-    <div className="flex items-center">
-      <svg width="18" height="18">
-        <rect width="15" height="15" x="0" y="0" rx="3" ry="3" fill={color} />
-      </svg>
-      <div className="text-sm">{text}</div>
-    </div>
   );
 }
