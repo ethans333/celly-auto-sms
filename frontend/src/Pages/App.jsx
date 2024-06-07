@@ -15,8 +15,10 @@ export default function () {
     sidebar,
     workspaceMetaData,
     setComponentsStack,
+    componentsStack,
     setDeltaX,
     setDeltaY,
+    currentView,
   } = useContext(WorkspaceContext);
   const { parseCode, validateToken, updateWorkspaceLists } =
     useContext(HelpersContext);

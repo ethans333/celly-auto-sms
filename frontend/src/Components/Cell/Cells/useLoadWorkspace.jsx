@@ -21,7 +21,7 @@ export default function () {
   const [cells, setCells] = useState([]);
   const [curves, setCurves] = useState([]);
 
-  const { workspaceMetaData } = useContext(WorkspaceContext);
+  const { workspaceMetaData, currentView } = useContext(WorkspaceContext);
 
   const nodes = {};
   const processed = [];
@@ -62,7 +62,7 @@ export default function () {
       // Map objects
       setCells(() => objects.map(mapCell));
     });
-  }, [workspaceMetaData.id]);
+  }, [workspaceMetaData.id, currentView]);
 
   function onNodeMount(e, c) {
     for (const n in c.nodes) {
