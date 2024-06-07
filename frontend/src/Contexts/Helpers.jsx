@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import * as api from "../api";
 import { Cell } from "../Components/Cell/Cell";
+import Tutorial from "../Components/Popups/Tutorial";
 
 export const HelpersContext = createContext();
 
@@ -151,6 +152,10 @@ export function HelpersProvider({ children }) {
     });
   }
 
+  function tutorial() {
+    setPopup(<Tutorial />);
+  }
+
   return (
     <HelpersContext.Provider
       value={{
@@ -160,6 +165,7 @@ export function HelpersProvider({ children }) {
         deployWorkspace,
         updateWorkspaceLists,
         deleteWorkspace,
+        tutorial,
       }}
     >
       {children}

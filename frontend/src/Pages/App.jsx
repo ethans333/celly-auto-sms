@@ -18,7 +18,7 @@ export default function () {
     setDeltaX,
     setDeltaY,
   } = useContext(WorkspaceContext);
-  const { parseCode, validateToken, updateWorkspaceLists } =
+  const { parseCode, validateToken, updateWorkspaceLists, tutorial } =
     useContext(HelpersContext);
 
   const { cells, curves } = useLoadWorkspace();
@@ -27,6 +27,7 @@ export default function () {
     parseCode();
     validateToken();
     updateWorkspaceLists();
+    tutorial();
   }, []);
 
   // Load Workspace
