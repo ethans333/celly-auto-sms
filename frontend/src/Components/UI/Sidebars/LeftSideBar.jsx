@@ -1,4 +1,4 @@
-import xmark from "../../../assets/xmark-solid.svg";
+import xmark from "../../../assets/angle-left-solid.svg";
 import angles from "../../../assets/angles-right-solid.svg";
 import { useContext, useEffect, useState } from "react";
 import { WorkspaceContext } from "../../../Contexts/Workspace.jsx";
@@ -35,11 +35,13 @@ export default function () {
         className="h-screen min-w-96 border-r-2 border-gray-100 bg-white px-5 pt-3 z-20 animate-shiftLR mr-6"
       >
         <div>
-          <img
-            src={xmark}
-            className="x-button"
-            onClick={() => setShowSideBar(false)}
-          />
+          <div className="w-6 h-7 py-[3px] border-2 rounded-lg ml-auto cursor-pointer border-gray-100 h-fit hover:opacity-50">
+            <img
+              src={xmark}
+              className="w-3 mx-auto my-auto"
+              onClick={() => setShowSideBar(false)}
+            />
+          </div>
           <div
             style={{
               display:
