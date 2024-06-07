@@ -79,6 +79,13 @@ Resources:
                 type: aws_proxy
                 uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${deployWorkspace.Arn}/invocations
               responses: {}
+          /workspace/hide_demo:
+            put:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${hideDemo.Arn}/invocations
+              responses: {}
       EndpointConfiguration: REGIONAL
       TracingEnabled: true
       Cors:
@@ -606,6 +613,11 @@ Resources:
           RequireNumbers: true
           RequireSymbols: true
           RequireUppercase: true
+      Schema:
+        - Name: show_demo
+          Required: false
+          Mutable: true
+          AttributeDataType: Boolean
       AdminCreateUserConfig:
         AllowAdminCreateUserOnly: false
       UsernameAttributes:
@@ -1551,6 +1563,34 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${unlinkAllESL}
+  hideDemo:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: hideDemo
+      CodeUri: src/hideDemo
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        WorkspaceApiPUTworkspacehidedemo:
+          Type: Api
+          Properties:
+            Path: /workspace/hide_demo
+            Method: PUT
+            RestApiId: !Ref WorkspaceApi
+      Environment:
+        Variables:
+          USERPOOLCLIENT_USER_POOL_CLIENT_ID: !Ref UserPoolClient
+  hideDemoLogGroup:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${hideDemo}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -1562,6 +1602,7 @@ Metadata:
         - deleteWorkspace
         - getAllUserWorkspaces
         - deployWorkspace
+        - hideDemo
     Group2:
       Label: Pinpoint SMS Service
       Members:

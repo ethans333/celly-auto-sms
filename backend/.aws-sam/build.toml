@@ -226,4 +226,13 @@ manifest_hash = "b7583518ec701cb8d72af5f1019b6dab"
 packagetype = "Zip"
 functions = ["unlinkAllESL"]
 
+[function_build_definitions.3c4e0183-c85f-46bd-91ad-e728024535a3]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\hideDemo"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["hideDemo"]
+
 [layer_build_definitions]

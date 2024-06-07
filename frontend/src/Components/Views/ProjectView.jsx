@@ -3,6 +3,7 @@ import Popup from "../Popup";
 import RightClickMenu from "../UI/Menus/RightClickMenu";
 import { WorkspaceContext } from "../../Contexts/Workspace.jsx";
 import ProjectViewController from "../UI/Controllers/ProjectViewController.jsx";
+import Tutorial from "../Popups/Tutorial.jsx";
 
 export default function () {
   const { componentsStack, deltaX, deltaY, popup, scale, setPopup } =
@@ -10,6 +11,7 @@ export default function () {
 
   return (
     <>
+      <Tutorial />
       <ProjectViewController />
       <div
         style={{

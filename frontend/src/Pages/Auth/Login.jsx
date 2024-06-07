@@ -71,7 +71,7 @@ export default function () {
           <div className="flex justify-center">
             <button
               onClick={handleLogin}
-              className="bg-black text-white w-fit px-3 rounded-lg py-1 hover:opacity-50 mt-3 mb-10"
+              className="bg-black font-bold text-white w-fit px-3 rounded-lg py-1.5 hover:opacity-50 mt-3 mb-5"
             >
               Login
             </button>
@@ -81,7 +81,7 @@ export default function () {
             Don't have an account?{" "}
             <a
               onClick={() => navigate("/register")}
-              className="text-indigo-600 font-bold cursor-pointer hover:opacity-50"
+              className="text-indigo-600 font-black cursor-pointer hover:opacity-50"
             >
               Sign Up
             </a>

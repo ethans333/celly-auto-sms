@@ -107,7 +107,7 @@ export async function getUser() {
     },
   });
 
-  if (response.status === 200) return response;
+  if (response.status === 200) return response.json();
 
   return await response.text(); // error
 }
@@ -404,6 +404,22 @@ export async function addCalendarEvent(
         start_time: startTime,
         end_time: endTime,
       }),
+    }
+  );
+
+  if (response.status === 200) return response;
+
+  return await response.text(); // error
+}
+
+export async function hideDemo() {
+  const response = await fetch(
+    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/hide_demo",
+    {
+      method: "PUT",
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
     }
   );
 

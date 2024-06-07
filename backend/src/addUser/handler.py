@@ -17,6 +17,12 @@ def handler(event, context):
             ClientId=user_pool_client_id,
             Username=body["email"],
             Password=body["password"],
+            UserAttributes=[
+                {
+                    "Name": "custom:show_demo",
+                    "Value": "true",
+                }
+            ],
         )
 
         user_id = response["UserSub"]

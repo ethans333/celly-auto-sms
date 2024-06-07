@@ -152,8 +152,20 @@ export function HelpersProvider({ children }) {
     });
   }
 
-  function tutorial() {
-    setPopup(<Tutorial />);
+  async function showTutorial() {
+    const res = await api.getUser();
+    const show_demo =
+      res.UserAttributes.filter(
+        (u) => u.Name === "custom:show_demo"
+      )[0].Value.toLowerCase() == "true";
+
+    return show_demo;
+  }
+
+  function hideTutorial() {
+    api.hideDemo().then((res) => {
+      console.log(res);
+    });
   }
 
   return (
@@ -165,7 +177,8 @@ export function HelpersProvider({ children }) {
         deployWorkspace,
         updateWorkspaceLists,
         deleteWorkspace,
-        tutorial,
+        showTutorial,
+        hideTutorial,
       }}
     >
       {children}

@@ -1,5 +1,6 @@
-import { useState, useContext } from "react";
-import { WorkspaceContext } from "../../Contexts/Workspace";
+import { useState, useContext, useEffect } from "react";
+import { HelpersContext } from "../../Contexts/Helpers";
+import Popup from "../Popup";
 
 import CircleIcon from "@mui/icons-material/Circle";
 
@@ -7,51 +8,63 @@ import tutorial1 from "../../assets/tutorial/tutorial1.gif";
 import tutorial2 from "../../assets/tutorial/tutorial2.gif";
 
 export default function () {
-  const [page, setPage] = useState(0);
-  const { setPopup } = useContext(WorkspaceContext);
+  const [page, setPage] = useState(-1);
+  const { hideTutorial, showTutorial } = useContext(HelpersContext);
 
   const nPages = 3;
 
-  return (
-    <div>
-      {
+  useEffect(() => {
+    showTutorial().then((st) => {
+      if (st) setPage(0);
+    });
+  }, []);
+
+  if (page != -1)
+    return (
+      <Popup
+        onClose={() => {
+          hideTutorial();
+          setPage(-1);
+        }}
+      >
         {
-          0: (
-            <Page>
-              <div className="text-center mt-24">
-                <div className="text-4xl font-black mb-5">
-                  <a>Welcome To </a>
-                  <a className="bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text">
-                    Intwine
-                  </a>
+          {
+            0: (
+              <Page>
+                <div className="text-center mt-24">
+                  <div className="text-4xl font-black mb-5">
+                    <a>Welcome To </a>
+                    <a className="bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text">
+                      Intwine
+                    </a>
+                  </div>
+                  <div className="text-5xl">👋</div>
+                  <p className="px-5 my-16">
+                    Before we get started there's some things you should know
+                    before navigating the app!
+                  </p>
+                  <ContinueButton />
                 </div>
-                <div className="text-5xl">👋</div>
-                <p className="px-5 my-16">
-                  Before we get started there's some things you should know
-                  before navigating the app!
-                </p>
-                <ContinueButton />
-              </div>
-            </Page>
-          ),
-          1: (
-            <GifPage
-              title="Creating Cells"
-              gif={tutorial1}
-              description="Create a cell by right-clicking your workspace, selecting 'Create Cell' from the menu and dragging and dropping a cell from the sidebar."
-            />
-          ),
-          2: (
-            <GifPage
-              title="Editing Cells"
-              gif={tutorial2}
-              description="In order to edit a cell, simply click the ellipse in the top-right of the cell and edit its attributes in the sidebar."
-            />
-          ),
-        }[page]
-      }
-    </div>
-  );
+              </Page>
+            ),
+            1: (
+              <GifPage
+                title="Creating Cells"
+                gif={tutorial1}
+                description="Create a cell by right-clicking your workspace, selecting 'Create Cell' from the menu and dragging and dropping a cell from the sidebar."
+              />
+            ),
+            2: (
+              <GifPage
+                title="Editing Cells"
+                gif={tutorial2}
+                description="In order to edit a cell, simply click the ellipse in the top-right of the cell and edit its attributes in the sidebar."
+              />
+            ),
+          }[page]
+        }
+      </Popup>
+    );
 
   function ContinueButton() {
     return (
@@ -59,7 +72,9 @@ export default function () {
         <div
           onClick={() => {
             if (page == nPages - 1) {
-              setPopup(null);
+              setPage(-1);
+              hideTutorial();
+              return;
             }
             setPage((p) => (p + 1) % nPages);
           }}
