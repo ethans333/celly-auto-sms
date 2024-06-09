@@ -16,8 +16,8 @@ export default function ({ children, topChildren }) {
           {currentView === Views.Project && <BottomMenu />}
         </div>
 
-        <div className="min-w-96 border-l-2 border-gray-100 bg-white px-5 pt-3 flex flex-col">
-          <div className="w-full mb-3 flex justify-between items-center">
+        <div className="min-w-96 border-l-2 border-gray-100 bg-white pt-3 flex flex-col">
+          <div className="w-full mb-3 flex justify-between items-center px-3">
             {topChildren}
             <img
               src={xmark}
@@ -26,7 +26,7 @@ export default function ({ children, topChildren }) {
             />
           </div>
           <div className="flex-1 overflow-y-scroll">
-            <div className="absolute">{children}</div>
+            <div className="px-5">{children}</div>
           </div>
         </div>
       </div>

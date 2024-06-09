@@ -32,7 +32,7 @@ export default function () {
     <div className="flex absolute left-0">
       <div
         id="lsb"
-        className="h-screen min-w-96 border-r-2 border-gray-100 bg-white px-5 pt-3 z-20 animate-shiftLR mr-6"
+        className="h-screen min-w-96 border-r-2 border-gray-100 bg-white px-5 pt-3 z-50 animate-shiftLR mr-6"
       >
         <div>
           <div className="w-6 h-7 py-[3px] border-2 rounded-lg ml-auto cursor-pointer border-gray-100 h-fit hover:opacity-50">

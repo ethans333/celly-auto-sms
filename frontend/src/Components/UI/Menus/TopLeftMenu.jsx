@@ -22,7 +22,7 @@ export default function () {
         visibility:
           Object.keys(workspaceMetaData).length > 0 ? "visible" : "hidden",
       }}
-      className="mt-5 z-50"
+      className="mt-5"
     >
       <div className="flex gap-x-3">
         {/* Emoji Dropdown */}

@@ -121,7 +121,7 @@ body {
 }
 
 .selection-cell-header {
-  @apply font-bold;
+  @apply font-extrabold;
 }
 
 .selection-cell-description {

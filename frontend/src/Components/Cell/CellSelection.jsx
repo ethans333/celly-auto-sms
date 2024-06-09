@@ -11,10 +11,10 @@ export default function () {
 
   return (
     <div className="">
-      <div className="selection-area">
-        <h3 className="selection-cell-header mt-7">Add a Cell</h3>
+      <div className="space-y-5">
+        <h3 className="font-black text-lg mt-7 pb-3">Add a Cell</h3>
         <div className="flex justify-center">
-          <div className="space-y-5 pb-5">
+          <div className="space-y-5 pb-5 absolute">
             {new Calendar().selection()}
             <div className="py-7">
               <div className="border-t" />
@@ -52,13 +52,13 @@ export default function () {
           boxShadow: "0px 0px 10px rgb(79, 70, 229, 0.2)",
           userSelect: "none",
         }}
-        className="rounded-lg shadow p-6 min-w-72 max-w-96 cursor-pointer bg-white w-fit"
+        className="rounded-lg shadow p-6 min-w-72 cursor-pointer bg-white"
       >
         <div className="flex">
           <img src={icon} className="w-10 p-2 mb-auto" />
           <h1 className="pt-2 font-bold text-[15px] pl-1.5">{title}</h1>
-          <div className="ml-auto font-bold mb-auto w-fit bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm px-2 py-1.5 rounded rotate-6 translate-x-10 -translate-y-7 shadow-lg shadow-indigo-500/50">
-            Premium
+          <div className="ml-auto font-extrabold mb-auto w-fit bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-2 py-1.5 rounded rotate-6 translate-x-10 -translate-y-7 shadow-lg shadow-indigo-500/50">
+            Core<a className="ml-[1px]">+</a>
           </div>
         </div>
         <div className="text-sm py-7 text-xs px-5 text-gray-600">

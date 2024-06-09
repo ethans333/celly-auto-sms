@@ -82,7 +82,7 @@ export default function ({ self }) {
 
   return (
     <div className="w-full flex flex-col space-y-2">
-      <p className="font-bold text-lg mb-3">Modify Scheduling</p>
+      <p className="font-extrabold text-lg mb-3 mt-7">Modify Scheduling</p>
       {isLoading ? (
         <mb.Loading />
       ) : isLinked ? (
