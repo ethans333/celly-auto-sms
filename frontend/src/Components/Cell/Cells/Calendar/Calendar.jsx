@@ -6,6 +6,7 @@ export class Calendar extends Cell {
   title = "Scheduling Cell";
   description = "Calendar for scheduling events.";
   icon = calendar_icon;
+  typename = "calendar";
   state = {
     meeting_title: "",
     meeting_description: "",
