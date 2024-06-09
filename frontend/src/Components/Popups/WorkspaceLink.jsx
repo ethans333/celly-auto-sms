@@ -6,17 +6,18 @@ import { GenericLabeledSquareButton } from "../LabeledSquareButton";
 export default function () {
   const { workspaceMetaData } = useContext(WorkspaceContext);
 
-  const url = `${window.location.origin}/scheduling/${
-    workspaceMetaData.user_id
-  }/${workspaceMetaData.id}`;
+  const url = `${window.location.origin}/scheduling/${workspaceMetaData.user_id}/${workspaceMetaData.id}`;
 
   return (
-    <div className="space-y-7 pb-5 px-7">
-      <div className="space-y-3 pt-5 pb-3">
+    <div className="space-y-7 pb-10 px-7">
+      <div className="space-y-3 pt-10">
         <div className="font-extrabold text-center text-2xl">
-          '{workspaceMetaData.workspace_name}' is Live!
+          <a className="bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text">
+            {workspaceMetaData.workspace_name}
+          </a>{" "}
+          is Live
         </div>
-        <div className="text-center text-4xl">🥳</div>
+        <div className="text-gray-500 text-center py-3">Share this link with others to schedule them.</div>
       </div>
 
       <div className="flex space-x-2">
