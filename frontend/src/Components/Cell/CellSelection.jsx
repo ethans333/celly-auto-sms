@@ -10,7 +10,7 @@ export default function () {
   const { setPopup } = useContext(WorkspaceContext);
 
   return (
-    <div className="overflow-visible">
+    <div className="">
       <div className="selection-area">
         <h3 className="selection-cell-header mt-7">Add a Cell</h3>
         <div className="flex justify-center">

@@ -10,14 +10,14 @@ export default function ({ children, topChildren }) {
   return children != null ? (
     // Open Sidebar
     <div className="absolute right-0 z-20 animate-shiftRL">
-      <div className="flex h-screen overflow-y-clip">
+      <div className="flex h-screen overflow-hidden">
         <div>
           {currentView === Views.Project && <TopMenu />}
           {currentView === Views.Project && <BottomMenu />}
         </div>
 
-        <div className="min-w-96 border-l-2 border-gray-100 bg-white px-5 pt-3 h-screen overflow-y-auto">
-          <div className="w-full mb-3 flex">
+        <div className="min-w-96 border-l-2 border-gray-100 bg-white px-5 pt-3 flex flex-col">
+          <div className="w-full mb-3 flex justify-between items-center">
             {topChildren}
             <img
               src={xmark}
@@ -25,7 +25,9 @@ export default function ({ children, topChildren }) {
               onClick={() => setSidebar(null)}
             />
           </div>
-          <div>{children}</div>
+          <div className="flex-1 overflow-y-scroll">
+            <div className="bg-blue-300 absolute">{children}</div>
+          </div>
         </div>
       </div>
     </div>
