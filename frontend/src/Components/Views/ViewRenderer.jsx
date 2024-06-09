@@ -24,6 +24,6 @@ export default function () {
   }
 
   function onSwitch() {
-    setSidebar(null);
+    // setSidebar(null);
   }
 }
