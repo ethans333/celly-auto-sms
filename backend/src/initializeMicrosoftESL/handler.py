@@ -6,7 +6,7 @@ import requests
 
 CLIENT_ID = "746d9d45-cad6-43ee-8677-a3942d0e3573"
 AUTHORITY = "https://login.microsoftonline.com/common"
-REDIRECT_PATH = "http://127.0.0.1:5173/"  # Your app's redirect URI
+REDIRECT_PATH = "https://dev.intwine.app/"  # Your app's redirect URI
 SCOPES = ["User.Read.All", "Calendars.ReadWrite"]
 
 
