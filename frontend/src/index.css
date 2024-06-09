@@ -133,7 +133,7 @@ body {
 }
 
 .selection-area {
-  @apply space-y-5 overflow-y-scroll h-[100vh] pr-5 pl-1 pb-24;
+  @apply space-y-5 h-[80vh] pr-5 pl-1 pb-24;
 }
 
 .settings-header {
