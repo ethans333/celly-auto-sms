@@ -16,7 +16,7 @@ export default function ({ children, topChildren }) {
           {currentView === Views.Project && <BottomMenu />}
         </div>
 
-        <div className="min-w-96 border-l-2 border-gray-100 bg-white px-5 pt-3">
+        <div className="min-w-96 border-l-2 border-gray-100 bg-white px-5 pt-3 h-screen overflow-y-auto">
           <div className="w-full mb-3 flex">
             {topChildren}
             <img

@@ -10,11 +10,11 @@ export default function () {
   const { setPopup } = useContext(WorkspaceContext);
 
   return (
-    <div className="overflow-y-scroll">
+    <div className="overflow-visible">
       <div className="selection-area">
         <h3 className="selection-cell-header mt-7">Add a Cell</h3>
         <div className="flex justify-center">
-          <div className="space-y-5">
+          <div className="space-y-5 pb-5">
             {new Calendar().selection()}
             <div className="py-7">
               <div className="border-t" />
