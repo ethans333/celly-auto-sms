@@ -26,7 +26,7 @@ export default function ({ children, topChildren }) {
             />
           </div>
           <div className="flex-1 overflow-y-scroll">
-            <div className="bg-blue-300 absolute">{children}</div>
+            <div className="absolute">{children}</div>
           </div>
         </div>
       </div>
