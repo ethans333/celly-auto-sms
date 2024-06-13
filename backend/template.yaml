@@ -968,6 +968,12 @@ Resources:
                 - sms-voice:SendTextMessage
               Resource:
                 - !Sub arn:aws:sms-voice:${AWS::Region}:${AWS::AccountId}:phone-number/*
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+              Resource:
+                  - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+                  - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:configuration-set/*
         - DynamoDBCrudPolicy:
             TableName: !Ref ScheduledMeetingsTable
 
