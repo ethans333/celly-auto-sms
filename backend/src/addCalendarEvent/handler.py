@@ -107,7 +107,7 @@ def handler(event, context):
 
             send_text(body["contact_value"], message)
 
-        # add scheduled event to scheduled table
+        # add scheduled event to scheduled table.
         ddb = boto3.client("dynamodb")
 
         ddb.put_item(
@@ -118,8 +118,8 @@ def handler(event, context):
                 "workspace_id": {"S": workspace_id},
                 "workspace_name": {"S": workspace_name},
                 "event_id": {"S": events_response["id"]},
-                "start_time": {"S": start_time},
-                "end_time": {"S": end_time},
+                "start_time": {"S": str(body["start_time"])},
+                "end_time": {"S": str(body["end_time"])},
                 "contact_method": {"S": body["contact_method"]},
                 "contact_value": {"S": body["contact_value"]},
             },

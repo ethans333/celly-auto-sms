@@ -17,7 +17,7 @@ export default function () {
             months[date.getMonth()]
           } ${date.getDate()}th, 
           ${date.getHours() % 12}:${date.getMinutes()}${
-            date.getMinutes() == 0 && "0"
+            date.getMinutes() == 0 ? "0" : ""
           } ${date.getHours() > 11 ? "PM" : "AM"}`}
         </p>
       </div>

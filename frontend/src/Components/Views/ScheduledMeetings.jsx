@@ -13,7 +13,10 @@ export default function () {
   const [meetings, setMeetings] = useState([]);
 
   useEffect(() => {
-    getScheduledMeetings().then((m) => setMeetings(m));
+    getScheduledMeetings().then((m) => {
+      console.log(m);
+      setMeetings(m);
+    });
   }, []);
 
   return (
@@ -43,15 +46,35 @@ export default function () {
                   <th scope="col" className="px-6 py-3 tracking-wide"></th>
                 </tr>
               </thead>
-              <tbody>
-                {scheduledMeetingsIsLoading
-                  ? Array(10)
-                      .fill(0)
-                      .map((_, i) => <LoadingRow key={i} i={i} />)
-                  : meetings.map((m, i) => (
-                      <Row key={i} background={i % 2 == 0} {...m} />
+              {scheduledMeetingsIsLoading ? (
+                <tbody>
+                  {Array(10)
+                    .fill(0)
+                    .map((_, i) => (
+                      <LoadingRow key={i} i={i} />
                     ))}
-              </tbody>
+                </tbody>
+              ) : meetings.length == 0 ? (
+                <tbody>
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="px-6 py-4 font-medium text-center"
+                    >
+                      No meetings scheduled
+                    </td>
+                  </tr>
+                </tbody>
+              ) : (
+                meetings.map((m, i) => (
+                  <Row
+                    key={i}
+                    background={i % 2 == 0}
+                    {...m}
+                    time={new Date(parseInt(m.start_time))}
+                  />
+                ))
+              )}
             </table>
           </div>
         </div>
@@ -66,8 +89,31 @@ function Row({
   contact_value,
   start_time,
   end_time,
+  time,
 }) {
   const { setSidebar } = useContext(WorkspaceContext);
+
+  console.log(time.getHours());
+
+  const dateOptions = {
+    weekday: "long",
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  };
+  const dateString = time.toLocaleDateString("en-us", dateOptions);
+
+  const hourOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "UTC",
+  };
+  const timeString = time.toLocaleTimeString("en-us", hourOptions);
+
+  const startDate = new Date(parseInt(start_time));
+  const endDate = new Date(parseInt(end_time));
+  const duration = (endDate - startDate) / 1000 / 60;
 
   return (
     <tr className={`${background && "bg-[#fdfdfd]"}`}>
@@ -84,16 +130,16 @@ function Row({
         {workspace_name}
       </th>
       <td className="px-6 py-4">
-        <div className="truncate w-32">{contact_value}</div>
+        <div className="truncate w-48">{contact_value}</div>
       </td>
       <td className="px-6 py-4">
-        <div className="truncate w-32">{start_time}</div>
+        <div className="w-fit">{timeString}</div>
       </td>
       <td className="px-6 py-4">
-        <div className="truncate w-32">{end_time}</div>
+        <div className="w-fit">{duration} min</div>
       </td>
       <td className="px-6 py-4">
-        <div className="truncate w-32">{end_time}</div>
+        <div className="w-fit">{dateString}</div>
       </td>
       <td className="px-6 py-4 w-16">
         <img

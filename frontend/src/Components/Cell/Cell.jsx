@@ -60,8 +60,6 @@ export class Cell extends React.Component {
 
   initState(props) {
     // Set inital state values to passed in prop values
-    console.log(this.state, props);
-
     for (const [key, value] of Object.entries(this.state)) {
       if (props && props[key]) {
         this.state[key] = props[key];
