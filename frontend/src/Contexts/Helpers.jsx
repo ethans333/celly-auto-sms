@@ -31,6 +31,7 @@ export function HelpersProvider({ children }) {
     setNoWorkspaces,
     deltaX,
     deltaY,
+    setScheduledMeetingsIsLoading,
   } = useContext(WorkspaceContext);
 
   /**
@@ -169,8 +170,10 @@ export function HelpersProvider({ children }) {
   }
 
   async function getScheduledMeetings() {
+    setScheduledMeetingsIsLoading(true);
     const res = await api.getScheduledMeetings();
     console.log(res.meetings);
+    setScheduledMeetingsIsLoading(false);
     return res.meetings;
   }
 

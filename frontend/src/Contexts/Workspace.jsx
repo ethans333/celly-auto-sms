@@ -24,6 +24,8 @@ export function WorkspaceProvider({ children }) {
   const [favoriteWorkspaceList, setFavoriteWorkspaceList] = useState([]);
   const [loadingWorkspaceList, setLoadingWorkspaceList] = useState(true);
   const [noWorkspaces, setNoWorkspaces] = useState(false);
+  const [scheduledMeetingsIsLoading, setScheduledMeetingsIsLoading] =
+    useState(true);
 
   const Views = {
     Project: 0,
@@ -70,6 +72,8 @@ export function WorkspaceProvider({ children }) {
         setLoadingWorkspaceList,
         noWorkspaces,
         setNoWorkspaces,
+        scheduledMeetingsIsLoading,
+        setScheduledMeetingsIsLoading,
       }}
     >
       {children}

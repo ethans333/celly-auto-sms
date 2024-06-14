@@ -6,7 +6,8 @@ import { WorkspaceContext } from "../../Contexts/Workspace";
 import { HelpersContext } from "../../Contexts/Helpers";
 
 export default function () {
-  const { workspaceMetaData } = useContext(WorkspaceContext);
+  const { workspaceMetaData, scheduledMeetingsIsLoading } =
+    useContext(WorkspaceContext);
   const { getScheduledMeetings } = useContext(HelpersContext);
 
   const [meetings, setMeetings] = useState([]);
@@ -43,9 +44,13 @@ export default function () {
                 </tr>
               </thead>
               <tbody>
-                {meetings.map((m, i) => (
-                  <Row key={i} background={i % 2 == 0} {...m} />
-                ))}
+                {scheduledMeetingsIsLoading
+                  ? Array(10)
+                      .fill(0)
+                      .map((_, i) => <LoadingRow key={i} i={i} />)
+                  : meetings.map((m, i) => (
+                      <Row key={i} background={i % 2 == 0} {...m} />
+                    ))}
               </tbody>
             </table>
           </div>
@@ -96,6 +101,35 @@ function Row({
           className="w-4 h-4 mx-auto cursor-pointer hover:opacity-50"
           onClick={() => setSidebar(<div>More Info</div>)}
         />
+      </td>
+    </tr>
+  );
+}
+
+function LoadingRow({ i }) {
+  return (
+    <tr className={`${i % 2 == 0 && "bg-[#fdfdfd] animate-pulse"}`}>
+      <td className="px-6 py-4 w-16">
+        <div className="w-4 h-4"></div>
+      </td>
+      <th
+        scope="row"
+        className="px-6 py-4 w-16 font-medium text-gray-900 whitespace-nowrap"
+      ></th>
+      <td className="px-6 py-4">
+        <div className="w-32"></div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="w-32"></div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="w-32"></div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="w-32"></div>
+      </td>
+      <td className="px-6 py-4 w-16">
+        <div className="w-4 h-4"></div>
       </td>
     </tr>
   );
