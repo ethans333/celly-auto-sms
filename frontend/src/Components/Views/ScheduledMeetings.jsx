@@ -130,7 +130,7 @@ function Row({
         {workspace_name}
       </th>
       <td className="px-6 py-4">
-        <div className="truncate w-48">{contact_value}</div>
+        <div className="truncate max-w-48">{contact_value}</div>
       </td>
       <td className="px-6 py-4">
         <div className="w-fit">{timeString}</div>
