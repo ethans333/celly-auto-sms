@@ -73,14 +73,20 @@ export default function () {
           <br></br>
           <button
             onClick={() => {
+              // account for timezone
+
+              const tzOffset = new Date().getTimezoneOffset() * 60000; // offset in milliseconds
+              let startTime = new Date(selectedStartTime - tzOffset).getTime();
+              let endTime = new Date(selectedEndTime - tzOffset).getTime();
+
               api
                 .addCalendarEvent(
                   user_id,
                   id,
                   method,
                   contactValue,
-                  selectedStartTime,
-                  selectedEndTime
+                  startTime,
+                  endTime
                 )
                 .then((res) => {
                   if (res.status === 200) {

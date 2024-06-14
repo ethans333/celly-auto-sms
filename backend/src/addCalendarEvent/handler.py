@@ -68,11 +68,11 @@ def handler(event, context):
                     },
                     "start": {
                         "dateTime": start_time,
-                        "timeZone": "Pacific Standard Time",
+                        "timeZone": "Eastern Standard Time",
                     },
                     "end": {
                         "dateTime": end_time,
-                        "timeZone": "Pacific Standard Time",
+                        "timeZone": "Eastern Standard Time",
                     },
                     "location": {"displayName": "Online Meeting"},
                     "attendees": [
