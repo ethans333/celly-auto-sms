@@ -14,6 +14,7 @@ export default function () {
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
   const [isScheduled, setIsScheduled] = useState(false);
+  const [eventsIsLoading, setEventsIsLoading] = useState(true);
 
   // constants
   const [title, setTitle] = useState("");
@@ -28,6 +29,7 @@ export default function () {
     api.getMicrosoftCalendarEvents(user_id, id).then((res) => {
       res.json().then((data) => {
         console.log(data);
+        setEventsIsLoading(false);
         setMeetingDescription(data["meeting_description"]);
         setStartHour(parseInt(data["start_time"]));
         setEndHour(parseInt(data["end_time"]));
@@ -47,6 +49,7 @@ export default function () {
         selectedEndTime,
         setSelectedEndTime,
         setIsScheduled,
+        eventsIsLoading,
         events,
         workspace,
         id,

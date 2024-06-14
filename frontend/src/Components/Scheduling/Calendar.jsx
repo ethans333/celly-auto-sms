@@ -13,6 +13,7 @@ export default function () {
     setSelectedStartTime,
     setSelectedEndTime,
     events,
+    eventsIsLoading,
     workspace,
     startHour,
     endHour,
@@ -162,7 +163,9 @@ export default function () {
           setHoverTime(Time.getTime());
         }}
         className={`w-full  ${m == 0 ? "border-t" : ""} ${
-          Available
+          eventsIsLoading
+            ? "bg-gray-50 animate-pulse"
+            : Available
             ? `cursor-pointer  ${isSelected ? "bg-green-200" : "bg-white"}`
             : "bg-gray-50 cursor-not-allowed"
         }`}
