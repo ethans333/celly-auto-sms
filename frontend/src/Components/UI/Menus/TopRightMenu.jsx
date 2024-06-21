@@ -2,7 +2,7 @@ import floppy from "../../../assets/floppy-disk-solid.svg";
 import sliders from "../../../assets/sliders-solid.svg";
 import star_regular from "../../../assets/star-regular.svg";
 import star_filled from "../../../assets/star-solid.svg";
-import cloud_bolt from "../../../assets/cloud-bolt-solid.svg";
+import share_icon from "../../../assets/arrow-up-from-bracket-solid.svg";
 
 import { WorkspaceContext } from "../../../Contexts/Workspace.jsx";
 import LabeledSquareButton from "../../LabeledSquareButton.jsx";
@@ -40,10 +40,10 @@ export default function () {
           saveWorkspace(metadata);
         }}
       />
-      {/* Deploy */}
+      {/* Share */}
       <LabeledSquareButton
-        icon={cloud_bolt}
-        label="Deploy"
+        icon={share_icon}
+        label="Share"
         onClick={() => {
           // save current workspace
           saveWorkspace();

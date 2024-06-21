@@ -31,8 +31,8 @@ export default function () {
         console.log(data);
         setEventsIsLoading(false);
         setMeetingDescription(data["meeting_description"]);
-        setStartHour(parseInt(data["start_time"]));
-        setEndHour(parseInt(data["end_time"]));
+        setStartHour(parseFloat(data["start_time"]));
+        setEndHour(parseFloat(data["end_time"]));
         setEvents(data["events"]);
         setWorkspace(data["workspace"]);
         setBlackoutDays(data["blackout_days"]);

@@ -390,6 +390,7 @@ export async function addCalendarEvent(
   id,
   contactMethod,
   contactValue,
+  secondContactValue,
   startTime,
   endTime
 ) {
@@ -401,6 +402,7 @@ export async function addCalendarEvent(
         user_id: userId,
         contact_method: contactMethod,
         contact_value: contactValue,
+        second_contact_value: secondContactValue,
         start_time: startTime,
         end_time: endTime,
       }),

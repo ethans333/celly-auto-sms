@@ -27,6 +27,13 @@ def handler(event, context):
             send_text(
                 meeting["contact_value"], meeting_reminder_text(meeting["start_time"])
             )
+        elif meeting["contact_method"] == "Phone & Email":
+            send_email(
+                meeting["contact_value"], meeting_reminder_email(meeting["start_time"])
+            )
+            send_text(
+                meeting["contact_value"], meeting_reminder_text(meeting["start_time"])
+            )
 
     return {
         "reminders_sent": len(meetings),

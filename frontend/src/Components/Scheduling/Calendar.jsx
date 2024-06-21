@@ -26,10 +26,17 @@ export default function () {
       <div className="w-[90%] xl:w-full mx-auto">
         <div className="w-full">
           <div className="flex justify-between pt-5 xl:pt-12 pb-12">
-            <div className="font-black text-2xl">
-              {title === "" ? workspace["workspace_name"] : title}
+            <div className="flex">
+              <div className="font-black text-2xl px-3 py-1.5 rounded-lg ml-3 bg-black text-white rounded-lg px-3 py-1">
+                {new Intl.DateTimeFormat("en-US", { month: "long" }).format(
+                  currentWeek[0]
+                )}
+              </div>
             </div>
             <div className="flex space-x-2">
+              <div className="font-black text-2xl px-3 py-1.5 rounded-lg ml-3 mr-5">
+                {title === "" ? workspace["workspace_name"] : title}
+              </div>
               <div
                 onClick={() => {
                   setWeekShift((p) => {
@@ -183,9 +190,25 @@ export default function () {
   function TimeLabelColumn() {
     let groups = [];
 
-    let current = startHour; // start time
+    // Pad start
 
-    for (let i = 0; i < endHour - startHour; i++) {
+    let startN = 0;
+
+    if (startHour % 0.25 > 0) {
+      startN = Math.floor(((1 - (startHour % 1)) * 60) / 15) + 1;
+    }
+
+    const startEnd = Array(startN).fill(
+      <div className="row-span-4 text-sm invisible">XXXX</div>
+    );
+
+    groups.push(...startEnd);
+
+    // Center Labels
+
+    let current = Math.ceil(startHour); // start time
+
+    for (let i = 0; i < Math.ceil(endHour - startHour); i++) {
       groups.push(
         <div className="row-span-4">
           <div className="text-gray-400 text-sm text-right pr-6 font-semibold">
@@ -219,11 +242,42 @@ export default function () {
             }[new Date(day).getDay()]
           }
         />
-        {...Array.from({ length: (endHour - startHour) * 4 - 3 }, (_, i) => {
-          const time = new Date(day);
-          time.setHours(9 + Math.floor(i / 4), (i % 4) * 15, 0, 0);
-          return <TimeCell Time={time} Available={isAvailable(time)} />;
-        })}
+        {/* Build Time Cells */}
+        {...Array.from(
+          {
+            length:
+              Math.floor((endHour * 60 - startHour * 60) / 15) +
+              (startHour % 0.25 > 0) +
+              (endHour % 0.25 > 0),
+          },
+          (_, i) => {
+            // Set hover times
+            const time = new Date(day);
+
+            const hours = startHour + Math.floor(i / 4);
+
+            const startMinute = (startHour % 1) * 60;
+            const endMinute = (endHour % 1) * 60;
+            const addMinute = (i % 4) * 15;
+
+            let minutes;
+
+            if (i == 0) {
+              minutes = startMinute;
+            } else if (
+              i ==
+              Math.floor((endHour * 60 - startHour * 60) / 15) + 1
+            ) {
+              minutes = endMinute;
+            } else {
+              minutes =
+                startMinute + addMinute - ((startMinute + addMinute) % 15);
+            }
+
+            time.setHours(hours, minutes, 0, 0);
+            return <TimeCell Time={time} Available={isAvailable(time)} />;
+          }
+        )}
       </div>
     );
   }

@@ -20,6 +20,11 @@ def handler(event, context):
             ExpressionAttributeValues={":user_id": user_id},
         )
 
+        # convert decimal times to time string
+        for meeting in response["Items"]:
+            meeting["start_time"] = str(meeting["start_time"])
+            meeting["end_time"] = str(meeting["end_time"])
+
         return {
             "statusCode": 200,
             "body": json.dumps(

@@ -13,10 +13,14 @@ export default function ({ self }) {
   const [selectedDays, setSelectedDays] = useState(["Saturday", "Sunday"]);
   const [startAMPM, setStartAMPM] = useState("AM");
   const [endAMPM, setEndAMPM] = useState("PM");
-  const [mwStart, setMwStart] = useState(9);
-  const [mwEnd, setMwEnd] = useState(17);
   const [meetingDescription, setMeetingDescription] = useState("");
   const [meetingTitle, setMeetingTitle] = useState("");
+
+  const [meetingWindowStartHour, setMeetingWindowStartHour] = useState("09");
+  const [meetingWindowStartMinute, setMeetingWindowStartMinute] =
+    useState("00");
+  const [meetingWindowEndHour, setMeetingWindowEndHour] = useState("05");
+  const [meetingWindowEndMinute, setMeetingWindowEndMinute] = useState("00");
 
   const dow = [
     "Sunday",
@@ -42,16 +46,64 @@ export default function ({ self }) {
     let s = self.state.start_time;
     let e = self.state.end_time;
 
+    console.log(s, e);
+
     setStartAMPM(s < 12 ? "AM" : "PM");
     setEndAMPM(e < 12 ? "AM" : "PM");
 
-    setMwStart(s < 12 ? s : s - 12);
-    setMwEnd(e < 12 ? e : e - 12);
+    // Start Time
+
+    setMeetingWindowStartHour((p) =>
+      parseHour((Math.floor(s) % 12).toString(), p)
+    );
+
+    setMeetingWindowStartMinute((p) =>
+      parseMinute(Math.floor((s % 1) * 60).toString(), p)
+    );
+
+    // End Time
+
+    setMeetingWindowEndHour((p) =>
+      parseHour((Math.floor(e) % 12).toString(), p)
+    );
+
+    setMeetingWindowEndMinute((p) =>
+      parseMinute(Math.floor((e % 1) * 60).toString(), p)
+    );
 
     let bdays = self.state.blackout_days;
 
     setSelectedDays(bdays.map((day) => dow[day]));
   }, []);
+
+  useEffect(() => {
+    let start = 0;
+    const startIsAM = startAMPM == "AM";
+    let end = 0;
+    const endIsAM = endAMPM == "AM";
+
+    start = parseInt(meetingWindowStartHour) + (startIsAM ? 0 : 12);
+    end = parseInt(meetingWindowEndHour) + (endIsAM ? 0 : 12);
+
+    start += parseInt(meetingWindowStartMinute) / 60;
+    end += parseInt(meetingWindowEndMinute) / 60;
+
+    if (start >= end) return;
+
+    console.log(start, end);
+
+    self.setState({
+      start_time: start,
+      end_time: end,
+    });
+  }, [
+    meetingWindowStartHour,
+    meetingWindowStartMinute,
+    meetingWindowEndHour,
+    meetingWindowEndMinute,
+    startAMPM,
+    endAMPM,
+  ]);
 
   useEffect(() => {
     api.tokenStatusMicrosoftESL().then((res) => {
@@ -66,19 +118,20 @@ export default function ({ self }) {
   }, [self]);
 
   useEffect(() => {
-    // if (mwStart == "" || mwEnd == "") return;
-
-    // const s = parseInt(mwStart) + (startAMPM == "AM" ? 0 : 12);
-    // const e = parseInt(mwEnd) + (endAMPM == "AM" ? 0 : 12);
-
-    // if (s >= e) return;
-
     const days = selectedDays.map((day) => dow.indexOf(day));
 
     self.setState({
       blackout_days: days,
     });
-  }, [selectedDays, mwStart, mwEnd, startAMPM, endAMPM]);
+  }, [
+    selectedDays,
+    meetingWindowStartHour,
+    meetingWindowStartMinute,
+    meetingWindowEndHour,
+    meetingWindowEndMinute,
+    startAMPM,
+    endAMPM,
+  ]);
 
   return (
     <div className="w-full flex flex-col space-y-2">
@@ -121,59 +174,60 @@ export default function ({ self }) {
         </div>
         <div>
           <p className="font-bold">Meeting Window</p>
+
           <div className="mt-3 flex space-x-3">
-            <input
-              placeholder="Start"
-              type="text"
-              value={mwStart}
-              onChange={(e) => {
-                let value = parseInt(e.target.value);
-
-                console.log(value);
-
-                if (
-                  (isNaN(value) && e.target.value !== "") ||
-                  value > 12 ||
-                  value < 1
-                )
-                  return;
-
-                self.setState({
-                  start_time: value,
-                });
-
-                setMwStart(e.target.value);
-              }}
-              className="w-[64px] border border-gray-100 border-2 rounded-md px-3 text-sm"
-            />
+            {/* Start Hour */}
+            <div className="w-fit border border-gray-100 border-2 rounded-md px-2 text-sm flex pt-[1px]">
+              <input
+                placeholder="00"
+                value={meetingWindowStartHour}
+                onChange={(e) => {
+                  setMeetingWindowStartHour((p) =>
+                    parseHour(e.target.value, p)
+                  );
+                }}
+                className="w-[17px] outline-none"
+              />
+              <div className="px-[3px] pt-[2.5px]">:</div>
+              <input
+                placeholder="00"
+                onChange={(e) => {
+                  setMeetingWindowStartMinute((p) =>
+                    parseMinute(e.target.value, p)
+                  );
+                }}
+                value={meetingWindowStartMinute}
+                className="w-[17px] outline-none"
+              />
+            </div>
             <Dropdown
               values={["AM", "PM"]}
               current={startAMPM}
               setCurrent={(v) => setStartAMPM(v)}
             />
             <p className="p-1">-</p>
-            <input
-              placeholder="End"
-              type="text"
-              value={mwEnd}
-              onChange={(e) => {
-                let value = parseInt(e.target.value);
-
-                if (
-                  (isNaN(value) && e.target.value !== "") ||
-                  value > 12 ||
-                  value < 1
-                )
-                  return;
-
-                self.setState({
-                  end_time: value + 12,
-                });
-
-                setMwEnd(e.target.value);
-              }}
-              className="w-[64px] border border-gray-100 border-2 rounded-md px-3 text-sm"
-            />
+            {/* End Hour */}
+            <div className="w-fit border border-gray-100 border-2 rounded-md px-2 text-sm flex  pt-[1px]">
+              <input
+                placeholder="00"
+                value={meetingWindowEndHour}
+                onChange={(e) => {
+                  setMeetingWindowEndHour((p) => parseHour(e.target.value, p));
+                }}
+                className="w-[17px] outline-none"
+              />
+              <div className="px-[3px] pt-[2.5px]">:</div>
+              <input
+                placeholder="00"
+                onChange={(e) => {
+                  setMeetingWindowEndMinute((p) =>
+                    parseMinute(e.target.value, p)
+                  );
+                }}
+                value={meetingWindowEndMinute}
+                className="w-[17px] outline-none"
+              />
+            </div>
             <Dropdown
               values={["AM", "PM"]}
               current={endAMPM}
@@ -214,5 +268,41 @@ export default function ({ self }) {
         {Day}
       </div>
     );
+  }
+
+  function parseHour(v, old) {
+    if (parseInt(v) == 0) {
+      return "00";
+    }
+
+    if ((isNaN(v) && v !== "") || parseInt(v) > 12) {
+      return old;
+    }
+
+    if (v.length > 2) {
+      return v.slice(1);
+    }
+
+    if (parseInt(v) < 10 && parseInt(v) != 0) {
+      v = "0" + v;
+    }
+
+    return v;
+  }
+
+  function parseMinute(v, old) {
+    if ((isNaN(v) && v !== "") || parseInt(v) > 59 || parseInt(v) < 0) {
+      return old;
+    }
+
+    if (v.length == 1 && parseInt(v) != 0 && parseInt(v) < 10) {
+      v = "0" + v;
+    } else if (v.length > 2) {
+      v = v.slice(1);
+    } else if (v == "0") {
+      v = "00";
+    }
+
+    return v;
   }
 }

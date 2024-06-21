@@ -91,21 +91,22 @@ def handler(event, context):
         # notify client of appointment
         if body["contact_method"] == "Email":
             email = body["contact_value"]
-            html = get_schedule_email(start_time)
+            html = get_schedule_email(body["start_time"])
             send_email(email, html)
         elif body["contact_method"] == "Phone":
-            day_of_week = datetime.fromtimestamp(
-                float(body["start_time"]) / 1000
-            ).strftime("%A")
-            month_day = datetime.fromtimestamp(
-                float(body["start_time"]) / 1000
-            ).strftime("%B %-d")
-            time = datetime.fromtimestamp(float(body["start_time"]) / 1000).strftime(
-                "%-I:%M %p"
-            )
-            message = f"{workspace_name} is scheduled for {day_of_week}, {month_day} at {time}"
-
+            message = get_schedule_text(body["start_time"], workspace_name)
             send_text(body["contact_value"], message)
+        elif body["contact_method"] == "Phone & Email":
+            phone = body["contact_value"]
+            email = body["second_contact_value"]
+
+            # send text
+            message = get_schedule_text(body["start_time"], workspace_name)
+            send_text(phone, message)
+
+            # send email
+            html = get_schedule_email(body["start_time"])
+            send_email(email, html)
 
         # add scheduled event to scheduled table.
         ddb = boto3.client("dynamodb")
@@ -189,7 +190,7 @@ def send_email(email, html):
         },
         Message={
             "Subject": {
-                "Data": "Celly Meeting",
+                "Data": "Meeting Reminder - Intwine",
             },
             "Body": {
                 "Html": {
@@ -198,6 +199,13 @@ def send_email(email, html):
             },
         },
     )
+
+
+def get_schedule_text(time, workspace_name="Your meeting"):
+    day_of_week = datetime.fromtimestamp(float(time) / 1000).strftime("%A")
+    month_day = datetime.fromtimestamp(float(time) / 1000).strftime("%B %-d")
+    t = datetime.fromtimestamp(float(time) / 1000).strftime("%-I:%M %p")
+    return f"{workspace_name} is scheduled for {day_of_week}, {month_day} at {t}"
 
 
 def get_schedule_email(time):

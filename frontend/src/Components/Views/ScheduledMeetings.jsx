@@ -54,7 +54,7 @@ export default function () {
                       <LoadingRow key={i} i={i} />
                     ))}
                 </tbody>
-              ) : meetings.length == 0 ? (
+              ) : meetings?.length == 0 ? (
                 <tbody>
                   <tr>
                     <td
@@ -66,7 +66,7 @@ export default function () {
                   </tr>
                 </tbody>
               ) : (
-                meetings.map((m, i) => (
+                meetings?.map((m, i) => (
                   <Row
                     key={i}
                     background={i % 2 == 0}

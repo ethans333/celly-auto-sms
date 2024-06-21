@@ -5,9 +5,10 @@ import { useState, useContext } from "react";
 import { SchedulingContext } from "../../Pages/Scheduling";
 
 export default function () {
-  const contactOptions = ["Phone", "Email"];
+  const contactOptions = ["Phone", "Email", "Phone & Email"]; // must match values in addCalendarEvent of backend
   const [method, setMethod] = useState(contactOptions[0]);
   const [contactValue, setContactValue] = useState("");
+  const [secondContactValue, setSecondContactValue] = useState("");
 
   const {
     selectedStartTime,
@@ -68,6 +69,22 @@ export default function () {
                   className="w-64 xl:w-72 border border-gray-300 shadow rounded-md p-2 px-3"
                 />
               ),
+              "Phone & Email": (
+                <div className="grid grid-cols-1 space-y-5">
+                  <input
+                    placeholder="Phone Number"
+                    type="number"
+                    onChange={(e) => setContactValue(e.target.value)}
+                    className="w-64 xl:w-72 border border-gray-300 shadow rounded-md p-2 px-3"
+                  />
+                  <input
+                    placeholder="Email"
+                    type="text"
+                    onChange={(e) => setSecondContactValue(e.target.value)}
+                    className="w-64 xl:w-72 border border-gray-300 shadow rounded-md p-2 px-3"
+                  />
+                </div>
+              ),
             }[method]
           }
           <br></br>
@@ -85,6 +102,7 @@ export default function () {
                   id,
                   method,
                   contactValue,
+                  secondContactValue,
                   startTime,
                   endTime
                 )

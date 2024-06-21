@@ -74,7 +74,7 @@ export default function () {
             </h1>
           </div>
         )}
-        {/* Live Signal */}
+        {/* Live Signal
         {workspaceMetaData.is_deployed && (
           <div className="relative">
             <div className="text-sm text-red-500 font-black transform translate-y-2 tracking-wide">
@@ -87,7 +87,7 @@ export default function () {
               </span>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
