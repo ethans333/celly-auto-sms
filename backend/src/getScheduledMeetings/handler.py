@@ -5,8 +5,8 @@ import boto3
 
 
 def handler(event, context):
-
     try:
+        workspace_id = event["pathParameters"]["id"]
         ddb = boto3.resource("dynamodb")
         table = ddb.Table(os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"])
 
@@ -16,8 +16,11 @@ def handler(event, context):
         user_id = client.get_user(AccessToken=access_token)["Username"]
 
         response = table.scan(
-            FilterExpression="user_id = :user_id",
-            ExpressionAttributeValues={":user_id": user_id},
+            FilterExpression="user_id = :user_id AND workspace_id = :workspace_id",
+            ExpressionAttributeValues={
+                ":user_id": user_id,
+                ":workspace_id": workspace_id,
+            },
         )
 
         # convert decimal times to time string

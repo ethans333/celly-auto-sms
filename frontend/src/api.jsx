@@ -430,9 +430,11 @@ export async function hideDemo() {
   return await response.text(); // error
 }
 
-export async function getScheduledMeetings() {
+export async function getScheduledMeetings(workspace_id) {
   const response = await fetch(
-    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/scheduled_meetings",
+    import.meta.env.VITE_WORKSPACE_API_URL +
+      "/workspace/scheduled_meetings/" +
+      workspace_id,
     {
       method: "GET",
       headers: {

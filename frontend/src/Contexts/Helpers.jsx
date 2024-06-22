@@ -169,9 +169,9 @@ export function HelpersProvider({ children }) {
     });
   }
 
-  async function getScheduledMeetings() {
+  async function getScheduledMeetings(workspace_id) {
     setScheduledMeetingsIsLoading(true);
-    const res = await api.getScheduledMeetings();
+    const res = await api.getScheduledMeetings(workspace_id);
     console.log(res.meetings);
     setScheduledMeetingsIsLoading(false);
     return res.meetings;

@@ -86,7 +86,7 @@ Resources:
                 type: aws_proxy
                 uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${hideDemo.Arn}/invocations
               responses: {}
-          /workspace/scheduled_meetings:
+          /workspace/scheduled_meetings/{id}:
             get:
               x-amazon-apigateway-integration:
                 httpMethod: POST
@@ -1378,10 +1378,10 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref ScheduledMeetingsTable
       Events:
-        WorkspaceApiGETworkspacescheduledmeetings:
+        WorkspaceApiGETworkspacescheduledmeetingsid:
           Type: Api
           Properties:
-            Path: /workspace/scheduled_meetings
+            Path: /workspace/scheduled_meetings/{id}
             Method: GET
             RestApiId: !Ref WorkspaceApi
   getScheduledMeetingsLogGroup:
