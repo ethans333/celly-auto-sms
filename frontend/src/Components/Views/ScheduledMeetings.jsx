@@ -6,6 +6,7 @@ import eraser from "../../assets/eraser-solid.svg";
 import { useEffect, useState, useContext } from "react";
 import { WorkspaceContext } from "../../Contexts/Workspace";
 import { HelpersContext } from "../../Contexts/Helpers";
+import * as api from "../../api";
 
 export default function () {
   const { workspaceMetaData, scheduledMeetingsIsLoading } =
@@ -43,7 +44,19 @@ export default function () {
                   <div>Unselect All</div>
                 </div>
                 {/* Cancel Meetings */}
-                <div className="bg-red-500 text-xs font-semibold text-white px-3 py-[8px] rounded-lg flex space-x-2  cursor-pointer hover:opacity-50 h-fit">
+                <div
+                  onClick={() => {
+                    api
+                      .cancelScheduledMeetings(
+                        workspaceMetaData?.id,
+                        selectedMeetings
+                      )
+                      .then((r) => {
+                        console.log(r);
+                      });
+                  }}
+                  className="bg-red-500 text-xs font-semibold text-white px-3 py-[8px] rounded-lg flex space-x-2  cursor-pointer hover:opacity-50 h-fit"
+                >
                   <img src={ban} className="w-4" />
                   <div>Cancel Selected Meetings</div>
                 </div>

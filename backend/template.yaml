@@ -93,6 +93,12 @@ Resources:
                 type: aws_proxy
                 uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getScheduledMeetings.Arn}/invocations
               responses: {}
+            delete:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${cancelScheduledMeetings.Arn}/invocations
+              responses: {}
       EndpointConfiguration: REGIONAL
       TracingEnabled: true
       Cors:
@@ -1455,6 +1461,55 @@ Resources:
               - Effect: Allow
                 Action: lambda:InvokeFunction
                 Resource: !GetAtt MeetingReminder.Arn
+  cancelScheduledMeetings:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: cancelScheduledMeetings
+      CodeUri: src/cancelScheduledMeetings
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        WorkspaceApiDELETEworkspacescheduledmeetingsid:
+          Type: Api
+          Properties:
+            Path: /workspace/scheduled_meetings/{id}
+            Method: DELETE
+            RestApiId: !Ref WorkspaceApi
+      Environment:
+        Variables:
+          SCHEDULEDMEETINGSTABLE_TABLE_NAME: !Ref ScheduledMeetingsTable
+          SCHEDULEDMEETINGSTABLE_TABLE_ARN: !GetAtt ScheduledMeetingsTable.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ScheduledMeetingsTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource:
+                - !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*
+            - Effect: Allow
+              Action:
+                - sms-voice:DescribePhoneNumbers
+                - sms-voice:SendTextMessage
+              Resource:
+                - !Sub arn:aws:sms-voice:${AWS::Region}:${AWS::AccountId}:phone-number/*
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+              Resource:
+                - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+                - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:configuration-set/*
+  cancelScheduledMeetingsLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${cancelScheduledMeetings}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -1468,6 +1523,7 @@ Metadata:
         - deployWorkspace
         - hideDemo
         - getScheduledMeetings
+        - cancelScheduledMeetings
     Group2:
       Label: Pinpoint SMS Service
       Members:

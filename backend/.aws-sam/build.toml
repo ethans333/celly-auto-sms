@@ -226,4 +226,13 @@ manifest_hash = "07c1a5bba43ad4584fb3d7ee0be01799"
 packagetype = "Zip"
 functions = ["MeetingReminder"]
 
+[function_build_definitions.150f1d93-0574-4a2a-86f4-ea52ec252e2e]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\cancelScheduledMeetings"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "fdde0fdb35a74d01e1a6e3c530f2882c"
+packagetype = "Zip"
+functions = ["cancelScheduledMeetings"]
+
 [layer_build_definitions]

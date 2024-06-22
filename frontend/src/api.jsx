@@ -447,3 +447,22 @@ export async function getScheduledMeetings(workspace_id) {
 
   return await response.text(); // error
 }
+
+export async function cancelScheduledMeetings(workspace_id, meetings) {
+  const response = await fetch(
+    import.meta.env.VITE_WORKSPACE_API_URL +
+      "/workspace/scheduled_meetings/" +
+      workspace_id,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: Cookies.get("access_token"),
+      },
+      body: JSON.stringify({ meetings: meetings }),
+    }
+  );
+
+  if (response.status === 200) return response.json();
+
+  return await response.text(); // error
+}
