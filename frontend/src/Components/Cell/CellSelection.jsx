@@ -3,6 +3,7 @@ import legalserver from "../../assets/legalserver.svg";
 import zoom from "../../assets/zoom-app.svg";
 import microsoftteams from "../../assets/microsoftteams.svg";
 import Premium from "../Popups/Premium";
+import texting from "../../assets/comments-solid.svg";
 import { useContext } from "react";
 import { WorkspaceContext } from "../../Contexts/Workspace";
 
@@ -21,8 +22,13 @@ export default function () {
             </div>
             <PremiumDisplayCell
               icon={legalserver}
-              title="Legal Server"
-              description="Legal Server Integration."
+              title="LegalServer"
+              description="LegalServer Integration."
+            />
+            <PremiumDisplayCell
+              icon={texting}
+              title="SMS"
+              description="Collect data via SMS."
             />
             <PremiumDisplayCell
               icon={microsoftteams}

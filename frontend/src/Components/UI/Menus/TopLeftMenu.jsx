@@ -4,7 +4,7 @@ import { HelpersContext } from "../../../Contexts/Helpers";
 import Dropdown from "../../Dropdown";
 
 export default function () {
-  const { workspaceMetaData, setWorkspaceMetaData } =
+  const { workspaceMetaData, setWorkspaceMetaData, emojis } =
     useContext(WorkspaceContext);
 
   const { saveWorkspace } = useContext(HelpersContext);
@@ -27,7 +27,7 @@ export default function () {
       <div className="flex gap-x-3">
         {/* Emoji Dropdown */}
         <Dropdown
-          values={["👽", "🛸", "🚀"]}
+          values={emojis}
           current={workspaceMetaData.workspace_emoji}
           setCurrent={(emo) => {
             setWorkspaceMetaData((p) => ({ ...p, workspace_emoji: emo }));

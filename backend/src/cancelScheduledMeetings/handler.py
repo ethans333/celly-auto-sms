@@ -37,11 +37,9 @@ def handler(event, context):
         if is_expired:
             secrets.rotate_secret(SecretId=user_id)
 
-        failed = 0
-
         # cancel each meeting in graph
         for meeting in meetings_to_cancel:
-            cancellation_response = requests.delete(  # delete a meeting
+            requests.delete(  # delete a meeting
                 "https://graph.microsoft.com/v1.0/me/calendar/events/"
                 + meeting["event_id"],
                 headers={
@@ -50,36 +48,27 @@ def handler(event, context):
                 },
             )
 
-            if (
-                cancellation_response.status_code == requests.codes.ok
-            ):  # cancellation was successful
-                # remove meeting from meetings table
-                table.delete_item(
-                    Key={
-                        "id": meeting["id"],
-                    }
-                )
+            # remove meeting from meetings table
+            table.delete_item(
+                Key={
+                    "id": meeting["id"],
+                }
+            )
 
-                # send message to client that meeting have been canceled
-                if meeting["contact_method"] == "Phone":
-                    send_text(meeting["contact_value"], get_cancellation_text(meeting))
-                elif meeting["contact_method"] == "Email":
-                    send_email(
-                        meeting["contact_value"], get_cancellation_email(meeting)
-                    )
-                elif meeting["contact_method"] == "Phone & Email":
-                    send_text(meeting["contact_value"], get_cancellation_text(meeting))
-                    send_email(
-                        meeting["contact_value"], get_cancellation_email(meeting)
-                    )
-            else:
-                failed += 1
+            # send message to client that meeting have been canceled
+            if meeting["contact_method"] == "Phone":
+                send_text(meeting["contact_value"], get_cancellation_text(meeting))
+            elif meeting["contact_method"] == "Email":
+                send_email(meeting["contact_value"], get_cancellation_email(meeting))
+            elif meeting["contact_method"] == "Phone & Email":
+                send_text(meeting["contact_value"], get_cancellation_text(meeting))
+                send_email(meeting["contact_value"], get_cancellation_email(meeting))
 
         return {
             "statusCode": 200,
             "body": json.dumps(
                 {
-                    "Meetings Canceled": len(meetings_to_cancel) - failed,
+                    "Meetings Canceled": len(meetings_to_cancel),
                 }
             ),
             "headers": {

@@ -6,8 +6,13 @@ import { HelpersContext } from "../../../Contexts/Helpers.jsx";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 export default function () {
-  const { setWorkspaceMetaData, setComponentsStack, noWorkspaces, setSidebar } =
-    useContext(WorkspaceContext);
+  const {
+    setWorkspaceMetaData,
+    setComponentsStack,
+    noWorkspaces,
+    setSidebar,
+    emojis,
+  } = useContext(WorkspaceContext);
 
   const { saveWorkspace, updateWorkspaceLists } = useContext(HelpersContext);
 
@@ -15,7 +20,11 @@ export default function () {
     // Save current workspace
     saveWorkspace();
     // Create new workspace with default values
-    const res = await api.addWorkspace("My Workspace", []);
+    const res = await api.addWorkspace(
+      "My Workspace",
+      [],
+      emojis[Math.floor(Math.random() * emojis.length)]
+    );
 
     if (res.status === 200) {
       const json = await res.json();

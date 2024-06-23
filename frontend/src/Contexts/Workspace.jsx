@@ -33,14 +33,9 @@ export function WorkspaceProvider({ children }) {
     Analytics: 2,
   };
 
-  // useEffect(() => {
-  //   console.log(workspaceMetaData);
-  //   setDeltaX(0);
-  //   setDeltaY(0);
-  //   setScale(1);
-  // }, [workspaceMetaData]);
+  const emojis = ["💼", "🏢", "🗂️", "📅", "💰", "🏛️", "📨", "📋", "☕"];
 
-  const [currentView, setCurrentView] = useState(Views.ScheduledMeetings);
+  const [currentView, setCurrentView] = useState(Views.Project);
 
   return (
     <WorkspaceContext.Provider
@@ -74,6 +69,7 @@ export function WorkspaceProvider({ children }) {
         setNoWorkspaces,
         scheduledMeetingsIsLoading,
         setScheduledMeetingsIsLoading,
+        emojis,
       }}
     >
       {children}
