@@ -1395,72 +1395,6 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${getScheduledMeetings}
-  MeetingReminder:
-    Type: AWS::Serverless::Function
-    Properties:
-      Description: !Sub
-        - Stack ${AWS::StackName} Function ${ResourceName}
-        - ResourceName: MeetingReminder
-      CodeUri: src/MeetingReminder
-      Handler: handler.handler
-      Runtime: python3.9
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - Statement:
-            - Effect: Allow
-              Action:
-                - sms-voice:DescribePhoneNumbers
-                - sms-voice:SendTextMessage
-              Resource:
-                - !Sub arn:aws:sms-voice:${AWS::Region}:${AWS::AccountId}:phone-number/*
-        - Statement:
-            - Effect: Allow
-              Action:
-                - ses:SendEmail
-              Resource:
-                - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/*
-                - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:configuration-set/*
-        - DynamoDBCrudPolicy:
-            TableName: !Ref ScheduledMeetingsTable
-      Environment:
-        Variables:
-          SCHEDULEDMEETINGSTABLE_TABLE_NAME: !Ref ScheduledMeetingsTable
-          SCHEDULEDMEETINGSTABLE_TABLE_ARN: !GetAtt ScheduledMeetingsTable.Arn
-  MeetingReminderLogGroup:
-    Type: AWS::Logs::LogGroup
-    UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
-    Properties:
-      LogGroupName: !Sub /aws/lambda/${MeetingReminder}
-  MeetingReminderSchedule:
-    Type: AWS::Scheduler::Schedule
-    Properties:
-      ScheduleExpression: rate(12 hours)
-      FlexibleTimeWindow:
-        Mode: 'OFF'
-      Target:
-        Arn: !GetAtt MeetingReminder.Arn
-        RoleArn: !GetAtt MeetingReminderScheduleToMeetingReminderRole.Arn
-  MeetingReminderScheduleToMeetingReminderRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          Effect: Allow
-          Principal:
-            Service: scheduler.amazonaws.com
-          Action: sts:AssumeRole
-      Policies:
-        - PolicyName: StartExecutionPolicy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: lambda:InvokeFunction
-                Resource: !GetAtt MeetingReminder.Arn
   cancelScheduledMeetings:
     Type: AWS::Serverless::Function
     Properties:
@@ -1510,6 +1444,137 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${cancelScheduledMeetings}
+  MeetingReminderHourly:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: MeetingReminderHourly
+      CodeUri: src/MeetingReminder
+      Handler: hourly_handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - sms-voice:DescribePhoneNumbers
+                - sms-voice:SendTextMessage
+              Resource:
+                - !Sub arn:aws:sms-voice:${AWS::Region}:${AWS::AccountId}:phone-number/*
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+              Resource:
+                - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+                - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:configuration-set/*
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ScheduledMeetingsTable
+      Environment:
+        Variables:
+          SCHEDULEDMEETINGSTABLE_TABLE_NAME: !Ref ScheduledMeetingsTable
+          SCHEDULEDMEETINGSTABLE_TABLE_ARN: !GetAtt ScheduledMeetingsTable.Arn
+  MeetingReminderHourlyLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${MeetingReminderHourly}
+  MeetingReminderHourlySchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      ScheduleExpression: rate(1 hour)
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+      Target:
+        Arn: !GetAtt MeetingReminderHourly.Arn
+        RoleArn: !GetAtt MeetingReminderHourlyScheduleToMeetingReminderHourlyRole.Arn
+  MeetingReminderHourlyScheduleToMeetingReminderHourlyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: scheduler.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: StartExecutionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt MeetingReminderHourly.Arn
+  MeetingReminderDaily:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: MeetingReminderDaily
+      CodeUri: src/MeetingReminder
+      Handler: daily_handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - sms-voice:DescribePhoneNumbers
+                - sms-voice:SendTextMessage
+              Resource:
+                - !Sub arn:aws:sms-voice:${AWS::Region}:${AWS::AccountId}:phone-number/*
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+              Resource:
+                - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+                - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:configuration-set/*
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ScheduledMeetingsTable
+      Environment:
+        Variables:
+          SCHEDULEDMEETINGSTABLE_TABLE_NAME: !Ref ScheduledMeetingsTable
+          SCHEDULEDMEETINGSTABLE_TABLE_ARN: !GetAtt ScheduledMeetingsTable.Arn
+  MeetingReminderDailyLogGroup:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${MeetingReminderDaily}
+  MeetingReminderDailyScheduleDaily:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      ScheduleExpression: rate(12 hours)
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+      Target:
+        Arn: !GetAtt MeetingReminderDaily.Arn
+        RoleArn: !GetAtt MeetingReminderDailyScheduleDailyToMeetingReminderRole.Arn
+  MeetingReminderDailyScheduleDailyToMeetingReminderRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: scheduler.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: StartExecutionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt MeetingReminderDaily.Arn
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -1560,6 +1625,13 @@ Metadata:
       Label: Public External Services
       Members:
         - getMicrosoftCalendarEvents
+    Group3:
+      Label: Meeting Reminders
+      Members:
+        - MeetingReminderHourlySchedule
+        - MeetingReminderDailyScheduleDaily
+        - MeetingReminderHourly
+        - MeetingReminderDaily
   Outputs:
     WokspaceApi:
       Description: Workspace API

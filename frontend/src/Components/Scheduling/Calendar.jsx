@@ -174,7 +174,7 @@ export default function () {
             ? "bg-gray-50 animate-pulse"
             : Available
             ? `cursor-pointer  ${isSelected ? "bg-green-200" : "bg-white"}`
-            : "bg-gray-50 cursor-not-allowed"
+            : "bg-gray-100 cursor-not-allowed"
         }`}
       >
         <p
@@ -194,8 +194,20 @@ export default function () {
 
     let startN = 0;
 
-    if (startHour % 0.25 > 0) {
-      startN = Math.floor(((1 - (startHour % 1)) * 60) / 15) + 1;
+    const h = Math.floor(startHour);
+    let m = startHour % 1;
+
+    if (m > 0 && m < 0.25) m = 0;
+    else if (m > 0.25 && m < 0.5) m = 0.25;
+    else if (m > 0.5 && m < 0.75) m = 0.5;
+    else if (m > 0.75 && m < 1) m = 0.75;
+
+    const roundedSH = h + m;
+
+    console.log(roundedSH);
+
+    if ((roundedSH % 1) / 0.25 > 0) {
+      startN = Math.floor(((1 - (roundedSH % 1)) * 60) / 15);
     }
 
     const startEnd = Array(startN).fill(
@@ -206,9 +218,9 @@ export default function () {
 
     // Center Labels
 
-    let current = Math.ceil(startHour); // start time
+    let current = Math.ceil(roundedSH); // start time
 
-    for (let i = 0; i < Math.ceil(endHour - startHour); i++) {
+    for (let i = 0; i < Math.ceil(endHour - roundedSH); i++) {
       groups.push(
         <div className="row-span-4">
           <div className="text-gray-400 text-sm text-right pr-6 font-semibold">

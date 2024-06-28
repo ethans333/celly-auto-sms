@@ -7,19 +7,24 @@ export default function () {
   const date = new Date(selectedStartTime);
 
   return (
-    <div className="flex justify-center items-center h-screen w-full pb-48">
-      <div className="text-3xl font-black w-[70vw] text-center">
-        <p className="text-7xl mb-5">🎉</p>
-        <p>Your meeting has been scheduled for</p>
+    <div className="bg-gradient-to-t from-[rgba(168,85,247,0.07)] flex items-center justify-center pb-[25vh] h-screen">
+      <div className="border border-200 shadow-lg rounded-xl px-14 pt-32 pb-16 bg-white text-center">
+        <p className="text-8xl mb-20">🎉</p>
+        <p className="text-xl">Your meeting has been scheduled for</p>
 
-        <p className="text-purple-500">
+        <a className="font-black text-2xl bg-gradient-to-r from-violet-600 to-indigo-600 inline-block text-transparent bg-clip-text">
           {`${dow[date.getDay()]} ${
             months[date.getMonth()]
           } ${date.getDate()}th, 
           ${date.getHours() % 12}:${date.getMinutes()}${
             date.getMinutes() == 0 ? "0" : ""
           } ${date.getHours() > 11 ? "PM" : "AM"}`}
-        </p>
+        </a>
+
+        <div className="mt-20 text-gray-400">
+          <p>Be on the look out for reminders!</p>
+          <p>You may close this window.</p>
+        </div>
       </div>
     </div>
   );

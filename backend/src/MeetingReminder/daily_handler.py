@@ -98,4 +98,4 @@ def meeting_reminder_email(start_time):
 
 def meeting_reminder_text(start_time):
     t = datetime.fromtimestamp(float(start_time) / 1000)
-    return f"Just a reminder than your meeting starts on {t.date()} at {t.time()}."
+    return f"Just a reminder than your meeting starts on {t.date()} at {t.time()} 📅"
