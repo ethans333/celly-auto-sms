@@ -2,6 +2,8 @@ import React from "react";
 import { WorkspaceContext } from "../../Contexts/Workspace";
 import uuid from "react-uuid";
 
+const arrowRadius = 10;
+
 export class Curve extends React.Component {
   constructor(props) {
     super(props);
@@ -50,7 +52,11 @@ export class Curve extends React.Component {
         y: Math.abs(a.y - b.y) / 2,
       };
 
-      const qr = 20;
+      // Set quad radius
+      let qr = 20;
+
+      const dy = Math.abs(a.y - b.y);
+      if (dy <= qr * 2) qr = dy / 2;
 
       // Line 1
       const l1 = {
@@ -153,7 +159,11 @@ export class Curve extends React.Component {
         y: Math.abs(a.y - b.y) / 2,
       };
 
-      const qr = 20;
+      // Set quad radius
+      let qr = 20;
+
+      const dy = Math.abs(a.y - b.y);
+      if (dy <= qr * 2) qr = dy / 2;
 
       // Line 3
       const l3 = {
@@ -256,7 +266,11 @@ export class Curve extends React.Component {
         y: Math.abs(a.y - b.y) / 2,
       };
 
-      const qr = 20;
+      // Set quad radius
+      let qr = 20;
+
+      const dy = Math.abs(a.x - b.x);
+      if (dy <= qr * 2) qr = dy / 2;
 
       // Line 1
       const l1 = {
@@ -359,7 +373,11 @@ export class Curve extends React.Component {
         y: Math.abs(a.y - b.y) / 2,
       };
 
-      const qr = 20;
+      // Set quad radius
+      let qr = 20;
+
+      const dx = Math.abs(a.x - b.x);
+      if (dx <= qr * 2) qr = dx / 2;
 
       // Line 1
       const l1 = {
@@ -455,6 +473,126 @@ export class Curve extends React.Component {
           fill="transparent"
         />
       );
+    } else if (a.side == "right" && b.side == "bottom") {
+      // Right to Bottom
+
+      // Set quad radius
+      let qr = 20;
+
+      const dx = Math.abs(a.x - b.x);
+      if (dx <= qr * 2) qr = dx / 2;
+
+      // Line 1
+      const l1 = horizontalLine(
+        a.x,
+        b.x - a.x - qr + start.width / 2,
+        a.y + start.width / 2
+      );
+
+      // Line 2
+      const l2 = verticalLine(l1.y1 - qr, b.y + space, b.x + start.width / 2);
+
+      // Quad 1
+      const q1 = bottomRightQuad(l2.x1, l1.y1, qr);
+
+      // Arrow
+      const arrow = arrowTip(l2.x1, l2.y2, arrowRadius, "up");
+
+      paths.push(
+        <Line {...l1} />,
+        <Corner {...q1} />,
+        <Line {...l2} />,
+        <Arrow {...arrow} />
+      );
+    } else if (a.side == "bottom" && b.side == "right") {
+      // Bottom to Right
+
+      // Set quad radius
+      let qr = 20;
+
+      const dx = Math.abs(a.x - b.x);
+      if (dx <= qr * 2) qr = dx / 2;
+
+      // Line 1
+      const l1 = verticalLine(a.y, b.y - qr, a.x);
+
+      // Line 2
+      const l2 = horizontalLine(a.x - qr, b.x + space, b.y);
+
+      // Quad 1
+      const q1 = bottomRightQuad(a.x, b.y, qr);
+
+      // Arrow
+      const arrow = arrowTip(b.x + space, b.y, arrowRadius, "left");
+
+      paths.push(
+        <Line {...l1} />,
+        <Corner {...q1} />,
+        <Line {...l2} />,
+        <Arrow {...arrow} />
+      );
+    } else if (a.side == "bottom" && b.side == "left") {
+      // Bottom to Left
+
+      // Set quad radius
+      let qr = 20;
+
+      const dx = Math.abs(a.x - b.x);
+      if (dx <= qr * 2) qr = dx / 2;
+
+      // Line 1
+      const l1 = verticalLine(a.y, b.y - qr, a.x + start.width / 2);
+
+      // Line 2
+      const l2 = horizontalLine(l1.x1 + qr, b.x + space, b.y);
+
+      // Quad 1
+      const q1 = bottomLeftQuad(l1.x1 + qr, b.y, qr);
+
+      // Arrow
+      const arrow = arrowTip(b.x + space, b.y, arrowRadius, "right");
+
+      paths.push(
+        <Line {...l1} />,
+        <Corner {...q1} />,
+        <Line {...l2} />,
+        <Arrow {...arrow} />
+      );
+    } else if (a.side == "left" && b.side == "bottom") {
+      // Bottom to Left
+
+      // Set quad radius
+      let qr = 20;
+
+      const dx = Math.abs(a.x - b.x);
+      if (dx <= qr * 2) qr = dx / 2;
+
+      // Line 1
+      const l1 = horizontalLine(
+        a.x + start.width,
+        b.x + start.width / 2 + qr,
+        a.y + start.height / 2
+      );
+
+      // Line 2
+      const l2 = verticalLine(
+        a.y - qr + start.height / 2,
+        b.y + space,
+        b.x + start.width / 2
+      );
+
+      // Quad 1
+      const q1 = bottomLeftQuad(l2.x1 + qr, l1.y1, qr);
+
+      // Arrow
+      const arrow = arrowTip(l2.x1, b.y + space, arrowRadius, "up");
+
+      paths.push(
+        <Line {...l1} />,
+        <Corner {...q1} />,
+        <Line {...l2} />,
+        <Arrow {...arrow} />
+      );
     }
 
     return (
@@ -505,3 +643,250 @@ export class Curve extends React.Component {
     );
   }
 }
+
+function Corner({ x1, y1, qx, qy, x2, y2 }) {
+  return (
+    <path
+      key={uuid()}
+      d={`M ${x1} ${y1} Q ${qx} ${qy} ${x2} ${y2}`}
+      stroke="black"
+      fill="transparent"
+    />
+  );
+}
+
+function Line({ x1, y1, x2, y2 }) {
+  return (
+    <path
+      key={uuid()}
+      d={`M ${x1} ${y1} L ${x2} ${y2}`}
+      stroke="black"
+      fill="transparent"
+    />
+  );
+}
+
+function Arrow({ x1, y1, x2, y2, x3, y3 }) {
+  return (
+    <path
+      key={uuid()}
+      d={`M ${x1} ${y1} L ${x2} ${y2} L ${x3} ${y3}`}
+      stroke="black"
+      fill="transparent"
+    />
+  );
+}
+
+// Angles
+const bottomRightQuad = (offsetX = 0, offsetY = 0, radius = 20) => {
+  const quad = {
+    x1: 0,
+    y1: radius,
+    x2: radius,
+    y2: 0,
+    qx: radius,
+    qy: radius,
+  };
+
+  quad.x1 += offsetX;
+  quad.y1 += offsetY;
+  quad.x2 += offsetX;
+  quad.y2 += offsetY;
+  quad.qx += offsetX;
+  quad.qy += offsetY;
+  quad.x1 -= radius;
+  quad.y1 -= radius;
+  quad.x2 -= radius;
+  quad.y2 -= radius;
+  quad.qx -= radius;
+  quad.qy -= radius;
+  return quad;
+};
+
+const bottomLeftQuad = (offsetX = 0, offsetY = 0, radius = 20) => {
+  const quad = {
+    x1: radius,
+    y1: radius,
+    x2: 0,
+    y2: 0,
+    qx: 0,
+    qy: radius,
+  };
+
+  quad.x1 += offsetX;
+  quad.y1 += offsetY;
+  quad.x2 += offsetX;
+  quad.y2 += offsetY;
+  quad.qx += offsetX;
+  quad.qy += offsetY;
+  quad.x1 -= radius;
+  quad.y1 -= radius;
+  quad.x2 -= radius;
+  quad.y2 -= radius;
+  quad.qx -= radius;
+  quad.qy -= radius;
+  return quad;
+};
+
+const topLeftQuad = (offsetX = 0, offsetY = 0, radius = 20) => {
+  const quad = {
+    x1: -radius,
+    y1: -radius,
+    x2: 0,
+    y2: 0,
+    qx: -radius,
+    qy: -radius,
+  };
+
+  quad.x1 += offsetX;
+  quad.y1 += offsetY;
+  quad.x2 += offsetX;
+  quad.y2 += offsetY;
+  quad.qx += offsetX;
+  quad.qy += offsetY;
+  quad.x1 += radius;
+  quad.y1 += radius;
+  quad.x2 += radius;
+  quad.y2 += radius;
+  quad.qx += radius;
+  quad.qy += radius;
+  return quad;
+};
+
+const topRightQuad = (offsetX = 0, offsetY = 0, radius = 20) => {
+  const quad = {
+    x1: 0,
+    y1: -radius,
+    x2: radius,
+    y2: 0,
+    qx: radius,
+    qy: -radius,
+  };
+
+  quad.x1 += offsetX;
+  quad.y1 += offsetY;
+  quad.x2 += offsetX;
+  quad.y2 += offsetY;
+  quad.qx += offsetX;
+  quad.qy += offsetY;
+  quad.x1 -= radius;
+  quad.y1 += radius;
+  quad.x2 -= radius;
+  quad.y2 += radius;
+  quad.qx -= radius;
+  quad.qy += radius;
+  return quad;
+};
+
+// Lines
+const horizontalLine = (x1, x2, y) => {
+  const line = {
+    x1: x1,
+    y1: y,
+    x2: x2,
+    y2: y,
+  };
+  return line;
+};
+
+const verticalLine = (y1, y2, x) => {
+  const line = {
+    x1: x,
+    y1: y1,
+    x2: x,
+    y2: y2,
+  };
+  return line;
+};
+
+// Arrow Tip
+const arrowTip = (offsetX = 0, offsetY = 0, radius = 20, direction = "up") => {
+  let points = {
+    x1: 0,
+    y1: 0,
+    x2: 0,
+    y2: 0,
+    x3: 0,
+    y3: 0,
+    qx1: 0,
+    qy1: 0,
+    qx2: 0,
+    qy2: 0,
+  };
+
+  switch (direction) {
+    case "up":
+      points = {
+        x1: -radius,
+        y1: radius,
+        x2: 0,
+        y2: 0,
+        x3: radius,
+        y3: radius,
+        qx1: -radius,
+        qy1: radius / 2,
+        qx2: radius,
+        qy2: radius / 2,
+      };
+      break;
+    case "down":
+      points = {
+        x1: -radius,
+        y1: -radius,
+        x2: 0,
+        y2: 0,
+        x3: radius,
+        y3: -radius,
+        qx1: -radius,
+        qy1: -radius / 2,
+        qx2: radius,
+        qy2: -radius / 2,
+      };
+      break;
+    case "left":
+      points = {
+        x1: radius,
+        y1: -radius,
+        x2: 0,
+        y2: 0,
+        x3: radius,
+        y3: radius,
+        qx1: radius / 2,
+        qy1: -radius,
+        qx2: radius / 2,
+        qy2: radius,
+      };
+      break;
+    case "right":
+      points = {
+        x1: -radius,
+        y1: -radius,
+        x2: 0,
+        y2: 0,
+        x3: -radius,
+        y3: radius,
+        qx1: -radius / 2,
+        qy1: -radius,
+        qx2: -radius / 2,
+        qy2: radius,
+      };
+      break;
+    default:
+      throw new Error(
+        'Invalid direction. Use "up", "down", "left", or "right".'
+      );
+  }
+
+  points.x1 += offsetX;
+  points.y1 += offsetY;
+  points.x2 += offsetX;
+  points.y2 += offsetY;
+  points.x3 += offsetX;
+  points.y3 += offsetY;
+  points.qx1 += offsetX;
+  points.qy1 += offsetY;
+  points.qx2 += offsetX;
+  points.qy2 += offsetY;
+
+  return points;
+};

@@ -57,7 +57,16 @@ export class Node extends React.Component {
                       this.side == "top") ||
                     (context.currentNode.side == "left" &&
                       this.side == "right") ||
-                    (context.currentNode.side == "right" && this.side == "left")
+                    (context.currentNode.side == "right" &&
+                      this.side == "left") ||
+                    (context.currentNode.side == "right" &&
+                      this.side == "bottom") ||
+                    (context.currentNode.side == "bottom" &&
+                      this.side == "right") ||
+                    (context.currentNode.side == "bottom" &&
+                      this.side == "left") ||
+                    (context.currentNode.side == "left" &&
+                      this.side == "bottom")
                   )
                 ) {
                   this.setState({
