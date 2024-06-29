@@ -112,7 +112,7 @@ export default function ({ self }) {
       if (res.status != 200) return;
 
       res.json().then((data) => {
-        if (res.status == 200 && !data.is_expired) setIsLinked(true);
+        if (res.status == 200) setIsLinked(true);
       });
     });
   }, [self]);
