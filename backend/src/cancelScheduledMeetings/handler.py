@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from datetime import datetime
 
 import boto3
@@ -9,7 +10,6 @@ from jose import jwt
 
 def handler(event, context):
     try:
-        workspace_id = event["pathParameters"]["id"]
         ddb = boto3.resource("dynamodb")
         table = ddb.Table(os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"])
 
@@ -82,6 +82,7 @@ def handler(event, context):
         return {
             "statusCode": 500,
             "body": str(e),
+            "traceback": f"ERROR: line {sys.exc_info()[-1].tb_lineno}, {str(e)}",
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",

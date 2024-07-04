@@ -17,6 +17,8 @@ export default function () {
     user_id,
     setIsScheduled,
     meetingDescription,
+    title,
+    workspace,
   } = useContext(SchedulingContext);
 
   return (
@@ -104,7 +106,8 @@ export default function () {
                   contactValue,
                   secondContactValue,
                   startTime,
-                  endTime
+                  endTime,
+                  title === "" ? workspace["workspace_name"] : title
                 )
                 .then((res) => {
                   if (res.status === 200) {

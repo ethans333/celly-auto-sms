@@ -396,7 +396,8 @@ export async function addCalendarEvent(
   contactValue,
   secondContactValue,
   startTime,
-  endTime
+  endTime,
+  meeting_name
 ) {
   const response = await fetch(
     import.meta.env.VITE_SCHEDULING_API_URL + "/scheduling/" + id,
@@ -409,6 +410,7 @@ export async function addCalendarEvent(
         second_contact_value: secondContactValue,
         start_time: startTime,
         end_time: endTime,
+        meeting_name: meeting_name,
       }),
     }
   );

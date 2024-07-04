@@ -19,8 +19,10 @@ export default function () {
   useEffect(() => {
     console.log(workspaceMetaData);
     getScheduledMeetings(workspaceMetaData?.id).then((m) => {
-      console.log(m);
-      setMeetings(m);
+      // Get future meetings only
+      setMeetings(
+        m.filter((mting) => parseInt(mting.end_time) > new Date().getTime())
+      );
     });
   }, [workspaceMetaData?.id]);
 
@@ -126,7 +128,7 @@ export default function () {
 
   function Row({
     background,
-    workspace_name,
+    meeting_name,
     contact_value,
     start_time,
     end_time,
@@ -182,7 +184,7 @@ export default function () {
           scope="row"
           className="px-6 py-4 w-16 font-medium text-gray-900 whitespace-nowrap"
         >
-          {workspace_name}
+          {meeting_name}
         </th>
         <td className="px-6 py-4">
           <div className="truncate max-w-48">{contact_value}</div>

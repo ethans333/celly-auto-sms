@@ -118,6 +118,7 @@ def handler(event, context):
                 "user_id": {"S": user_id},
                 "workspace_id": {"S": workspace_id},
                 "workspace_name": {"S": workspace_name},
+                "meeting_name": {"S": body["meeting_name"]},
                 "event_id": {"S": events_response["id"]},
                 "start_time": {"N": str(body["start_time"])},
                 "end_time": {"N": str(body["end_time"])},

@@ -1,3 +1,4 @@
+import decimal
 import json
 import os
 
@@ -9,12 +10,46 @@ def handler(event, context):
     try:
         workspace_id = event["pathParameters"]["id"]
 
+        # bucket
         s3 = boto3.resource("s3")
-
         bucket = s3.Bucket(os.environ["WORKSPACESBUCKET_BUCKET_NAME"])
+
+        # table
+        ddb = boto3.resource("dynamodb")
+        table = ddb.Table(os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"])
+
+        # lambda
+        lambda_client = boto3.client("lambda")
 
         access_token = event["headers"]["Authorization"]
         user_id = jwt.decode(access_token, options={"verify_signature": False})["sub"]
+
+        # Get all meeting ids related to workspace
+        meetings_to_cancel = table.scan(
+            FilterExpression="user_id = :user_id AND workspace_id = :workspace_id",
+            ExpressionAttributeValues={
+                ":user_id": user_id,
+                ":workspace_id": workspace_id,
+            },
+        )["Items"]
+
+        # raise Exception(str(meetings_to_cancel))
+
+        # Cancel meetings
+        response = lambda_client.invoke(
+            FunctionName=os.environ["CANCELSCHEDULEDMEETINGS_FUNCTION_NAME"],
+            InvocationType="RequestResponse",
+            Payload=bytes(
+                json.dumps(
+                    {
+                        "body": {"meetings": meetings_to_cancel},
+                        "headers": {"Authorization": access_token},
+                    },
+                    cls=DecimalEncoder,
+                ),
+                encoding="utf8",
+            ),
+        )
 
         # Delete workspace from bucket
         bucket.delete_objects(
@@ -36,7 +71,7 @@ def handler(event, context):
         "statusCode": 200,
         "body": json.dumps(
             {
-                "message": "Workspace deleted successfully",
+                "message": str(response["Payload"].read().decode("utf8")),
             }
         ),
         "headers": {
@@ -46,3 +81,11 @@ def handler(event, context):
             "Content-Type": "application/json",
         },
     }
+
+
+# decimal encoder for calling json.dumps. Used when given there exists a variable of type decimal
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, decimal.Decimal):
+            return str(o)
+        return super().default(o)
