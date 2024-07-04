@@ -18,7 +18,12 @@ def handler(event, context):
         access_token = event["headers"]["Authorization"]
         user_id = client.get_user(AccessToken=access_token)["Username"]
 
-        meetings_to_cancel = json.loads(event["body"])["meetings"]
+        body = event["body"]
+
+        if isinstance(event["body"], str):
+            body = json.loads(event["body"])
+
+        meetings_to_cancel = body["meetings"]
 
         # Get Microsoft tokens from Secrets Manager
         secrets = boto3.client("secretsmanager")
