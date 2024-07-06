@@ -15,6 +15,7 @@ export default function ({ self }) {
   const [endAMPM, setEndAMPM] = useState("PM");
   const [meetingDescription, setMeetingDescription] = useState("");
   const [meetingTitle, setMeetingTitle] = useState("");
+  const [contact, setContact] = useState("");
 
   const [meetingWindowStartHour, setMeetingWindowStartHour] = useState("09");
   const [meetingWindowStartMinute, setMeetingWindowStartMinute] =
@@ -36,12 +37,14 @@ export default function ({ self }) {
     self.setState({
       meeting_description: meetingDescription,
       meeting_title: meetingTitle,
+      contact: contact,
     });
-  }, [meetingDescription, meetingTitle]);
+  }, [meetingDescription, meetingTitle, contact]);
 
   useEffect(() => {
     setMeetingTitle(self.state.meeting_title);
     setMeetingDescription(self.state.meeting_description);
+    setContact(self.state.contact);
 
     let s = self.state.start_time;
     let e = self.state.end_time;
@@ -160,11 +163,31 @@ export default function ({ self }) {
           </div>
         </div>
         <div>
+          <p className="font-bold">Phone Number</p>
+          <div className="mt-3 flex space-x-3">
+            <input
+              placeholder="Your Phone Number"
+              type="text"
+              value={contact}
+              onChange={(e) => {
+                const phoneRegex = /^[0-9\-\+\(\)]+$/;
+                if (
+                  e.target.value.length > 0 &&
+                  !phoneRegex.test(e.target.value)
+                )
+                  return;
+                setContact(e.target.value);
+              }}
+              className="w-full border border-gray-100 border-2 rounded-md px-3 py-1.5 text-sm"
+            />
+          </div>
+        </div>
+        <div>
           <p className="font-bold">Meeting Notes</p>
           <div className="mt-3 flex space-x-3">
             <textarea
               className="border border-gray-100 border-2 rounded-md px-3 py-3 text-sm w-full"
-              placeholder="Optional"
+              placeholder="What to know..."
               type="text"
               rows={5}
               value={meetingDescription}

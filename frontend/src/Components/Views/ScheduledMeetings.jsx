@@ -15,16 +15,27 @@ export default function () {
 
   const [meetings, setMeetings] = useState([]);
   const [selectedMeetings, setSelectedMeetings] = useState([]);
+  const [meetingTitle, setMeetingTitle] = useState(
+    workspaceMetaData?.workspace_name
+  );
 
   useEffect(() => {
-    console.log(workspaceMetaData);
+    fetchMeetings();
+  }, [workspaceMetaData?.id]);
+
+  function fetchMeetings() {
     getScheduledMeetings(workspaceMetaData?.id).then((m) => {
+      // Set meeting title
+      if (m.length > 0) {
+        setMeetingTitle(m[0].meeting_name);
+      }
+
       // Get future meetings only
       setMeetings(
         m.filter((mting) => parseInt(mting.end_time) > new Date().getTime())
       );
     });
-  }, [workspaceMetaData?.id]);
+  }
 
   return (
     <div>
@@ -32,7 +43,7 @@ export default function () {
         <div className="mt-[15vh] overflow-y-scroll max-h-[80vh] p-5">
           <div className="mb-4 flex h-8">
             <div className="text-lg font-black">
-              Active Meetings for {workspaceMetaData?.workspace_name}
+              Active Meetings for {meetingTitle}
             </div>
 
             {selectedMeetings.length > 0 && (
@@ -55,6 +66,8 @@ export default function () {
                       )
                       .then((r) => {
                         console.log(r);
+                        fetchMeetings();
+                        setSelectedMeetings([]);
                       });
                   }}
                   className="bg-red-500 text-xs font-semibold text-white px-3 py-[8px] rounded-lg flex space-x-2  cursor-pointer hover:opacity-50 h-fit"
@@ -70,23 +83,23 @@ export default function () {
             <table className="w-full text-sm text-left rtl:text-right text-gray-500">
               <thead className="text-sm text-black">
                 <tr>
-                  <th scope="col" className="px-6 py-3 tracking-wide"></th>
-                  <th scope="col" className="px-6 py-3 tracking-wide">
-                    Meeting
-                  </th>
-                  <th scope="col" className="px-6 py-3 tracking-wide">
+                  <th scope="col" className="px-6 py-3 tracking-wide w-16"></th>
+                  <th scope="col" className="px-6 py-3 tracking-wide w-24">
                     Contact
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 w-24">
                     Time
                   </th>
-                  <th scope="col" className="px-6 py-3 tracking-wide">
+                  <th scope="col" className="px-6 py-3 tracking-wide w-24">
                     Length
                   </th>
-                  <th scope="col" className="px-6 py-3 tracking-wide">
+                  <th scope="col" className="px-6 py-3 tracking-wide w-34">
                     Date
                   </th>
-                  <th scope="col" className="px-6 py-3 tracking-wide"></th>
+                  <th scope="col" className="px-6 py-3 tracking-wide">
+                    Attending?
+                  </th>
+                  <th scope="col" className="px-6 py-3 tracking-wide w-16"></th>
                 </tr>
               </thead>
               {scheduledMeetingsIsLoading ? (
@@ -102,7 +115,7 @@ export default function () {
                   <tr>
                     <td
                       colSpan={7}
-                      className="px-6 py-4 font-medium text-center"
+                      className="px-6 py-8 font-medium text-center"
                     >
                       No meetings scheduled
                     </td>
@@ -180,34 +193,51 @@ export default function () {
             className="w-4 h-4 mx-auto cursor-pointer hover:opacity-50"
           />
         </td>
-        <th
-          scope="row"
-          className="px-6 py-4 w-16 font-medium text-gray-900 whitespace-nowrap"
-        >
-          {meeting_name}
-        </th>
         <td className="px-6 py-4">
-          <div className="truncate max-w-48">{contact_value}</div>
+          <div className="truncate w-24">{contact_value}</div>
         </td>
         <td className="px-6 py-4">
-          <div className="w-fit">{timeString}</div>
+          <div className="truncate w-24">{timeString}</div>
         </td>
         <td className="px-6 py-4">
-          <div className="w-fit">{duration} min</div>
+          <div className="truncate w-24">{duration} min</div>
         </td>
         <td className="px-6 py-4">
-          <div className="w-fit">{dateString}</div>
+          <div className="truncate w-34">{dateString}</div>
+        </td>
+        <td className="px-6 py-4">
+          <AttendingBadge />
         </td>
         <td className="px-6 py-4 w-16">
           <img
             src={eye}
             className="w-4 h-4 mx-auto cursor-pointer hover:opacity-50"
-            onClick={() => setSidebar(<div>More Info</div>)}
+            onClick={() =>
+              setSidebar(<div>There is no info at this time.</div>)
+            }
           />
         </td>
       </tr>
     );
   }
+}
+
+function PendingBadge() {
+  return (
+    <div className="flex justify-center space-x-2">
+      <div className="w-2 h-2 bg-yellow-500 rounded-full my-auto"></div>
+      <div className="text-yellow-500">Pending</div>
+    </div>
+  );
+}
+
+function AttendingBadge() {
+  return (
+    <div className="flex justify-center space-x-2">
+      <div className="w-2 h-2 bg-green-500 rounded-full my-auto"></div>
+      <div className="text-green-500">Attending</div>
+    </div>
+  );
 }
 
 function LoadingRow({ i }) {

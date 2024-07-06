@@ -11,12 +11,6 @@ from jose import jwt
 
 def handler(event, context):
     try:
-        # read booked event as date time from event body
-        # contact_method
-        # contact_value
-        # start_time
-        # end_time
-
         # get parameters
         body = json.loads(event["body"])
         user_id = body["user_id"]
@@ -52,6 +46,10 @@ def handler(event, context):
         )
 
         workspace_name = metadata["workspace_name"]
+        meeting_name = body["meeting_name"]
+
+        if meeting_name == "":
+            meeting_name = "Your meeting"
 
         events_response = requests.post(  # events for the next week
             f"https://graph.microsoft.com/v1.0/me/calendar/events",
@@ -61,10 +59,10 @@ def handler(event, context):
             },
             data=json.dumps(
                 {
-                    "subject": f"{workspace_name} meeting",
+                    "subject": f"{meeting_name}",
                     "body": {
                         "contentType": "HTML",
-                        "content": f"{workspace_name} meeting. Scheduled via Intwine.",
+                        "content": f"{meeting_name}. Scheduled via Intwine.",
                     },
                     "start": {
                         "dateTime": start_time,
@@ -74,7 +72,7 @@ def handler(event, context):
                         "dateTime": end_time,
                         "timeZone": "Eastern Standard Time",
                     },
-                    "location": {"displayName": "Online Meeting"},
+                    "location": {"displayName": "Over the Phone"},
                     "attendees": [
                         # {
                         #     "emailAddress": {
@@ -91,21 +89,21 @@ def handler(event, context):
         # notify client of appointment
         if body["contact_method"] == "Email":
             email = body["contact_value"]
-            html = get_schedule_email(body["start_time"])
+            html = get_schedule_email(body["start_time"], meeting_name)
             send_email(email, html)
         elif body["contact_method"] == "Phone":
-            message = get_schedule_text(body["start_time"], workspace_name)
+            message = get_schedule_text(body["start_time"], meeting_name)
             send_text(body["contact_value"], message)
         elif body["contact_method"] == "Phone & Email":
             phone = body["contact_value"]
             email = body["second_contact_value"]
 
             # send text
-            message = get_schedule_text(body["start_time"], workspace_name)
+            message = get_schedule_text(body["start_time"], meeting_name)
             send_text(phone, message)
 
             # send email
-            html = get_schedule_email(body["start_time"], workspace_name)
+            html = get_schedule_email(body["start_time"], meeting_name)
             send_email(email, html)
 
         # add scheduled event to scheduled table.
@@ -124,6 +122,7 @@ def handler(event, context):
                 "end_time": {"N": str(body["end_time"])},
                 "contact_method": {"S": body["contact_method"]},
                 "contact_value": {"S": body["contact_value"]},
+                "attendance_status": {"S": "PENDING"},
             },
         )
 
@@ -143,7 +142,6 @@ def handler(event, context):
         }
 
     except Exception as e:
-        print()
         return {
             "statusCode": 500,
             "body": json.dumps(
@@ -202,14 +200,14 @@ def send_email(email, html):
     )
 
 
-def get_schedule_text(time, workspace_name="Your meeting"):
+def get_schedule_text(time, meeting_name="Your meeting"):
     day_of_week = datetime.fromtimestamp(float(time) / 1000).strftime("%A")
     month_day = datetime.fromtimestamp(float(time) / 1000).strftime("%B %-d")
     t = datetime.fromtimestamp(float(time) / 1000).strftime("%-I:%M %p")
-    return f"{workspace_name} is scheduled for {day_of_week}, {month_day} at {t}"
+    return f"{meeting_name} is scheduled for {day_of_week}, {month_day} at {t}"
 
 
-def get_schedule_email(time, workspace_name="Your meeting"):
+def get_schedule_email(time, meeting_name="Your meeting"):
     day_of_week = datetime.fromtimestamp(float(time) / 1000).strftime("%A")
     month_day = datetime.fromtimestamp(float(time) / 1000).strftime("%B %-d")
     t = datetime.fromtimestamp(float(time) / 1000).strftime("%-I:%M %p")
@@ -218,7 +216,7 @@ def get_schedule_email(time, workspace_name="Your meeting"):
         <html>
     <body>
     <p>
-        {workspace_name} is scheduled for {day_of_week}, {month_day} at {t}.
+        {meeting_name} is scheduled for {day_of_week}, {month_day} at {t}.
     </p>
     </body>
     </html>

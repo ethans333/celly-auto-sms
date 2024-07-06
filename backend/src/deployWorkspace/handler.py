@@ -36,8 +36,15 @@ def handler(event, context):
 
         workspace_raw = json.loads(workspace_raw)
 
+        contact = ""
+
         # loop through all cell types
         for cell in workspace_raw:
+            # get contact
+            if cell["typename"] == "calendar" and cell["contact"] != "":
+                contact = cell["contact"]
+
+            # get cell types
             cell_types.append(cell["typename"])
 
         if "calendar" in cell_types:
@@ -52,6 +59,11 @@ def handler(event, context):
         # Update is_deployed status to true
         metadata = bucket.Object(f"{user_id}/{workspace_id}").metadata
         metadata["is_deployed"] = "true"
+        metadata["contact"] = contact
+
+        # change everything to string
+        for k in metadata:
+            metadata[k] = str(metadata[k])
 
         bucket.put_object(
             Key=f"{user_id}/{workspace_id}",

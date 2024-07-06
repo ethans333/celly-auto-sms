@@ -35,7 +35,7 @@ export default function () {
             </div>
             <div className="flex space-x-2">
               <div className="font-black text-2xl px-3 py-1.5 rounded-lg ml-3 mr-5">
-                {title === "" ? workspace["workspace_name"] : title}
+                {title}
               </div>
               <div
                 onClick={() => {

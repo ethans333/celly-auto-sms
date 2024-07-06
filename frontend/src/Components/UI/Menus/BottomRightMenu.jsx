@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { WorkspaceContext } from "../../../Contexts/Workspace.jsx";
 import * as api from "../../../api.jsx";
 import { HelpersContext } from "../../../Contexts/Helpers.jsx";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import arrow from "../../../assets/caret-down-solid-purple.svg";
 
 export default function () {
   const {
@@ -47,13 +47,15 @@ export default function () {
   function NoWorkspacesAddButton() {
     return (
       <div>
-        <div className="animate-bounce">
-          <div className="text-sm ml-[32px] w-32 text-center font-semibold text-indigo-600">
-            Create a New Project
+        <div className="animate-bounce ml-[34px]">
+          <div className="text-sm  w-32 text-center font-semibold text-indigo-600">
+            <div className="bg-gradient-to-r from-violet-600 to-indigo-600 font-bold text-center w-fit px-3 py-1.5 rounded-lg text-white">
+              Create a New Project
+            </div>
           </div>
 
-          <div className="ml-[85.5px] mt-1 mb-5">
-            <ArrowDownwardIcon sx={{ fill: "#4F46E5" }} />
+          <div className="mb-5 mt-2 w-full flex justify-center animate-bounce">
+            <img src={arrow} className="w-4" />
           </div>
         </div>
 

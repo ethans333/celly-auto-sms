@@ -33,11 +33,7 @@ export default function () {
         onClick={() => {
           // on favorite
           setWorkspaceMetaData((p) => ({ ...p, is_favorite: !p.is_favorite }));
-
-          let metadata = workspaceMetaData;
-          workspaceMetaData.is_favorite = !workspaceMetaData.is_favorite;
-
-          saveWorkspace(metadata);
+          saveWorkspace();
         }}
       />
       {/* Share */}
@@ -45,8 +41,6 @@ export default function () {
         icon={share_icon}
         label="Share"
         onClick={() => {
-          // save current workspace
-          saveWorkspace();
           // deploy current workspace
           deployWorkspace(() => {
             setPopup(<WorkspaceLink />);

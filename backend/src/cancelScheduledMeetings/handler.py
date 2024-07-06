@@ -61,13 +61,23 @@ def handler(event, context):
             )
 
             # send message to client that meeting have been canceled
+            meeting_name = (
+                meeting["meeting_name"]
+                if meeting["meeting_name"] != ""
+                else "Your Meeting"
+            )
+
             if meeting["contact_method"] == "Phone":
-                send_text(meeting["contact_value"], get_cancellation_text(meeting))
+                send_text(meeting["contact_value"], get_cancellation_text(meeting_name))
             elif meeting["contact_method"] == "Email":
-                send_email(meeting["contact_value"], get_cancellation_email(meeting))
+                send_email(
+                    meeting["contact_value"], get_cancellation_email(meeting_name)
+                )
             elif meeting["contact_method"] == "Phone & Email":
-                send_text(meeting["contact_value"], get_cancellation_text(meeting))
-                send_email(meeting["contact_value"], get_cancellation_email(meeting))
+                send_text(meeting["contact_value"], get_cancellation_text(meeting_name))
+                send_email(
+                    meeting["contact_value"], get_cancellation_email(meeting_name)
+                )
 
         return {
             "statusCode": 200,
@@ -139,11 +149,11 @@ def send_email(email, html):
     )
 
 
-def get_cancellation_text(meeting):
-    return f"{meeting['workspace_name']} meeting has been canceled."
+def get_cancellation_text(meeting_name):
+    return f"{meeting_name} has been canceled."
 
 
-def get_cancellation_email(meeting):
+def get_cancellation_email(meeting_name):
     return f"""
-    <p>{meeting['workspace_name']} meeting has been canceled.</p>
+    <p>{meeting_name} has been canceled.</p>
     """

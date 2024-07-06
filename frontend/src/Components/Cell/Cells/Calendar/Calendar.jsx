@@ -13,6 +13,7 @@ export class Calendar extends Cell {
     start_time: 9,
     end_time: 17,
     blackout_days: [0, 6],
+    contact: "",
   };
 
   sidebar() {

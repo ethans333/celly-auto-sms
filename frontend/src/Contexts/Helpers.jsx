@@ -110,9 +110,8 @@ export function HelpersProvider({ children }) {
    */
   async function deployWorkspace(callback) {
     api.deployWorkspace(workspaceMetaData.id).then((res) => {
-      console.log(res);
       callback();
-      setWorkspaceMetaData((p) => ({ ...p, is_deployed: true }));
+      saveWorkspace();
     });
   }
 

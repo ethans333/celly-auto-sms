@@ -107,7 +107,7 @@ export default function () {
                   secondContactValue,
                   startTime,
                   endTime,
-                  title === "" ? workspace["workspace_name"] : title
+                  title
                 )
                 .then((res) => {
                   if (res.status === 200) {
