@@ -6,6 +6,11 @@ export default function () {
 
   const date = new Date(selectedStartTime);
 
+  function geth(h) {
+    if (h > 12) return h - 12;
+    else return h;
+  }
+
   return (
     <div className="bg-gradient-to-t from-[rgba(168,85,247,0.07)] flex items-center justify-center pb-[25vh] h-screen">
       <div className="border border-200 shadow-lg rounded-xl px-14 pt-32 pb-16 bg-white text-center">
@@ -16,7 +21,7 @@ export default function () {
           {`${dow[date.getDay()]} ${
             months[date.getMonth()]
           } ${date.getDate()}th, 
-          ${date.getHours() % 12}:${date.getMinutes()}${
+          ${geth(date.getHours())}:${date.getMinutes()}${
             date.getMinutes() == 0 ? "0" : ""
           } ${date.getHours() > 11 ? "PM" : "AM"}`}
         </a>

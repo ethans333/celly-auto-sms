@@ -465,7 +465,6 @@ Resources:
       Environment:
         Variables:
           USERPOOLCLIENT_USER_POOL_CLIENT_ID: !Ref UserPoolClient
-          BOT_ID: !Ref CellyBot
       Events:
         UserApiPOSTuser:
           Type: Api
@@ -727,79 +726,6 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${getAllUserWorkspaces}
-  CellyBot:
-    Type: AWS::Lex::Bot
-    Properties:
-      IdleSessionTTLInSeconds: 300
-      RoleArn: !Sub arn:aws:iam::${AWS::AccountId}:role/aws-service-role/lexv2.amazonaws.com/AWSServiceRoleForLexV2Bots_34K6AS1XY81
-      Name: CellyBot
-      DataPrivacy:
-        ChildDirected: false
-  PinpointLexFunctionIamRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: PinpointLexFunctionRole
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Path: /
-      Policies:
-        - PolicyName: Logs
-          PolicyDocument:
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource: arn:aws:logs:*:*:*
-        - PolicyName: Pinpoint
-          PolicyDocument:
-            Statement:
-              - Effect: Allow
-                Action:
-                  - sms-voice:SendTextMessage
-                Resource: '*'
-        - PolicyName: Lex
-          PolicyDocument:
-            Statement:
-              - Effect: Allow
-                Action:
-                  - lex:PostContent
-                  - lex:PostText
-                  - lex:RecognizeText
-                Resource: !Sub arn:aws:lex:${AWS::Region}:${AWS::AccountId}:bot-alias/STPJGYCE7A/3VMZOZI7RH
-  PinpointLexFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Description: !Sub
-        - Stack ${AWS::StackName} Function ${ResourceName}
-        - ResourceName: PinpointLexFunction
-      CodeUri: src/PinpointLexFunction
-      Handler: handler.handler
-      Runtime: python3.9
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Role: !GetAtt PinpointLexFunctionIamRole.Arn
-      Events:
-        SNS1:
-          Type: SNS
-          Properties:
-            Topic: !Ref SNSTopic1
-  SNSTopic1:
-    Type: AWS::SNS::Topic
-  PinpointLexFunctionLogGroup:
-    Type: AWS::Logs::LogGroup
-    UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
-    Properties:
-      LogGroupName: !Sub /aws/lambda/${PinpointLexFunction}
   deployWorkspace:
     Type: AWS::Serverless::Function
     Properties:
@@ -814,7 +740,6 @@ Resources:
       Tracing: Active
       Environment:
         Variables:
-          BOT_ID: !Ref CellyBot
           WORKSPACESBUCKET_BUCKET_NAME: !Ref WorkspacesBucket
           WORKSPACESBUCKET_BUCKET_ARN: !GetAtt WorkspacesBucket.Arn
       Policies:
@@ -1596,6 +1521,57 @@ Resources:
               - Effect: Allow
                 Action: lambda:InvokeFunction
                 Resource: !GetAtt MeetingReminderDaily.Arn
+  MeetingConfirmationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !GetAtt MeetingConfirmation.Arn
+          Protocol: lambda
+  MeetingConfirmation:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: MeetingConfirmation
+      CodeUri: src/MeetingConfirmation
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        MeetingConfirmationTopic:
+          Type: SNS
+          Properties:
+            Topic: !Ref MeetingConfirmationTopic
+            Region: !Select
+              - 3
+              - !Split
+                - ':'
+                - !Ref MeetingConfirmationTopic
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - sms-voice:DescribePhoneNumbers
+                - sms-voice:SendTextMessage
+              Resource:
+                - !Sub arn:aws:sms-voice:${AWS::Region}:${AWS::AccountId}:phone-number/*
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ScheduledMeetingsTable
+        - LambdaInvokePolicy:
+            FunctionName: !Ref cancelScheduledMeetings
+      Environment:
+        Variables:
+          SCHEDULEDMEETINGSTABLE_TABLE_NAME: !Ref ScheduledMeetingsTable
+          SCHEDULEDMEETINGSTABLE_TABLE_ARN: !GetAtt ScheduledMeetingsTable.Arn
+          CANCELSCHEDULEDMEETINGS_FUNCTION_NAME: !Ref cancelScheduledMeetings
+          CANCELSCHEDULEDMEETINGS_FUNCTION_ARN: !GetAtt cancelScheduledMeetings.Arn
+  MeetingConfirmationLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${MeetingConfirmation}
 Metadata:
   AWS::Composer::Groups:
     Group:

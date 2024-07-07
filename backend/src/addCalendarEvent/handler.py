@@ -124,6 +124,7 @@ def handler(event, context):
                 "contact_value": {"S": body["contact_value"]},
                 "attendance_status": {"S": "PENDING"},
                 "outbound_contact_value": {"S": metadata["contact"]},
+                "latest_message_id": {"S": ""},
             },
         )
 

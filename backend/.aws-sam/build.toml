@@ -109,15 +109,6 @@ manifest_hash = "fad975d2f7b12f7080d9cf20a516c695"
 packagetype = "Zip"
 functions = ["getAllUserWorkspaces"]
 
-[function_build_definitions.72af4c69-8c85-46bc-af9f-1d37211b5e01]
-codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\PinpointLexFunction"
-runtime = "python3.9"
-architecture = "x86_64"
-handler = "handler.handler"
-manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
-packagetype = "Zip"
-functions = ["PinpointLexFunction"]
-
 [function_build_definitions.b3c1c7e0-3b12-4e0f-87b4-d41fb2ef8e21]
 codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\deployWorkspace"
 runtime = "python3.9"
@@ -234,5 +225,14 @@ handler = "handler.handler"
 manifest_hash = "fdde0fdb35a74d01e1a6e3c530f2882c"
 packagetype = "Zip"
 functions = ["cancelScheduledMeetings"]
+
+[function_build_definitions.7d1ddf29-ea83-4c0f-a3a9-b52a9f58e19f]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\MeetingConfirmation"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["MeetingConfirmation"]
 
 [layer_build_definitions]

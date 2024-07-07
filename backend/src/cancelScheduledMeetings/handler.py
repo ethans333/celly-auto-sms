@@ -13,10 +13,15 @@ def handler(event, context):
         ddb = boto3.resource("dynamodb")
         table = ddb.Table(os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"])
 
-        # get user id from access token
-        client = boto3.client("cognito-idp")
-        access_token = event["headers"]["Authorization"]
-        user_id = client.get_user(AccessToken=access_token)["Username"]
+        # get user id
+
+        if "user_id" in event:
+            user_id = event["user_id"]
+        else:
+            # get user id from access token
+            client = boto3.client("cognito-idp")
+            access_token = event["headers"]["Authorization"]
+            user_id = client.get_user(AccessToken=access_token)["Username"]
 
         body = event["body"]
 
@@ -61,23 +66,18 @@ def handler(event, context):
             )
 
             # send message to client that meeting have been canceled
-            meeting_name = (
-                meeting["meeting_name"]
-                if meeting["meeting_name"] != ""
-                else "Your Meeting"
+            email = get_cancellation_email(
+                meeting["meeting_name"], meeting["start_time"]
             )
+            text = get_cancellation_text(meeting["meeting_name"], meeting["start_time"])
 
             if meeting["contact_method"] == "Phone":
-                send_text(meeting["contact_value"], get_cancellation_text(meeting_name))
+                send_text(meeting["contact_value"], text)
             elif meeting["contact_method"] == "Email":
-                send_email(
-                    meeting["contact_value"], get_cancellation_email(meeting_name)
-                )
+                send_email(meeting["contact_value"], email)
             elif meeting["contact_method"] == "Phone & Email":
-                send_text(meeting["contact_value"], get_cancellation_text(meeting_name))
-                send_email(
-                    meeting["contact_value"], get_cancellation_email(meeting_name)
-                )
+                send_text(meeting["contact_value"], text)
+                send_email(meeting["contact_value"], email)
 
         return {
             "statusCode": 200,
@@ -149,11 +149,25 @@ def send_email(email, html):
     )
 
 
-def get_cancellation_text(meeting_name):
-    return f"{meeting_name} has been canceled."
+def get_cancellation_text(meeting_name, time):
+    if meeting_name == "":
+        meeting_name = "Your meeting"
+
+    day_of_week = datetime.fromtimestamp(float(time) / 1000).strftime("%A")
+    month_day = datetime.fromtimestamp(float(time) / 1000).strftime("%B %-d")
+    t = datetime.fromtimestamp(float(time) / 1000).strftime("%-I:%M %p")
+
+    return f"{meeting_name} for {day_of_week}, {month_day} at {t} has been CANCELED."
 
 
-def get_cancellation_email(meeting_name):
+def get_cancellation_email(meeting_name, time):
+    if meeting_name == "":
+        meeting_name = "Your meeting"
+
+    day_of_week = datetime.fromtimestamp(float(time) / 1000).strftime("%A")
+    month_day = datetime.fromtimestamp(float(time) / 1000).strftime("%B %-d")
+    t = datetime.fromtimestamp(float(time) / 1000).strftime("%-I:%M %p")
+
     return f"""
-    <p>{meeting_name} has been canceled.</p>
+    <p>{meeting_name} for {day_of_week}, {month_day} at {t} has been CANCELED.</p>
     """

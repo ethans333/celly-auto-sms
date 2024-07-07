@@ -141,7 +141,7 @@ export default function () {
 
   function Row({
     background,
-    meeting_name,
+    attendance_status,
     contact_value,
     start_time,
     end_time,
@@ -206,7 +206,12 @@ export default function () {
           <div className="truncate w-34">{dateString}</div>
         </td>
         <td className="px-6 py-4">
-          <AttendingBadge />
+          {
+            {
+              PENDING: <PendingBadge />,
+              CONFIRMED: <AttendingBadge />,
+            }[attendance_status]
+          }
         </td>
         <td className="px-6 py-4 w-16">
           <img
@@ -224,18 +229,18 @@ export default function () {
 
 function PendingBadge() {
   return (
-    <div className="flex justify-center space-x-2">
+    <div className="flex space-x-2">
       <div className="w-2 h-2 bg-yellow-500 rounded-full my-auto"></div>
-      <div className="text-yellow-500">Pending</div>
+      <div className="text-yellow-500 font-semibold">Pending</div>
     </div>
   );
 }
 
 function AttendingBadge() {
   return (
-    <div className="flex justify-center space-x-2">
+    <div className="flex space-x-2">
       <div className="w-2 h-2 bg-green-500 rounded-full my-auto"></div>
-      <div className="text-green-500">Attending</div>
+      <div className="text-green-500 font-semibold">Attending</div>
     </div>
   );
 }
