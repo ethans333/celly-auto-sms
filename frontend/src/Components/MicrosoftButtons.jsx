@@ -28,9 +28,9 @@ export function LinkToGraph() {
 
 export function AlreadyLinked() {
   return (
-    <div className="flex space-x-3 rounded-lg shadow w-full px-5 py-3 bg-green-400 text-white">
+    <div className="flex space-x-3 rounded-lg shadow w-full px-5 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white">
       <img src={windows} alt="microsoft-logo" className="w-5" />
-      <div className="font-[400]">Microsoft Linked</div>
+      <div className="font-[500]">Microsoft Linked</div>
     </div>
   );
 }
