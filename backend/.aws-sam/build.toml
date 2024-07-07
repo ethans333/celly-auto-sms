@@ -222,7 +222,7 @@ codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\MeetingReminder"
 runtime = "python3.9"
 architecture = "x86_64"
 handler = "handler.handler"
-manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+manifest_hash = "07c1a5bba43ad4584fb3d7ee0be01799"
 packagetype = "Zip"
 functions = ["MeetingReminderHourly", "MeetingReminderDaily"]
 

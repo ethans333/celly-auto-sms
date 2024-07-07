@@ -14,10 +14,8 @@ def handler(event, context):
 
     now = int(datetime.now(pytz.timezone("US/Eastern")).timestamp()) * 1000
     meetings = table.scan(
-        FilterExpression=Attr("end_time")
-        .gt(now)
-        .And("end_time")
-        .lt(now + 60 * 60 * 1000),
+        FilterExpression=Attr("end_time").gt(now)
+        & Attr("end_time").lt(now + 60 * 60 * 1000),
     )[
         "Items"
     ]  # between now and one hour from now
@@ -41,7 +39,6 @@ def handler(event, context):
 
     return {
         "reminders_sent": len(meetings),
-        "now": str(int(datetime.now(pytz.timezone("US/Eastern")).timestamp()) * 1000),
     }
 
 
