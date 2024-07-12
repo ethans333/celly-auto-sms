@@ -257,19 +257,6 @@ function LoadingRow({ i }) {
   );
 }
 
-function convertUTCToLocal(utcTimestampInMilliseconds) {
-  // Create a new Date object using the UTC timestamp in milliseconds
-  const date = new Date(utcTimestampInMilliseconds);
-
-  // Get the local time offset in minutes and convert it to milliseconds
-  const localTimeOffset = date.getTimezoneOffset() * 60000;
-
-  // Create a new Date object that represents the local time
-  const localDate = new Date(date.getTime() - localTimeOffset);
-
-  return localDate;
-}
-
 function convertTimestamp(timestamp) {
   // Create a Date object using the timestamp in milliseconds
   const date = new Date(timestamp);

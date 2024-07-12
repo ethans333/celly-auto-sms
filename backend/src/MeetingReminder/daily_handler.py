@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 import boto3
 import pytz
@@ -21,12 +21,14 @@ def handler(event, context):
     for meeting in meetings:
         email = meeting_reminder_email(
             meeting["start_time"],
+            meeting["timezone"],
             meeting["meeting_name"],
             meeting["outbound_contact_value"],
             meeting["id"],
         )
         text = meeting_reminder_text(
             meeting["start_time"],
+            meeting["timezone"],
             meeting["meeting_name"],
             meeting["outbound_contact_value"],
         )
@@ -100,13 +102,23 @@ def send_email(email, html):
     )
 
 
-def meeting_reminder_email(time, meeting_name, outbound_contact, meeting_id):
+def meeting_reminder_email(time, tz, meeting_name, outbound_contact, meeting_id):
     if meeting_name == "":
         meeting_name = "your meeting"
 
-    day_of_week = datetime.fromtimestamp(float(time) / 1000).strftime("%A")
-    month_day = datetime.fromtimestamp(float(time) / 1000).strftime("%B %-d")
-    t = datetime.fromtimestamp(float(time) / 1000).strftime("%-I:%M %p")
+    # Convert timestamp to datetime object in UTC
+    utc_dt = datetime.utcfromtimestamp(float(time) / 1000)
+
+    # Get the timezone object for the desired timezone
+    timezone = pytz.timezone(tz)
+
+    # Convert UTC datetime to the desired timezone
+    localized_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(timezone)
+
+    # Format the localized datetime
+    day_of_week = localized_dt.strftime("%A")
+    month_day = localized_dt.strftime("%B %-d")
+    t = localized_dt.strftime("%-I:%M %p")
 
     s = f"Just a reminder that {meeting_name} starts on {day_of_week}, {month_day} at {t}."
 
@@ -130,13 +142,23 @@ def meeting_reminder_email(time, meeting_name, outbound_contact, meeting_id):
     """
 
 
-def meeting_reminder_text(time, meeting_name, outbound_contact):
+def meeting_reminder_text(time, tz, meeting_name, outbound_contact):
     if meeting_name == "":
         meeting_name = "your meeting"
 
-    day_of_week = datetime.fromtimestamp(float(time) / 1000).strftime("%A")
-    month_day = datetime.fromtimestamp(float(time) / 1000).strftime("%B %-d")
-    t = datetime.fromtimestamp(float(time) / 1000).strftime("%-I:%M %p")
+    # Convert timestamp to datetime object in UTC
+    utc_dt = datetime.utcfromtimestamp(float(time) / 1000)
+
+    # Get the timezone object for the desired timezone
+    timezone = pytz.timezone(tz)
+
+    # Convert UTC datetime to the desired timezone
+    localized_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(timezone)
+
+    # Format the localized datetime
+    day_of_week = localized_dt.strftime("%A")
+    month_day = localized_dt.strftime("%B %-d")
+    t = localized_dt.strftime("%-I:%M %p")
 
     s = f"Just a reminder that {meeting_name} starts on {day_of_week}, {month_day} at {t}."
 
