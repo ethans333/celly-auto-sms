@@ -472,3 +472,16 @@ export async function cancelScheduledMeetings(workspace_id, meetings) {
 
   return await response.text(); // error
 }
+
+export async function cancelMeeting(meeting_id) {
+  const response = await fetch(
+    import.meta.env.VITE_SCHEDULING_API_URL + "/scheduling/" + meeting_id,
+    {
+      method: "DELETE",
+    }
+  );
+
+  if (response.status === 200) return response.json();
+
+  return await response.text(); // error
+}

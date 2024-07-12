@@ -235,4 +235,13 @@ manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
 packagetype = "Zip"
 functions = ["MeetingConfirmation"]
 
+[function_build_definitions.6f576683-7e09-40b9-ad77-73bd22744e84]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\cancelMeeting"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["cancelMeeting"]
+
 [layer_build_definitions]

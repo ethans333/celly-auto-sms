@@ -23,6 +23,7 @@ def handler(event, context):
             meeting["start_time"],
             meeting["meeting_name"],
             meeting["outbound_contact_value"],
+            meeting["id"],
         )
         text = meeting_reminder_text(
             meeting["start_time"],
@@ -97,7 +98,7 @@ def send_email(email, html):
     )
 
 
-def meeting_reminder_email(time, meeting_name, outbound_contact):
+def meeting_reminder_email(time, meeting_name, outbound_contact, meeting_id):
     if meeting_name == "":
         meeting_name = "your meeting"
 
@@ -115,6 +116,12 @@ def meeting_reminder_email(time, meeting_name, outbound_contact):
     <body>
     <p>
         {s}
+    </p>
+    <p>
+        To confim visit <a href='https://intwine.app/confirm-meeting/{meeting_id}'>confirm</a>
+    </p>
+    <p>
+        To cancel visit <a href='https://intwine.app/cancel-meeting/{meeting_id}'>cancel</a>
     </p>
     </body>
     </html>

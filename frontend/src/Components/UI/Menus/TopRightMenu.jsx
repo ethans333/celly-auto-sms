@@ -22,7 +22,7 @@ export default function () {
         visibility:
           Object.keys(workspaceMetaData).length > 0 ? "visible" : "hidden",
       }}
-      className="flex pr-5 mt-3.5 h-fit space-x-2.5"
+      className="flex pl-2 pr-7 pt-3.5 h-fit space-x-2.5"
     >
       {/* Save */}
       <LabeledSquareButton icon={floppy} label="Save" onClick={saveWorkspace} />

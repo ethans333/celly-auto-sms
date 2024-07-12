@@ -14,6 +14,7 @@ import Login from "./Pages/Auth/Login.jsx";
 import Register from "./Pages/Auth/Register.jsx";
 import ConfirmCode from "./Pages/Auth/ConfirmCode.jsx";
 import Scheduling from "./Pages/Scheduling.jsx";
+import CancelMeeting from "./Pages/CancelMeeting.jsx";
 
 // Contexts
 import { HelpersProvider } from "./Contexts/Helpers.jsx";
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
   { path: "/register", element: <Register /> },
   { path: "/confirm-code", element: <ConfirmCode /> },
   { path: "/scheduling/:user_id/:id", element: <Scheduling /> },
+  { path: "/cancel-meeting/:id", element: <CancelMeeting /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
