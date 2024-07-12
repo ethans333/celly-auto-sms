@@ -411,6 +411,7 @@ export async function addCalendarEvent(
         start_time: startTime,
         end_time: endTime,
         meeting_name: meeting_name,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       }),
     }
   );
@@ -478,6 +479,19 @@ export async function cancelMeeting(meeting_id) {
     import.meta.env.VITE_SCHEDULING_API_URL + "/scheduling/" + meeting_id,
     {
       method: "DELETE",
+    }
+  );
+
+  if (response.status === 200) return response.json();
+
+  return await response.text(); // error
+}
+
+export async function confirmMeeting(meeting_id) {
+  const response = await fetch(
+    import.meta.env.VITE_SCHEDULING_API_URL + "/scheduling/" + meeting_id,
+    {
+      method: "PUT",
     }
   );
 

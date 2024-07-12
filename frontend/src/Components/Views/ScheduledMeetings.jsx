@@ -21,7 +21,7 @@ export default function () {
 
   useEffect(() => {
     fetchMeetings();
-  }, [workspaceMetaData?.id]);
+  }, [workspaceMetaData]);
 
   function fetchMeetings() {
     getScheduledMeetings(workspaceMetaData?.id).then((m) => {
@@ -31,8 +31,14 @@ export default function () {
       }
 
       // Get future meetings only
+      const currentTime = new Date();
+      const utcOffset = currentTime.getTimezoneOffset() * 60000;
+      const currentTimeInUtc = new Date(currentTime - utcOffset);
+
       setMeetings(
-        m.filter((mting) => parseInt(mting.end_time) > new Date().getTime())
+        m.filter((mting) => {
+          return parseInt(mting.end_time) > currentTimeInUtc.getTime();
+        })
       );
     });
   }
@@ -97,7 +103,7 @@ export default function () {
                     Date
                   </th>
                   <th scope="col" className="px-6 py-3 tracking-wide">
-                    Attending?
+                    Confirmations
                   </th>
                   <th scope="col" className="px-6 py-3 tracking-wide w-16"></th>
                 </tr>
@@ -141,7 +147,8 @@ export default function () {
 
   function Row({
     background,
-    attendance_status,
+    confirmations_confirmed,
+    confirmations_sent,
     contact_value,
     start_time,
     end_time,
@@ -150,21 +157,7 @@ export default function () {
   }) {
     const { setSidebar } = useContext(WorkspaceContext);
 
-    const dateOptions = {
-      weekday: "long",
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-    };
-    const dateString = time.toLocaleDateString("en-us", dateOptions);
-
-    const hourOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-      timeZone: "UTC",
-    };
-    const timeString = time.toLocaleTimeString("en-us", hourOptions);
+    const { timeString, dateString } = convertTimestamp(time);
 
     const startDate = new Date(parseInt(start_time));
     const endDate = new Date(parseInt(end_time));
@@ -205,13 +198,13 @@ export default function () {
         <td className="px-6 py-4">
           <div className="truncate w-34">{dateString}</div>
         </td>
-        <td className="px-6 py-4">
-          {
-            {
-              PENDING: <PendingBadge />,
-              CONFIRMED: <AttendingBadge />,
-            }[attendance_status]
-          }
+        <td className="px-6 py-4 w-24">
+          <div className="flex justify-center">
+            <Confirmations
+              n={confirmations_confirmed}
+              total={confirmations_sent}
+            />
+          </div>
         </td>
         <td className="px-6 py-4 w-16">
           <img
@@ -227,20 +220,10 @@ export default function () {
   }
 }
 
-function PendingBadge() {
+function Confirmations({ n, total }) {
   return (
-    <div className="flex space-x-2">
-      <div className="w-2 h-2 bg-yellow-500 rounded-full my-auto"></div>
-      <div className="text-yellow-500 font-semibold">Pending</div>
-    </div>
-  );
-}
-
-function AttendingBadge() {
-  return (
-    <div className="flex space-x-2">
-      <div className="w-2 h-2 bg-green-500 rounded-full my-auto"></div>
-      <div className="text-green-500 font-semibold">Attending</div>
+    <div className="flex space-x-2 font-semibold text-gray-900">
+      {n}/{total}
     </div>
   );
 }
@@ -272,4 +255,46 @@ function LoadingRow({ i }) {
       </td>
     </tr>
   );
+}
+
+function convertUTCToLocal(utcTimestampInMilliseconds) {
+  // Create a new Date object using the UTC timestamp in milliseconds
+  const date = new Date(utcTimestampInMilliseconds);
+
+  // Get the local time offset in minutes and convert it to milliseconds
+  const localTimeOffset = date.getTimezoneOffset() * 60000;
+
+  // Create a new Date object that represents the local time
+  const localDate = new Date(date.getTime() - localTimeOffset);
+
+  return localDate;
+}
+
+function convertTimestamp(timestamp) {
+  // Create a Date object using the timestamp in milliseconds
+  const date = new Date(timestamp);
+
+  // Get the hours, minutes, and AM/PM indicator
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const period = hours >= 12 ? "PM" : "AM";
+
+  // Convert hours from 24-hour format to 12-hour format
+  hours = hours % 12;
+  hours = hours ? hours : 12; // Handle midnight (0 hours) as 12 AM
+
+  // Format the timeString as HH:MM AM/PM with preceding zero if minute is a single digit
+  const timeString = `${hours}:${
+    minutes < 10 ? "0" + minutes : minutes
+  } ${period}`;
+
+  // Get the day, month, and year
+  const day = date.getDate();
+  const month = date.getMonth() + 1; // Months are zero-based, so add 1
+  const year = date.getFullYear();
+
+  // Format the dateString as MM/DD/YYYY with no preceding zeros
+  const dateString = `${month}/${day}/${year}`;
+
+  return { timeString, dateString };
 }

@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime
 
 import boto3
+import pytz
 import requests
 from jose import jwt
 
@@ -66,11 +67,11 @@ def handler(event, context):
                     },
                     "start": {
                         "dateTime": start_time,
-                        "timeZone": "Eastern Standard Time",
+                        "timeZone": body["timezone"],
                     },
                     "end": {
                         "dateTime": end_time,
-                        "timeZone": "Eastern Standard Time",
+                        "timeZone": body["timezone"],
                     },
                     "location": {"displayName": "Over the Phone"},
                     "attendees": [
@@ -85,6 +86,10 @@ def handler(event, context):
                 }
             ),
         ).json()
+
+        # convert start and end times to utc
+        start_time_utc = convert_to_utc(body["start_time"], body["timezone"])
+        end_time_utc = convert_to_utc(body["end_time"], body["timezone"])
 
         # notify client of appointment
         if body["contact_method"] == "Email":
@@ -118,13 +123,15 @@ def handler(event, context):
                 "workspace_name": {"S": workspace_name},
                 "meeting_name": {"S": body["meeting_name"]},
                 "event_id": {"S": events_response["id"]},
-                "start_time": {"N": str(body["start_time"])},
-                "end_time": {"N": str(body["end_time"])},
+                "start_time": {"N": str(start_time_utc)},
+                "end_time": {"N": str(end_time_utc)},
                 "contact_method": {"S": body["contact_method"]},
                 "contact_value": {"S": body["contact_value"]},
-                "attendance_status": {"S": "PENDING"},
+                "confirmations_confirmed": {"N": "0"},
+                "confirmations_sent": {"N": "0"},
                 "outbound_contact_value": {"S": metadata["contact"]},
                 "latest_message_id": {"S": ""},
+                "timezone": {"S": body["timezone"]},
             },
         )
 
@@ -223,3 +230,28 @@ def get_schedule_email(time, meeting_name="Your meeting"):
     </body>
     </html>
     """
+
+
+def convert_to_utc(unix_timestamp, timezone_str):
+    """
+    unix_timestamp: int, in milliseconds
+    timezone_str: string, e.g. "America/New_York"
+
+    returns: int, in milliseconds
+    """
+    # Create a timezone object from the provided timezone string
+    local_timezone = pytz.timezone(timezone_str)
+
+    # Convert the Unix timestamp to a naive datetime object
+    naive_datetime = datetime.fromtimestamp(float(unix_timestamp / 1000))
+
+    # Localize the naive datetime to the provided timezone
+    local_datetime = local_timezone.localize(naive_datetime)
+
+    # Convert the localized datetime to UTC
+    utc_datetime = local_datetime.astimezone(pytz.utc)
+
+    # Convert the UTC datetime to a Unix timestamp in milliseconds
+    utc_timestamp = int(utc_datetime.timestamp()) * 1000
+
+    return utc_timestamp

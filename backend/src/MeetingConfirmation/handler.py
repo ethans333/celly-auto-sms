@@ -6,6 +6,7 @@ import boto3
 from boto3.dynamodb.conditions import Attr
 
 
+# meeting confirmation via text
 def handler(event, context):
     table = boto3.resource("dynamodb").Table(
         os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"]
@@ -31,7 +32,9 @@ def handler(event, context):
                 meeting_name = "Your meeting"
 
             if reply == "C":
-                meeting["attendance_status"] = "CONFIRMED"
+                meeting["confirmations_confirmed"] = (
+                    int(meeting["confirmations_confirmed"]) + 1
+                )
                 response_message = (
                     f"{meeting_name} has been confirmed. Your host has been notified."
                 )
@@ -39,12 +42,12 @@ def handler(event, context):
                 # send confirmation message
                 send_text(number, response_message)
 
-                # update attendance status
+                # update number of confirmations confirmed by user
                 table.update_item(
                     Key={"id": meeting["id"]},
-                    UpdateExpression="set attendance_status = :as, latest_message_id = :empty_s",
+                    UpdateExpression="set confirmations_confirmed = confirmations_confirmed + :val, latest_message_id = :empty_s",
                     ExpressionAttributeValues={
-                        ":as": meeting["attendance_status"],
+                        ":val": 1,
                         ":empty_s": "",
                     },
                 )

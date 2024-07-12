@@ -132,7 +132,7 @@ codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\addCalendarEvent"
 runtime = "python3.9"
 architecture = "x86_64"
 handler = "handler.handler"
-manifest_hash = "fdde0fdb35a74d01e1a6e3c530f2882c"
+manifest_hash = "2181aaa5bd58ba31a8a66734d869e476"
 packagetype = "Zip"
 functions = ["addCalendarEvent"]
 
@@ -243,5 +243,14 @@ handler = "handler.handler"
 manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
 packagetype = "Zip"
 functions = ["cancelMeeting"]
+
+[function_build_definitions.0e6a9827-5c13-423e-aaa4-321bad25a19a]
+codeuri = "E:\\Work\\celly-auto-sms\\backend\\src\\confirmMeeting"
+runtime = "python3.9"
+architecture = "x86_64"
+handler = "handler.handler"
+manifest_hash = "d41d8cd98f00b204e9800998ecf8427e"
+packagetype = "Zip"
+functions = ["confirmMeeting"]
 
 [layer_build_definitions]

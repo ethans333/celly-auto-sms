@@ -88,7 +88,7 @@ export default function () {
             {...currentWeek.map((d) => <TimeColumn day={d} />)}
           </div>
         </div>
-        <div className="flex items-center tracking-wide">
+        <div className="flex items-center tracking-wide mt-10">
           <div className="w-3 h-3 bg-white border"></div>
           <div className="text-sm ml-2">Available</div>
           <div className="w-3 h-3 ml-5 bg-gray-100 border"></div>

@@ -14,7 +14,7 @@ def handler(event, context):
 
     meetings = table.scan(
         FilterExpression=Attr("end_time").gt(
-            int(datetime.now(pytz.timezone("US/Eastern")).timestamp()) * 1000
+            int(datetime.now(pytz.timezone("UTC")).timestamp()) * 1000
         ),
     )["Items"]
 
@@ -36,11 +36,13 @@ def handler(event, context):
             send_email(meeting["contact_value"], email)
         elif meeting["contact_method"] == "Phone":
             # send reminder via phone
-            send_text(meeting["contact_value"], text, meeting["meeting_id"])
+            send_text(meeting["contact_value"], text, meeting["id"])
         elif meeting["contact_method"] == "Phone & Email":
             # send reminder via email and phone
             send_email(meeting["contact_value"], email)
-            send_text(meeting["contact_value"], text, meeting["meeting_id"])
+            send_text(meeting["contact_value"], text, meeting["id"])
+
+        increment_confirmations_sent(meeting)
     return {
         "reminders_sent": len(meetings),
     }
@@ -144,3 +146,14 @@ def meeting_reminder_text(time, meeting_name, outbound_contact):
     s += " Text C to confirm or X to cancel."
 
     return s
+
+
+def increment_confirmations_sent(meeting):
+    table = boto3.resource("dynamodb").Table(
+        os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"]
+    )
+    table.update_item(
+        Key={"id": meeting["id"]},
+        UpdateExpression="SET confirmations_sent = confirmations_sent + :val",
+        ExpressionAttributeValues={":val": 1},
+    )

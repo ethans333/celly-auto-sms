@@ -818,6 +818,12 @@ Resources:
                 type: aws_proxy
                 uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${cancelMeeting.Arn}/invocations
               responses: {}
+            put:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${confirmMeeting.Arn}/invocations
+              responses: {}
       EndpointConfiguration: REGIONAL
       TracingEnabled: true
       Cors:
@@ -1613,6 +1619,37 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/lambda/${cancelMeeting}
+  confirmMeeting:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: !Sub
+        - Stack ${AWS::StackName} Function ${ResourceName}
+        - ResourceName: confirmMeeting
+      CodeUri: src/confirmMeeting
+      Handler: handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Events:
+        SchedulingApiPUTschedulingid:
+          Type: Api
+          Properties:
+            Path: /scheduling/{id}
+            Method: PUT
+            RestApiId: !Ref SchedulingApi
+      Environment:
+        Variables:
+          SCHEDULEDMEETINGSTABLE_TABLE_NAME: !Ref ScheduledMeetingsTable
+          SCHEDULEDMEETINGSTABLE_TABLE_ARN: !GetAtt ScheduledMeetingsTable.Arn
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ScheduledMeetingsTable
+  confirmMeetingLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${confirmMeeting}
 Metadata:
   AWS::Composer::Groups:
     Group:
@@ -1653,6 +1690,7 @@ Metadata:
         - getAvailability
         - addCalendarEvent
         - cancelMeeting
+        - confirmMeeting
     Group7:
       Label: External Service Link
       Members:

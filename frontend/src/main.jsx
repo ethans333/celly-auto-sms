@@ -15,6 +15,7 @@ import Register from "./Pages/Auth/Register.jsx";
 import ConfirmCode from "./Pages/Auth/ConfirmCode.jsx";
 import Scheduling from "./Pages/Scheduling.jsx";
 import CancelMeeting from "./Pages/CancelMeeting.jsx";
+import ConfirmMeeting from "./Pages/ConfirmMeeting.jsx";
 
 // Contexts
 import { HelpersProvider } from "./Contexts/Helpers.jsx";
@@ -38,12 +39,11 @@ const router = createBrowserRouter([
   { path: "/confirm-code", element: <ConfirmCode /> },
   { path: "/scheduling/:user_id/:id", element: <Scheduling /> },
   { path: "/cancel-meeting/:id", element: <CancelMeeting /> },
+  { path: "/confirm-meeting/:id", element: <ConfirmMeeting /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <MsalProvider instance={msalInstance}>
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>
+    <RouterProvider router={router} />
   </MsalProvider>
 );

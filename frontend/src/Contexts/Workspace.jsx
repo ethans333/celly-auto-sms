@@ -35,7 +35,7 @@ export function WorkspaceProvider({ children }) {
 
   const emojis = ["💼", "🏢", "🗂️", "📅", "💰", "🏛️", "📨", "📋", "☕"];
 
-  const [currentView, setCurrentView] = useState(Views.Project);
+  const [currentView, setCurrentView] = useState(Views.ScheduledMeetings);
 
   return (
     <WorkspaceContext.Provider

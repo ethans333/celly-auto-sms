@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 import boto3
 
@@ -23,10 +24,10 @@ def handler(event, context):
             },
         )
 
-        # convert decimal times to time string
+        # convert decimal values to strings for json serialization
         for meeting in response["Items"]:
-            meeting["start_time"] = str(meeting["start_time"])
-            meeting["end_time"] = str(meeting["end_time"])
+            for key in meeting.keys():
+                meeting[key] = str(meeting[key])
 
         return {
             "statusCode": 200,
@@ -45,7 +46,7 @@ def handler(event, context):
     except Exception as e:
         return {
             "statusCode": 500,
-            "body": str(e),
+            "body": f"ERROR: line {sys.exc_info()[-1].tb_lineno}, {str(e)}",
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",
