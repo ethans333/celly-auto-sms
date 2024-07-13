@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import * as api from "../api";
 
 export default function () {
-  let { id } = useParams();
+  let { id, token } = useParams();
 
   useEffect(() => {
-    api.confirmMeeting(id).then((res) => {
+    api.confirmMeeting(id, token).then((res) => {
       console.log(res);
     });
   }, []);

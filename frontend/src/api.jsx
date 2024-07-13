@@ -487,9 +487,13 @@ export async function cancelMeeting(meeting_id) {
   return await response.text(); // error
 }
 
-export async function confirmMeeting(meeting_id) {
+export async function confirmMeeting(meeting_id, confirmation_token) {
   const response = await fetch(
-    import.meta.env.VITE_SCHEDULING_API_URL + "/scheduling/" + meeting_id,
+    import.meta.env.VITE_SCHEDULING_API_URL +
+      "/scheduling/" +
+      meeting_id +
+      "/" +
+      confirmation_token,
     {
       method: "PUT",
     }

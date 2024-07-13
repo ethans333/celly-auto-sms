@@ -132,6 +132,7 @@ def handler(event, context):
                 "outbound_contact_value": {"S": metadata["contact"]},
                 "latest_message_id": {"S": ""},
                 "timezone": {"S": body["timezone"]},
+                "confirmation_token": {"S": ""},
             },
         )
 

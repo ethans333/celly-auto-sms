@@ -39,7 +39,7 @@ const router = createBrowserRouter([
   { path: "/confirm-code", element: <ConfirmCode /> },
   { path: "/scheduling/:user_id/:id", element: <Scheduling /> },
   { path: "/cancel-meeting/:id", element: <CancelMeeting /> },
-  { path: "/confirm-meeting/:id", element: <ConfirmMeeting /> },
+  { path: "/confirm-meeting/:id/:token", element: <ConfirmMeeting /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

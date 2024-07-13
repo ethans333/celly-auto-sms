@@ -818,6 +818,7 @@ Resources:
                 type: aws_proxy
                 uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${cancelMeeting.Arn}/invocations
               responses: {}
+          /scheduling/{id}/{token}:
             put:
               x-amazon-apigateway-integration:
                 httpMethod: POST
@@ -1631,13 +1632,6 @@ Resources:
       MemorySize: 3008
       Timeout: 30
       Tracing: Active
-      Events:
-        SchedulingApiPUTschedulingid:
-          Type: Api
-          Properties:
-            Path: /scheduling/{id}
-            Method: PUT
-            RestApiId: !Ref SchedulingApi
       Environment:
         Variables:
           SCHEDULEDMEETINGSTABLE_TABLE_NAME: !Ref ScheduledMeetingsTable
@@ -1645,6 +1639,13 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref ScheduledMeetingsTable
+      Events:
+        SchedulingApiPUTschedulingidtoken:
+          Type: Api
+          Properties:
+            Path: /scheduling/{id}/{token}
+            Method: PUT
+            RestApiId: !Ref SchedulingApi
   confirmMeetingLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Retain

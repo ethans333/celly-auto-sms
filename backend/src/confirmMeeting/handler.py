@@ -8,6 +8,7 @@ import boto3
 def handler(event, context):
     try:
         meeting_id = event["pathParameters"]["id"]
+        confirmation_token = event["pathParameters"]["token"]
 
         ddb = boto3.resource("dynamodb")
         table = ddb.Table(os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"])
@@ -15,26 +16,18 @@ def handler(event, context):
         meeting = table.get_item(Key={"id": meeting_id})
 
         if "Item" not in meeting:
-            return {
-                "statusCode": 404,
-                "body": json.dumps(
-                    {
-                        "message": "Meeting not found.",
-                    }
-                ),
-                "headers": {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Headers": "*",
-                    "Access-Control-Allow-Methods": "*",
-                    "Content-Type": "application/json",
-                },
-            }
+            raise Exception("Meeting not found")
+        elif meeting["Item"]["confirmation_token"] == confirmation_token:
+            raise Exception("Meeting already confirmed")
 
         # update the number of confirmations confirmed by the user
         table.update_item(
             Key={"id": meeting_id},
-            UpdateExpression="SET confirmations_confirmed = confirmations_confirmed + :val",
-            ExpressionAttributeValues={":val": 1},
+            UpdateExpression="SET confirmations_confirmed = confirmations_confirmed + :val, confirmation_token = :token",
+            ExpressionAttributeValues={
+                ":val": 1,
+                ":token": confirmation_token,
+            },
         )
 
         return {

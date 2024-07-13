@@ -1,11 +1,11 @@
-import json
 import os
-import time
+import uuid
 from datetime import datetime
 
 import boto3
 import pytz
 from boto3.dynamodb.conditions import Attr
+from util import increment_confirmations_sent, send_email, send_text
 
 
 def handler(event, context):
@@ -54,58 +54,6 @@ def handler(event, context):
     }
 
 
-def send_text(phone, message, meeting_id):
-    pinpoint = boto3.client("pinpoint-sms-voice-v2")
-
-    # get sender_id
-    phone_nums = pinpoint.describe_phone_numbers()
-
-    if len(phone_nums["PhoneNumbers"]) == 0:
-        raise Exception(
-            "No phone numbers found. You need to register a phone number in pinpoint."
-        )
-
-    originator_id = phone_nums["PhoneNumbers"][0]["PhoneNumberId"]
-
-    response = pinpoint.send_text_message(
-        DestinationPhoneNumber=f"+1{phone}",
-        OriginationIdentity=originator_id,
-        MessageBody=message,
-        MessageType="TRANSACTIONAL",
-    )
-
-    # update latest message id
-    table = boto3.resource("dynamodb").Table(
-        os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"]
-    )
-    table.update_item(
-        Key={"id": meeting_id},
-        UpdateExpression="SET latest_message_id = :val",
-        ExpressionAttributeValues={":val": response["MessageId"]},
-    )
-
-
-def send_email(email, html):
-    ses = boto3.client("ses")
-
-    ses.send_email(
-        Source="no-reply@intwine.app",
-        Destination={
-            "ToAddresses": [email],
-        },
-        Message={
-            "Subject": {
-                "Data": "Meeting Reminder",
-            },
-            "Body": {
-                "Html": {
-                    "Data": html,
-                },
-            },
-        },
-    )
-
-
 def meeting_reminder_email(time, tz, meeting_name, outbound_contact, meeting_id):
     if meeting_name == "":
         meeting_name = "your meeting"
@@ -127,6 +75,19 @@ def meeting_reminder_email(time, tz, meeting_name, outbound_contact, meeting_id)
     if outbound_contact != "":
         s += f" You will be contacted by {outbound_contact}."
 
+    # generate confirmation token to track last confirmation sent
+    confirmation_token = uuid.uuid4().hex
+
+    # update table with confirmation token
+    table = boto3.resource("dynamodb").Table(
+        os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"]
+    )
+    table.update_item(
+        Key={"id": meeting_id},
+        UpdateExpression="SET confirmation_token = :val",
+        ExpressionAttributeValues={":val": confirmation_token},
+    )
+
     return f"""
     <html>
     <body>
@@ -134,10 +95,10 @@ def meeting_reminder_email(time, tz, meeting_name, outbound_contact, meeting_id)
         {s}
     </p>
     <p>
-        To confim visit <a href='https://intwine.app/confirm-meeting/{meeting_id}'>confirm</a>
+        To confim visit <a href='https://intwine.app/confirm-meeting/{meeting_id}/{confirmation_token}'>confirm</a>
     </p>
     <p>
-        To cancel visit <a href='https://intwine.app/confirm-meeting/{meeting_id}'>cancel</a>
+        To cancel visit <a href='https://intwine.app/cancel-meeting/{meeting_id}'>cancel</a>
     </p>
     </body>
     </html>
@@ -168,14 +129,3 @@ def meeting_reminder_text(time, tz, meeting_name, outbound_contact):
     s += " Text C to confirm or X to cancel."
 
     return s
-
-
-def increment_confirmations_sent(meeting):
-    table = boto3.resource("dynamodb").Table(
-        os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"]
-    )
-    table.update_item(
-        Key={"id": meeting["id"]},
-        UpdateExpression="SET confirmations_sent = confirmations_sent + :val",
-        ExpressionAttributeValues={":val": 1},
-    )
