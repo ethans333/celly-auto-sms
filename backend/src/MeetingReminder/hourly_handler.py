@@ -5,6 +5,7 @@ from datetime import datetime
 import boto3
 import pytz
 from boto3.dynamodb.conditions import Attr
+from reminder_email import reminder_email
 from util import increment_confirmations_sent, send_email, send_text
 
 
@@ -70,11 +71,6 @@ def meeting_reminder_email(time, tz, meeting_name, outbound_contact, meeting_id)
     # Format the localized datetime
     t = localized_dt.strftime("%-I:%M %p")
 
-    s = f"Just a reminder that {meeting_name} starts in less than an hour! (@ {t})."
-
-    if outbound_contact != "":
-        s += f" You will be contacted by {outbound_contact}."
-
     # generate confirmation token to track last confirmation sent
     confirmation_token = uuid.uuid4().hex
 
@@ -88,21 +84,16 @@ def meeting_reminder_email(time, tz, meeting_name, outbound_contact, meeting_id)
         ExpressionAttributeValues={":val": confirmation_token},
     )
 
-    return f"""
-    <html>
-    <body>
-    <p>
-        {s}
-    </p>
-    <p>
-        To confim visit <a href='https://intwine.app/confirm-meeting/{meeting_id}/{confirmation_token}'>confirm</a>
-    </p>
-    <p>
-        To cancel visit <a href='https://intwine.app/cancel-meeting/{meeting_id}'>cancel</a>
-    </p>
-    </body>
-    </html>
+    # build email body
+
+    s = f"""
+        Just a reminder that <a style='font-weight: 800'>{meeting_name}</a> starts in <a style='font-weight: 800'>less than an hour, at {t}</a>.
     """
+
+    if outbound_contact != "":
+        s += f" You will be contacted by <a style='font-weight: 800'>{outbound_contact}</a>."
+
+    return reminder_email(s, meeting_id, confirmation_token)
 
 
 def meeting_reminder_text(time, tz, meeting_name, outbound_contact):
