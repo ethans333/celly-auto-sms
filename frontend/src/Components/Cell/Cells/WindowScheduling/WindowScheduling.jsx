@@ -4,7 +4,7 @@ import clock_icon from "../../../../assets/clock-solid.svg";
 
 export class WindowScheduling extends Cell {
   title = "Window Scheduling";
-  description = "Schedule based off time windows.";
+  description = "Schedule with time windows.";
   icon = clock_icon;
   typename = "windowscheduling";
   state = {

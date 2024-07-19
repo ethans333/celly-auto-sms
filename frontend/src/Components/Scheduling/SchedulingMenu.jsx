@@ -2,7 +2,7 @@ import Dropdown from "react-dropdown";
 import caret from "../../assets/caret-down-solid.svg";
 import * as api from "../../api";
 import { useState, useContext } from "react";
-import { SchedulingContext } from "../../Pages/Scheduling";
+import { SchedulingContext } from "../../Contexts/Scheduling";
 
 export default function () {
   const contactOptions = ["Phone", "Email", "Phone & Email"]; // must match values in addCalendarEvent of backend
@@ -116,7 +116,7 @@ export default function () {
                   }
                 });
             }}
-            className="bg-black font-semibold text-white w-64 xl:w-full rounded-lg py-2 mt-7 hover:bg-gray-300 hover:text-black"
+            className="bg-gradient-to-r from-violet-600 to-indigo-600 font-semibold text-white w-64 xl:w-full rounded-lg py-2 mt-7 hover:opacity-50 shadow-lg shadow-indigo-500/50"
           >
             Schedule
           </button>

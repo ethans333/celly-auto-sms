@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SchedulingContext } from "../../Pages/Scheduling";
+import { SchedulingContext } from "../../Contexts/Scheduling";
 
 export default function () {
   const { selectedStartTime } = useContext(SchedulingContext);

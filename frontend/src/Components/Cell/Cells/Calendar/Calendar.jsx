@@ -4,7 +4,7 @@ import calendar_icon from "../../../../assets/calendar-solid.svg";
 
 export class Calendar extends Cell {
   title = "Scheduling Cell";
-  description = "Calendar for scheduling events.";
+  description = "Schedule with a calendar.";
   icon = calendar_icon;
   typename = "calendar";
   state = {

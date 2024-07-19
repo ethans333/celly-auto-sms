@@ -14,6 +14,7 @@ import Login from "./Pages/Auth/Login.jsx";
 import Register from "./Pages/Auth/Register.jsx";
 import ConfirmCode from "./Pages/Auth/ConfirmCode.jsx";
 import Scheduling from "./Pages/Scheduling.jsx";
+import WindowScheduling from "./Pages/WindowScheduling.jsx";
 import CancelMeeting from "./Pages/CancelMeeting.jsx";
 import ConfirmMeeting from "./Pages/ConfirmMeeting.jsx";
 import PageNotFound from "./Pages/PageNotFound.jsx";
@@ -21,6 +22,7 @@ import PageNotFound from "./Pages/PageNotFound.jsx";
 // Contexts
 import { HelpersProvider } from "./Contexts/Helpers.jsx";
 import { WorkspaceProvider } from "./Contexts/Workspace.jsx";
+import { SchedulingProvider } from "./Contexts/Scheduling.jsx";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -35,13 +37,28 @@ const router = createBrowserRouter([
       </WorkspaceProvider>
     ),
   },
+  { path: "*", element: <PageNotFound /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/confirm-code", element: <ConfirmCode /> },
-  { path: "/scheduling/:user_id/:id", element: <Scheduling /> },
+  {
+    path: "/scheduling/:user_id/:id",
+    element: (
+      <SchedulingProvider>
+        <Scheduling />
+      </SchedulingProvider>
+    ),
+  },
+  {
+    path: "/window-scheduling/:user_id/:id",
+    element: (
+      <SchedulingProvider>
+        <WindowScheduling />
+      </SchedulingProvider>
+    ),
+  },
   { path: "/cancel-meeting/:id", element: <CancelMeeting /> },
   { path: "/confirm-meeting/:id/:token", element: <ConfirmMeeting /> },
-  { path: "*", element: <PageNotFound /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

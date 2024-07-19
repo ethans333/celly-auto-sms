@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import arrow from "../../assets/chevron-solid.svg";
-import { SchedulingContext } from "../../Pages/Scheduling";
+import { SchedulingContext } from "../../Contexts/Scheduling";
 
 export default function () {
   const [weekShift, setWeekShift] = useState(0);
@@ -27,14 +27,14 @@ export default function () {
         <div className="w-full">
           <div className="flex justify-between pt-5 xl:pt-12 pb-12">
             <div className="flex">
-              <div className="font-black text-2xl px-3 py-1.5 rounded-lg ml-3 bg-black text-white rounded-lg px-3 py-1">
+              <div className="font-black text-2xl px-3 py-1.5 rounded-lg ml-3 bg-gradient-to-r from-violet-500 to-indigo-500 text-white rounded-lg px-3 py-1">
                 {new Intl.DateTimeFormat("en-US", { month: "long" }).format(
                   currentWeek[0]
                 )}
               </div>
             </div>
             <div className="flex space-x-2">
-              <div className="font-black text-2xl px-3 py-1.5 rounded-lg ml-3 mr-5">
+              <div className="font-black text-2xl px-3 py-1.5 rounded-lg ml-3 mr-5 bg-gradient-to-r from-violet-500 to-indigo-500 inline-block text-transparent bg-clip-text">
                 {title}
               </div>
               <div

@@ -17,7 +17,7 @@ export default function () {
       <div className="flex justify-center">
         <div className="space-y-5 pb-5">
           {new Calendar().selection()}
-          {/* {new WindowScheduling().selection()} */}
+          {new WindowScheduling().selection()}
           <div className="py-7">
             <div className="border-t" />
           </div>
