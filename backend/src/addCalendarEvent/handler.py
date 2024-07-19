@@ -114,6 +114,10 @@ def handler(event, context):
         # add scheduled event to scheduled table.
         ddb = boto3.client("dynamodb")
 
+        outbound_contact_value = (
+            "" if "contact" not in metadata else metadata["contact"]
+        )
+
         ddb.put_item(
             TableName=os.environ["SCHEDULEDMEETINGSTABLE_TABLE_NAME"],
             Item={
@@ -129,7 +133,7 @@ def handler(event, context):
                 "contact_value": {"S": body["contact_value"]},
                 "confirmations_confirmed": {"N": "0"},
                 "confirmations_sent": {"N": "0"},
-                "outbound_contact_value": {"S": metadata["contact"]},
+                "outbound_contact_value": {"S": outbound_contact_value},
                 "latest_message_id": {"S": ""},
                 "timezone": {"S": body["timezone"]},
                 "confirmation_token": {"S": ""},

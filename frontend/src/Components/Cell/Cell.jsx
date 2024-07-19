@@ -114,7 +114,7 @@ export class Cell extends React.Component {
             draggable={false}
           />
         </div>
-        <div className="text-sm py-7 text-xs px-5 text-gray-600">
+        <div className="text-sm py-7 text-xs px-5 text-gray-600 w-64 truncate">
           {this.description}
         </div>
       </div>
@@ -125,32 +125,34 @@ export class Cell extends React.Component {
     return (
       <WorkspaceContext.Consumer>
         {(context) => (
-          <div>
-            <Draggable
-              onStop={(e) => {
-                const r = this.selectionRef.current.getBoundingClientRect();
+          <div className="w-[303.99px] hover:h-[154.25px]">
+            <div className="hover:absolute">
+              <Draggable
+                onStop={(e) => {
+                  const r = this.selectionRef.current.getBoundingClientRect();
 
-                console.log(context);
+                  console.log(context);
 
-                const cid = uuid();
+                  const cid = uuid();
 
-                const el = this.newSelf({
-                  key: cid,
-                  id: cid,
-                  ref: React.createRef(),
-                  x: r.x - context.deltaX,
-                  y: r.y - context.deltaY,
-                });
+                  const el = this.newSelf({
+                    key: cid,
+                    id: cid,
+                    ref: React.createRef(),
+                    x: r.x - context.deltaX,
+                    y: r.y - context.deltaY,
+                  });
 
-                context.setComponentsStack([...context.componentsStack, el]);
-              }}
-              nodeRef={this.selectionRef}
-              position={{ x: 0, y: 0 }}
-            >
-              <div ref={this.selectionRef} className="hover:opacity-80">
-                {this.selectionCell()}
-              </div>
-            </Draggable>
+                  context.setComponentsStack([...context.componentsStack, el]);
+                }}
+                nodeRef={this.selectionRef}
+                position={{ x: 0, y: 0 }}
+              >
+                <div ref={this.selectionRef} className="hover:opacity-80">
+                  {this.selectionCell()}
+                </div>
+              </Draggable>
+            </div>
           </div>
         )}
       </WorkspaceContext.Consumer>

@@ -1,4 +1,5 @@
 import { Calendar } from "./Cells/Calendar/Calendar";
+import { WindowScheduling } from "./Cells/WindowScheduling/WindowScheduling";
 import legalserver from "../../assets/legalserver.svg";
 import zoom from "../../assets/zoom-app.svg";
 import microsoftteams from "../../assets/microsoftteams.svg";
@@ -11,36 +12,35 @@ export default function () {
   const { setPopup } = useContext(WorkspaceContext);
 
   return (
-    <div className="">
-      <div className="space-y-5">
-        <h3 className="font-black text-lg mt-7 pb-3">Add a Cell</h3>
-        <div className="flex justify-center">
-          <div className="space-y-5 pb-5 absolute">
-            {new Calendar().selection()}
-            <div className="py-7">
-              <div className="border-t" />
-            </div>
-            <PremiumDisplayCell
-              icon={legalserver}
-              title="LegalServer"
-              description="LegalServer Integration."
-            />
-            <PremiumDisplayCell
-              icon={texting}
-              title="SMS"
-              description="Collect data via SMS."
-            />
-            <PremiumDisplayCell
-              icon={microsoftteams}
-              title="Microsoft Teams"
-              description="Integrate Scheduling with Teams."
-            />
-            <PremiumDisplayCell
-              icon={zoom}
-              title="Zoom"
-              description="Integrate Scheduling with Zoom."
-            />
+    <div className="overflow-y-scroll overflow-x-visible w-fit px-5">
+      <h3 className="font-black text-lg mt-7 pb-3">Add a Cell</h3>
+      <div className="flex justify-center">
+        <div className="space-y-5 pb-5">
+          {new Calendar().selection()}
+          {/* {new WindowScheduling().selection()} */}
+          <div className="py-7">
+            <div className="border-t" />
           </div>
+          <PremiumDisplayCell
+            icon={legalserver}
+            title="LegalServer"
+            description="LegalServer Integration."
+          />
+          <PremiumDisplayCell
+            icon={texting}
+            title="SMS"
+            description="Collect data via SMS."
+          />
+          <PremiumDisplayCell
+            icon={microsoftteams}
+            title="Microsoft Teams"
+            description="Integrate Scheduling with Teams."
+          />
+          <PremiumDisplayCell
+            icon={zoom}
+            title="Zoom"
+            description="Integrate Scheduling with Zoom."
+          />
         </div>
       </div>
     </div>
