@@ -16,6 +16,7 @@ import ConfirmCode from "./Pages/Auth/ConfirmCode.jsx";
 import Scheduling from "./Pages/Scheduling.jsx";
 import CancelMeeting from "./Pages/CancelMeeting.jsx";
 import ConfirmMeeting from "./Pages/ConfirmMeeting.jsx";
+import PageNotFound from "./Pages/PageNotFound.jsx";
 
 // Contexts
 import { HelpersProvider } from "./Contexts/Helpers.jsx";
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
   { path: "/scheduling/:user_id/:id", element: <Scheduling /> },
   { path: "/cancel-meeting/:id", element: <CancelMeeting /> },
   { path: "/confirm-meeting/:id/:token", element: <ConfirmMeeting /> },
+  { path: "*", element: <PageNotFound /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
