@@ -26,6 +26,9 @@ export function WorkspaceProvider({ children }) {
   const [noWorkspaces, setNoWorkspaces] = useState(false);
   const [scheduledMeetingsIsLoading, setScheduledMeetingsIsLoading] =
     useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSaved, setShowSaved] = useState(false);
+  const [savedTimer, setSavedTimer] = useState(0);
 
   const Views = {
     Project: 0,
@@ -70,6 +73,12 @@ export function WorkspaceProvider({ children }) {
         scheduledMeetingsIsLoading,
         setScheduledMeetingsIsLoading,
         emojis,
+        isSaving,
+        setIsSaving,
+        showSaved,
+        setShowSaved,
+        savedTimer,
+        setSavedTimer,
       }}
     >
       {children}

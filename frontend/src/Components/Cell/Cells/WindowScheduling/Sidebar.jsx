@@ -13,9 +13,6 @@ const meetingLengths = {
 };
 
 export default function ({ self }) {
-  const { workspaceMetaData, setWorkspaceMetaData } =
-    useContext(WorkspaceContext);
-
   const [isLoading, setIsLoading] = useState(true);
   const [isLinked, setIsLinked] = useState(false);
   const [selectedDays, setSelectedDays] = useState(["Saturday", "Sunday"]);

@@ -86,12 +86,12 @@ export default function () {
           </div>
 
           {/* Workspaces List */}
-          {(favoriteWorkspaceList.length > 0 || loadingWorkspaceList) && (
+          {favoriteWorkspaceList.length > 0 && (
             <p className="font-extrabold mt-8">Favorites</p>
           )}
           {/* Favorite Projects */}
           <div className="space-y-3 mt-3 ml-1">
-            {loadingWorkspaceList ? (
+            {loadingWorkspaceList && workspaceList.length == 0 ? (
               <WorkspacesListLoading n={3} />
             ) : (
               mapWorkspaces(favoriteWorkspaceList)
@@ -100,7 +100,7 @@ export default function () {
           <p className={`font-extrabold mt-8`}>Projects</p>
           {/* All Projects */}
           <div className="space-y-3 mt-3 ml-1">
-            {loadingWorkspaceList ? (
+            {loadingWorkspaceList && workspaceList.length == 0 ? (
               <WorkspacesListLoading />
             ) : workspaceList.length > 0 ? (
               mapWorkspaces(workspaceList)

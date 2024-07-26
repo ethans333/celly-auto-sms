@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 
-export default function LabeledSquareButton({ icon, label, onClick }) {
+export default function LabeledSquareButton({
+  icon,
+  label,
+  onClick,
+  showLabel = false,
+}) {
   const [isHovering, setIsHovering] = useState(false);
 
   return (
@@ -12,8 +17,8 @@ export default function LabeledSquareButton({ icon, label, onClick }) {
         onMouseOver={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       />
-      {isHovering && (
-        <div className="absolute top-7 left-4 transform -translate-x-1/2 bg-black text-white text-xs rounded p-1">
+      {(isHovering || showLabel) && (
+        <div className="absolute top-[28px] left-4 transform -translate-x-1/2 bg-black text-white text-xs rounded p-1 px-1.5 w-fit">
           {label}
         </div>
       )}
@@ -24,11 +29,6 @@ export default function LabeledSquareButton({ icon, label, onClick }) {
 export function GenericLabeledSquareButton({ label, onClick, children }) {
   const [isHovering, setIsHovering] = useState(false);
   const buttonRef = useRef(null);
-  const [height, setHeight] = useState(0);
-
-  useEffect(() => {
-    setHeight(buttonRef.current.getBoundingClientRect().height);
-  });
 
   return (
     <div className="relative mt-1">

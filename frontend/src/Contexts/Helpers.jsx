@@ -1,5 +1,5 @@
 import { WorkspaceContext } from "../Contexts/Workspace";
-import { useContext, createContext } from "react";
+import { useContext, createContext, useEffect } from "react";
 import * as jose from "jose";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +31,11 @@ export function HelpersProvider({ children }) {
     setNoWorkspaces,
     deltaX,
     deltaY,
+    setIsSaving,
     setScheduledMeetingsIsLoading,
+    setShowSaved,
+    savedTimer,
+    setSavedTimer,
   } = useContext(WorkspaceContext);
 
   /**
@@ -89,6 +93,8 @@ export function HelpersProvider({ children }) {
   function saveWorkspace() {
     const metadata = workspaceMetaData;
 
+    setIsSaving(true);
+
     metadata["delta_x"] = deltaX.toString();
     metadata["delta_y"] = deltaY.toString();
     console.log(metadata);
@@ -101,6 +107,11 @@ export function HelpersProvider({ children }) {
 
     api.updateWorkspace(metadata, objects).then((res) => {
       updateWorkspaceLists(false);
+      setIsSaving(false);
+      setShowSaved(true);
+      setTimeout(() => {
+        setShowSaved(false);
+      }, 1500);
     });
   }
 
@@ -177,6 +188,18 @@ export function HelpersProvider({ children }) {
     setScheduledMeetingsIsLoading(false);
     return res.meetings;
   }
+
+  function updateSavedTimer() {
+    if (savedTimer > 0) {
+      console.log(savedTimer);
+      if (savedTimer === 1) saveWorkspace();
+      setTimeout(() => setSavedTimer((p) => p - 1), 1000);
+    }
+  }
+
+  useEffect(() => {
+    updateSavedTimer();
+  }, [savedTimer]);
 
   return (
     <HelpersContext.Provider

@@ -8,6 +8,7 @@ import { Node } from "./Node.jsx";
 import { Position } from "./Position.jsx";
 
 export class Cell extends React.Component {
+  static contextType = WorkspaceContext;
   nodeWidth = new Node().width;
 
   // Cell Properties
@@ -64,6 +65,12 @@ export class Cell extends React.Component {
       if (props && props[key]) {
         this.state[key] = props[key];
       }
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState !== this.state) {
+      this.context.setSavedTimer(10); // Reset timer
     }
   }
 
@@ -160,7 +167,6 @@ export class Cell extends React.Component {
   }
 
   toJSON() {
-    console.log(this.state);
     return {
       ...this.toObject(),
       ...this.state,
