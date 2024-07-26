@@ -23,7 +23,7 @@ export default function () {
   return (
     <div className="mx-[7vw] space-x-14 xl:space-x-0 xl:space-y-7 flex xl:block xl:w-[400px] 2xl:w-[500px] xl:mx-5 xl:shadow-lg xl:border border-gray-300 rounded-lg py-10 px-8">
       {meetingDescription.length > 0 && (
-        <div className="border-b pb-5">
+        <div className="xl:border-b pb-5">
           <div className="font-extrabold">Meeting Notes</div>
           <p
             style={{

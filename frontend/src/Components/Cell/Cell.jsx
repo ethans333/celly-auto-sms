@@ -125,7 +125,7 @@ export class Cell extends React.Component {
     return (
       <WorkspaceContext.Consumer>
         {(context) => (
-          <div className="w-[303.99px] hover:h-[154.25px]">
+          <div className="w-[303.99px] h-[151.97px]">
             <div className="hover:absolute">
               <Draggable
                 onStop={(e) => {
@@ -160,6 +160,7 @@ export class Cell extends React.Component {
   }
 
   toJSON() {
+    console.log(this.state);
     return {
       ...this.toObject(),
       ...this.state,

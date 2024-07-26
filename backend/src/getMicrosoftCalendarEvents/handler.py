@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import time
 from datetime import datetime, timedelta
 
@@ -30,9 +31,12 @@ def handler(event, context):
         calendar_cell = None
 
         for cell in bucket_raw:
-            if cell["typename"] == "calendar":
+            if cell["typename"] in ["calendar", "windowscheduling"]:
                 calendar_cell = cell
                 break
+
+        if not calendar_cell:
+            raise Exception("Calendar cell not found")
 
         # get workspace metadata
         metadata = bucket.Object(f"{user_id}/{workspace_id}").metadata
@@ -84,6 +88,7 @@ def handler(event, context):
                     "workspace": metadata,
                     "events": event_times,
                     "meeting_title": calendar_cell["meeting_title"],
+                    "meeting_length": calendar_cell["meeting_length"],
                 }
             ),
             "headers": {
@@ -97,7 +102,7 @@ def handler(event, context):
     except Exception as e:
         return {
             "statusCode": 500,
-            "body": str(e),
+            "body": f"Error on line {sys.exc_info()[2].tb_lineno}: {str(e)}",
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",

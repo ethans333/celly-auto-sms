@@ -14,6 +14,7 @@ export class WindowScheduling extends Cell {
     end_time: 17,
     blackout_days: [0, 6],
     contact: "",
+    meeting_length: 30,
   };
 
   sidebar() {

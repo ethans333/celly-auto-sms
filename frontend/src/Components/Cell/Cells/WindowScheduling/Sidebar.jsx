@@ -4,6 +4,14 @@ import * as mb from "../../../MicrosoftButtons.jsx";
 import * as api from "../../../../api.jsx";
 import Dropdown from "../../../Dropdown.jsx";
 
+const meetingLengths = {
+  15: "15 min",
+  30: "30 min",
+  45: "45 min",
+  60: "1 hr",
+  120: "2 hr",
+};
+
 export default function ({ self }) {
   const { workspaceMetaData, setWorkspaceMetaData } =
     useContext(WorkspaceContext);
@@ -22,6 +30,9 @@ export default function ({ self }) {
     useState("00");
   const [meetingWindowEndHour, setMeetingWindowEndHour] = useState("05");
   const [meetingWindowEndMinute, setMeetingWindowEndMinute] = useState("00");
+  const [meetingLength, setMeetingLength] = useState(
+    meetingLengths[self.state.meeting_length]
+  );
 
   const dow = [
     "Sunday",
@@ -135,6 +146,21 @@ export default function ({ self }) {
     startAMPM,
     endAMPM,
   ]);
+
+  useEffect(() => {
+    let len;
+
+    for (const [key, value] of Object.entries(meetingLengths)) {
+      if (value === meetingLength) {
+        len = key;
+        break;
+      }
+    }
+
+    self.setState({
+      meeting_length: parseInt(len),
+    });
+  }, [meetingLength]);
 
   return (
     <div className="w-full flex flex-col space-y-2">
@@ -255,6 +281,19 @@ export default function ({ self }) {
               values={["AM", "PM"]}
               current={endAMPM}
               setCurrent={(v) => setEndAMPM(v)}
+            />
+          </div>
+        </div>
+        <div>
+          <p className="font-bold pt-5">Meeting Length</p>
+          <div className="mt-3">
+            <Dropdown
+              values={Object.values(meetingLengths)}
+              current={meetingLength}
+              setCurrent={function (value) {
+                setMeetingLength(value);
+              }}
+              padded
             />
           </div>
         </div>

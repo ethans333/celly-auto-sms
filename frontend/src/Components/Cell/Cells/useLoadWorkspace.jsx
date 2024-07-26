@@ -13,9 +13,10 @@ import {
 
 // Cell Types
 import { Calendar } from "./Calendar/Calendar";
+import { WindowScheduling } from "./WindowScheduling/WindowScheduling";
 
 // Add Cell Types to types array
-const types = [Calendar];
+const types = [Calendar, WindowScheduling];
 
 export default function () {
   const [cells, setCells] = useState([]);

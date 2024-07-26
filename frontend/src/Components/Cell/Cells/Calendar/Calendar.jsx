@@ -14,6 +14,7 @@ export class Calendar extends Cell {
     end_time: 17,
     blackout_days: [0, 6],
     contact: "",
+    meeting_length: -1,
   };
 
   sidebar() {

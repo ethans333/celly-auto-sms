@@ -97,6 +97,8 @@ export function HelpersProvider({ children }) {
       .filter((c) => c.ref.current.constructor.prototype instanceof Cell)
       .map((c) => c.ref.current.toJSON());
 
+    console.log(objects);
+
     api.updateWorkspace(metadata, objects).then((res) => {
       updateWorkspaceLists(false);
     });

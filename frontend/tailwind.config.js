@@ -25,6 +25,10 @@ export default {
           "0%": { transform: "translateX(-80%)" },
           "100%": { transform: "translate(0%)" },
         },
+        grow: {
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(1.05)" },
+        },
       },
     },
   },

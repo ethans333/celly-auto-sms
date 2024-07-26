@@ -13,7 +13,7 @@ export default function () {
 
   return (
     <div className="overflow-y-scroll overflow-x-visible w-fit px-5">
-      <h3 className="font-black text-lg mt-7 pb-3">Add a Cell</h3>
+      <h3 className="font-black text-lg mt-7 pb-7">Add a Cell</h3>
       <div className="flex justify-center">
         <div className="space-y-5 pb-5">
           {new Calendar().selection()}

@@ -19,6 +19,7 @@ export function SchedulingProvider({ children }) {
   const [endHour, setEndHour] = useState(17);
   const [meetingDescription, setMeetingDescription] = useState("");
   const [blackoutDays, setBlackoutDays] = useState([0, 6]);
+  const [meetingLength, setMeetingLength] = useState(-1);
 
   let { user_id, id } = useParams();
 
@@ -34,6 +35,7 @@ export function SchedulingProvider({ children }) {
         setWorkspace(data["workspace"]);
         setBlackoutDays(data["blackout_days"]);
         setTitle(data["meeting_title"]);
+        setMeetingLength(data["meeting_length"]);
       });
     });
   }, []);
@@ -56,6 +58,7 @@ export function SchedulingProvider({ children }) {
         meetingDescription,
         blackoutDays,
         title,
+        meetingLength,
       }}
     >
       {isScheduled ? <Scheduled /> : <>{children}</>}

@@ -1,12 +1,32 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WorkspaceContext } from "../../Contexts/Workspace";
 import { ContentCopy } from "@mui/icons-material";
 import { GenericLabeledSquareButton } from "../LabeledSquareButton";
 
-export default function () {
-  const { workspaceMetaData } = useContext(WorkspaceContext);
+const schedulingTypes = {
+  Calendar: "scheduling",
+  WindowScheduling: "window-scheduling",
+};
 
-  const url = `${window.location.origin}/scheduling/${workspaceMetaData.user_id}/${workspaceMetaData.id}`;
+export default function () {
+  const { workspaceMetaData, componentsStack } = useContext(WorkspaceContext);
+  const [url, setUrl] = useState("");
+
+  useEffect(() => {
+    let base;
+    let types = Object.keys(schedulingTypes);
+
+    for (let i = 0; i < componentsStack.length; i++) {
+      if (types.includes(componentsStack[i].type.name)) {
+        base = schedulingTypes[componentsStack[i].type.name];
+        break;
+      }
+    }
+
+    setUrl(
+      `${window.location.origin}/${base}/${workspaceMetaData.user_id}/${workspaceMetaData.id}`
+    );
+  }, [componentsStack]);
 
   return (
     <div className="space-y-7 pb-10 px-7">
@@ -17,7 +37,9 @@ export default function () {
           </a>{" "}
           is Live
         </div>
-        <div className="text-gray-500 text-center py-3">Share this link with others to schedule them.</div>
+        <div className="text-gray-500 text-center py-3">
+          Share this link with others to schedule them.
+        </div>
       </div>
 
       <div className="flex space-x-2">
