@@ -23,6 +23,7 @@ import PageNotFound from "./Pages/PageNotFound.jsx";
 import { HelpersProvider } from "./Contexts/Helpers.jsx";
 import { WorkspaceProvider } from "./Contexts/Workspace.jsx";
 import { SchedulingProvider } from "./Contexts/Scheduling.jsx";
+import { SnackbarProvider } from "./Contexts/Snackbar.jsx";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -63,6 +64,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <MsalProvider instance={msalInstance}>
-    <RouterProvider router={router} />
+    <SnackbarProvider>
+      <RouterProvider router={router} />
+    </SnackbarProvider>
   </MsalProvider>
 );

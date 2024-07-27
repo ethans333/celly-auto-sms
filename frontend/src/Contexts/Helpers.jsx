@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import * as api from "../api";
 import { Cell } from "../Components/Cell/Cell";
-import Tutorial from "../Components/Popups/Tutorial";
+import { SnackbarContext } from "./Snackbar";
 
 export const HelpersContext = createContext();
 
@@ -37,6 +37,8 @@ export function HelpersProvider({ children }) {
     savedTimer,
     setSavedTimer,
   } = useContext(WorkspaceContext);
+
+  const { setSnackbarMessage } = useContext(SnackbarContext);
 
   /**
    * Validates the token's expiration.
@@ -103,15 +105,17 @@ export function HelpersProvider({ children }) {
       .filter((c) => c.ref.current.constructor.prototype instanceof Cell)
       .map((c) => c.ref.current.toJSON());
 
-    console.log(objects);
-
     api.updateWorkspace(metadata, objects).then((res) => {
       updateWorkspaceLists(false);
       setIsSaving(false);
-      setShowSaved(true);
-      setTimeout(() => {
-        setShowSaved(false);
-      }, 1500);
+      if (res.status === 200) {
+        setShowSaved(true);
+        setTimeout(() => {
+          setShowSaved(false);
+        }, 1500);
+      } else {
+        setSnackbarMessage("Error: " + res.data);
+      }
     });
   }
 

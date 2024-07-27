@@ -1,18 +1,27 @@
 import Cookies from "js-cookie";
 
-/*
+async function apiHandler(url, method, body, authorization) {
+  const headers = {
+    "Content-Type": "application/json",
+  };
 
-/ user
+  if (authorization !== undefined) headers["Authorization"] = authorization;
+  if (typeof body == "object") body = JSON.stringify(body);
 
-*/
+  const response = await fetch(url, {
+    method: method,
+    headers: headers,
+    body: body,
+  });
 
-/**
- * Creates a new user.
- *
- * @param {String} email Email of the user
- * @param {String} password Password of the user
- * @returns {Object}
- * */
+  console.log(response);
+
+  const data =
+    response.status === 200 ? await response.json() : await response.text();
+
+  return { status: response.status, data: data };
+}
+
 export async function createUser(email, password) {
   const response = await fetch(import.meta.env.VITE_USER_API_URL + "/user", {
     method: "POST",
@@ -30,13 +39,6 @@ export async function createUser(email, password) {
   return await response.text(); // error
 }
 
-/**
- * Logs in the user.
- *
- * @param {String} email Email of the user
- * @param {String} password Password of the user
- * @returns {Object}
- * */
 export async function loginUser(email, password) {
   const response = await fetch(
     import.meta.env.VITE_USER_API_URL + "/user/login",
@@ -67,13 +69,6 @@ export async function loginUser(email, password) {
   return await response.text(); // error
 }
 
-/**
- * Confirms the user.
- *
- * @param {String} email Email of the user
- * @param {String} code Code to confirm the user
- * @returns {Object}
- */
 export async function confirmUser(email, code) {
   const response = await fetch(
     import.meta.env.VITE_USER_API_URL + "/user/confirm",
@@ -94,11 +89,6 @@ export async function confirmUser(email, code) {
   return await response.text(); // error
 }
 
-/**
- * Gets the user. User must be authenticated.
- *
- * @returns {Object}
- * */
 export async function getUser() {
   const response = await fetch(import.meta.env.VITE_USER_API_URL + "/user", {
     method: "GET",
@@ -112,20 +102,6 @@ export async function getUser() {
   return await response.text(); // error
 }
 
-/*
-
-/ workspace
-
-*/
-
-/**
- * Adds a workspace
- *
- * @param {String} workspace_name Name of the workspace
- * @param {String} workspace_raw Raw data of the workspace
- * @param {String} workspace_emoji Emoji of the workspace
- * @returns {Object} Message and workspace id
- */
 export async function addWorkspace(
   workspace_name,
   workspace_raw,
@@ -152,12 +128,6 @@ export async function addWorkspace(
   return await response.text(); // error
 }
 
-/**
- * Gets a workspace
- *
- * @param {String} id Id of the workspace
- * @returns {Object} Workspace
- */
 export async function getWorkspace(id) {
   if (!id) return "No id provided";
 
@@ -176,36 +146,19 @@ export async function getWorkspace(id) {
   return await response.text(); // error
 }
 
-/**
- * Updates an existing workspace
- *
- * @param {Object} metadata Workspace metadata
- * @param {Object} workspace_raw Raw data of the workspace
- * @returns {Object} Message and workspace id
- */
 export async function updateWorkspace(metadata, workspace_raw) {
-  const response = await fetch(
-    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + metadata.id,
-    {
-      method: "PUT",
-      headers: {
-        Authorization: Cookies.get("access_token"),
-      },
-      body: JSON.stringify({
-        metadata: JSON.stringify(metadata),
-        workspace_raw: JSON.stringify(workspace_raw),
-      }),
-    }
-  );
+  const url =
+    import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/" + metadata.id;
+  const method = "PUT";
+  const body = {
+    metadata: JSON.stringify(metadata),
+    workspace_raw: JSON.stringify(workspace_raw),
+  };
+  const authorization = Cookies.get("access_token");
 
-  if (response.status === 200) return await response.json();
-  return await response.text(); // error
+  return await apiHandler(url, method, body, authorization);
 }
 
-/**
- * Gets all of user's workspaces
- *
- * @returns {Array<Object>} */
 export async function getAllUserWorkspaces() {
   const response = await fetch(
     import.meta.env.VITE_WORKSPACE_API_URL + "/workspace/all",
@@ -222,12 +175,6 @@ export async function getAllUserWorkspaces() {
   return await response.text(); // error
 }
 
-/**
- * Deletes a workspace
- *
- * @param {String} id Id of the workspace
- * @returns {Object} Status
- */
 export async function deleteWorkspace(id) {
   if (!id) return "No id provided";
 
@@ -260,23 +207,6 @@ export async function deployWorkspace(id) {
   return await response.text(); // error
 }
 
-/**
- *
- * Deploys an existing workspace
- *
- */
-
-/*
-
-  /esl
-
-*/
-
-/**
- * Gets login url for Microsoft
- *
- * @returns {Object} URL
- */
 export async function initializeMicrosoftESL() {
   const response = await fetch(
     import.meta.env.VITE_ESL_API_URL + "/esl/microsoft",
@@ -293,13 +223,6 @@ export async function initializeMicrosoftESL() {
   return await response.text(); // error
 }
 
-/**
- * Sends authorization code to finish Microsoft authentication process.
- *
- * @param {String} code Code from Microsoft URL (aquired after authentication)
- *
- * @returns {Object} Status
- */
 export async function storeMicrosoftTokenESL(code) {
   const response = await fetch(
     import.meta.env.VITE_ESL_API_URL + "/esl/microsoft",
@@ -323,11 +246,6 @@ export async function storeMicrosoftTokenESL(code) {
   return await response.text(); // error
 }
 
-/**
- * Gets status of token (whether it has expired or not)
- *
- * @returns {Object} Containing status of token
- */
 export async function tokenStatusMicrosoftESL() {
   const response = await fetch(
     import.meta.env.VITE_ESL_API_URL + "/esl/microsoft/token_status",
@@ -342,11 +260,6 @@ export async function tokenStatusMicrosoftESL() {
   return response;
 }
 
-/**
- * Unlinks all External services from account.
- *
- * @returns {Object} Status
- */
 export async function unlinkAllESL() {
   const response = await fetch(
     import.meta.env.VITE_ESL_API_URL + "/esl/unlink/all",
@@ -363,12 +276,6 @@ export async function unlinkAllESL() {
   return await response.text(); // error
 }
 
-/*
-
-  /pesl
-
-*/
-
 export async function getMicrosoftCalendarEvents(user_id, workspace_id) {
   const response = await fetch(
     import.meta.env.VITE_PESL_API_URL +
@@ -382,12 +289,6 @@ export async function getMicrosoftCalendarEvents(user_id, workspace_id) {
 
   return await response.text(); // error
 }
-
-/*
-
-  /scheduling
-
-*/
 
 export async function addCalendarEvent(
   userId,
