@@ -61,7 +61,11 @@ export function SchedulingProvider({ children }) {
         meetingLength,
       }}
     >
-      {isScheduled ? <Scheduled /> : <>{children}</>}
+      {isScheduled ? (
+        <Scheduled />
+      ) : (
+        <div className="overflow-y-scroll h-screen pb-16">{children}</div>
+      )}
     </SchedulingContext.Provider>
   );
 }
