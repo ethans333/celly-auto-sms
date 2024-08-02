@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 import boto3
 import jwt
@@ -20,8 +21,8 @@ def handler(event, context):
         # Update metdata
         new_metadata = json.loads(body["metadata"])
 
-        new_metadata["workspace_emoji"] = "U+{:X}".format(
-            ord(new_metadata["workspace_emoji"])
+        new_metadata["workspace_emoji"] = ",".join(
+            ["U+{:X}".format(ord(char)) for char in new_metadata["workspace_emoji"]]
         )
 
         # change everything to string
@@ -37,7 +38,7 @@ def handler(event, context):
     except Exception as e:
         return {
             "statusCode": 500,
-            "body": str(e),
+            "body": f"{str(e)}\nException occurred at line {sys.exc_info()[-1].tb_lineno}",
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",

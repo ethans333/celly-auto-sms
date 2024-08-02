@@ -195,10 +195,17 @@ export function HelpersProvider({ children }) {
 
   function updateSavedTimer() {
     if (savedTimer > 0) {
-      console.log(savedTimer);
       if (savedTimer === 1) saveWorkspace();
       setTimeout(() => setSavedTimer((p) => p - 1), 1000);
     }
+  }
+
+  function validPhone(phone) {
+    return /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/.test(phone);
+  }
+
+  function validEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
   useEffect(() => {
@@ -217,6 +224,8 @@ export function HelpersProvider({ children }) {
         showTutorial,
         hideTutorial,
         getScheduledMeetings,
+        validPhone,
+        validEmail,
       }}
     >
       {children}

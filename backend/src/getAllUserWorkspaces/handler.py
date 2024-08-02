@@ -21,8 +21,8 @@ def handler(event, context):
             workspace_metadata = bucket.Object(obj.key).get()["Metadata"]
 
             # convert unicode to emoji string
-            workspace_metadata["workspace_emoji"] = chr(
-                int(workspace_metadata["workspace_emoji"][2:], 16)
+            workspace_metadata["workspace_emoji"] = unicode_to_emoji(
+                workspace_metadata["workspace_emoji"]
             )
 
             # edit bools
@@ -60,3 +60,9 @@ def handler(event, context):
             "Content-Type": "application/json",
         },
     }
+
+
+def unicode_to_emoji(unicode_string):
+    code_points = unicode_string.split(",")
+    emoji = "".join(chr(int(code_point[2:], 16)) for code_point in code_points)
+    return emoji

@@ -128,9 +128,9 @@ export default function () {
           setSelectedStartTime(start_time);
           setSelectedEndTime(end_time);
         }}
-        className={`rounded-xl shadow w-full text-center px-7 py-7 bg-gradient-to-r from-violet-500 to-indigo-500 text-white font-bold cursor-pointer hover:opacity-50 shadow-lg shadow-indigo-300/50 ${
+        className={`rounded-xl shadow w-full text-center px-7 py-7 bg-gradient-to-r from-violet-500 to-indigo-500 text-white font-bold cursor-pointer hover:opacity-70 shadow-lg shadow-indigo-300/50 ${
           selectedStartTime === start_time &&
-          "bg-gradient-to-r from-blue-400 to-cyan-400 animate-[grow_0.1s_ease-in-out_forwards] text-pink-100"
+          "bg-gradient-to-r from-violet-700 to-indigo-700 animate-[grow_0.1s_ease-in-out_forwards]"
         }`}
       >
         <div>{time}</div>

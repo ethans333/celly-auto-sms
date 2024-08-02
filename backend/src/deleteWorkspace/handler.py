@@ -33,8 +33,6 @@ def handler(event, context):
             },
         )["Items"]
 
-        # raise Exception(str(meetings_to_cancel))
-
         # Cancel meetings
         response = lambda_client.invoke(
             FunctionName=os.environ["CANCELSCHEDULEDMEETINGS_FUNCTION_NAME"],

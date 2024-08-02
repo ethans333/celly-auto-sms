@@ -24,7 +24,9 @@ def handler(event, context):
 
     try:
         workspace_metadata = {
-            "workspace_emoji": "U+{:X}".format(ord(workspace_emoji)),
+            "workspace_emoji": ",".join(
+                ["U+{:X}".format(ord(char)) for char in workspace_emoji]
+            ),
             "workspace_name": workspace_name,
             "user_id": user_id,
             "id": workspace_id,

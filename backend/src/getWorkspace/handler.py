@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 import boto3
 import jwt
@@ -24,14 +25,14 @@ def handler(event, context):
 
         # convert unicode to emoji string
         if "workspace_emoji" in workspace_metadata:
-            workspace_metadata["workspace_emoji"] = chr(
-                int(workspace_metadata["workspace_emoji"][2:], 16)
+            workspace_metadata["workspace_emoji"] = unicode_to_emoji(
+                workspace_metadata["workspace_emoji"]
             )
 
     except Exception as e:
         return {
             "statusCode": 500,
-            "body": str(e),
+            "body": f"{e}\nLine: {sys.exc_info()[-1].tb_lineno}",
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",
@@ -56,3 +57,9 @@ def handler(event, context):
             "Content-Type": "application/json",
         },
     }
+
+
+def unicode_to_emoji(unicode_string):
+    code_points = unicode_string.split(",")
+    emoji = "".join(chr(int(code_point[2:], 16)) for code_point in code_points)
+    return emoji

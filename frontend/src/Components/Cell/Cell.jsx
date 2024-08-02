@@ -4,6 +4,7 @@ import React from "react";
 import ellipsis from "../../assets/ellipsis-vertical.svg";
 import CellMenu from "./CellComponents/CellMenu.jsx";
 import { WorkspaceContext } from "../../Contexts/Workspace";
+import { SnackbarContext } from "../../Contexts/Snackbar.jsx";
 import { Node } from "./Node.jsx";
 import { Position } from "./Position.jsx";
 
@@ -132,35 +133,69 @@ export class Cell extends React.Component {
     return (
       <WorkspaceContext.Consumer>
         {(context) => (
-          <div className="w-[303.99px] h-[151.97px]">
-            <div className="hover:absolute">
-              <Draggable
-                onStop={(e) => {
-                  const r = this.selectionRef.current.getBoundingClientRect();
+          <SnackbarContext.Consumer>
+            {(snackbarContext) => (
+              <div className="w-[303.99px] h-[151.97px]">
+                <div className="hover:absolute">
+                  <Draggable
+                    onStart={(e) => {
+                      context.setDragStart({ x: e.clientX, y: e.clientY });
+                    }}
+                    onStop={(e) => {
+                      // Prevent multiple scheduling cells
+                      for (const c of context.componentsStack) {
+                        if (
+                          ["scheduling", "windowscheduling"].includes(
+                            c.props.typename
+                          )
+                        ) {
+                          snackbarContext.setSnackbarMessage(
+                            "Two scheduling cell is not permitted!"
+                          );
+                          return;
+                        }
+                      }
 
-                  console.log(context);
+                      // Ignore small movements
+                      const delta = Math.floor(
+                        Math.sqrt(
+                          (context.dragStart.x - e.clientX) ** 2 +
+                            (context.dragStart.y - e.clientY) ** 2
+                        )
+                      );
 
-                  const cid = uuid();
+                      if (delta < 100) return;
 
-                  const el = this.newSelf({
-                    key: cid,
-                    id: cid,
-                    ref: React.createRef(),
-                    x: r.x - context.deltaX,
-                    y: r.y - context.deltaY,
-                  });
+                      const r =
+                        this.selectionRef.current.getBoundingClientRect();
 
-                  context.setComponentsStack([...context.componentsStack, el]);
-                }}
-                nodeRef={this.selectionRef}
-                position={{ x: 0, y: 0 }}
-              >
-                <div ref={this.selectionRef} className="hover:opacity-80">
-                  {this.selectionCell()}
+                      const cid = uuid();
+
+                      const el = this.newSelf({
+                        key: cid,
+                        id: cid,
+                        ref: React.createRef(),
+                        x: r.x - context.deltaX,
+                        y: r.y - context.deltaY,
+                        typename: this.typename,
+                      });
+
+                      context.setComponentsStack([
+                        ...context.componentsStack,
+                        el,
+                      ]);
+                    }}
+                    nodeRef={this.selectionRef}
+                    position={{ x: 0, y: 0 }}
+                  >
+                    <div ref={this.selectionRef} className="hover:opacity-80">
+                      {this.selectionCell()}
+                    </div>
+                  </Draggable>
                 </div>
-              </Draggable>
-            </div>
-          </div>
+              </div>
+            )}
+          </SnackbarContext.Consumer>
         )}
       </WorkspaceContext.Consumer>
     );

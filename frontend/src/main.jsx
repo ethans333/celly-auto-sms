@@ -46,7 +46,11 @@ const router = createBrowserRouter([
     path: "/scheduling/:user_id/:id",
     element: (
       <SchedulingProvider>
-        <Scheduling />
+        <WorkspaceProvider>
+          <HelpersProvider>
+            <Scheduling />
+          </HelpersProvider>
+        </WorkspaceProvider>
       </SchedulingProvider>
     ),
   },
@@ -54,7 +58,11 @@ const router = createBrowserRouter([
     path: "/window-scheduling/:user_id/:id",
     element: (
       <SchedulingProvider>
-        <WindowScheduling />
+        <WorkspaceProvider>
+          <HelpersProvider>
+            <WindowScheduling />
+          </HelpersProvider>
+        </WorkspaceProvider>
       </SchedulingProvider>
     ),
   },

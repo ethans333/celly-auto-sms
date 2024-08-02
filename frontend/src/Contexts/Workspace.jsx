@@ -22,6 +22,7 @@ export function WorkspaceProvider({ children }) {
   const [favoriteWorkspaceList, setFavoriteWorkspaceList] = useState([]);
   const [loadingWorkspaceList, setLoadingWorkspaceList] = useState(true);
   const [noWorkspaces, setNoWorkspaces] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [scheduledMeetingsIsLoading, setScheduledMeetingsIsLoading] =
     useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -77,6 +78,8 @@ export function WorkspaceProvider({ children }) {
         setShowSaved,
         savedTimer,
         setSavedTimer,
+        dragStart,
+        setDragStart,
       }}
     >
       {children}

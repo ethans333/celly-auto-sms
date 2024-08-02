@@ -3,12 +3,17 @@ import caret from "../../assets/caret-down-solid.svg";
 import * as api from "../../api";
 import { useState, useContext } from "react";
 import { SchedulingContext } from "../../Contexts/Scheduling";
+import { SnackbarContext } from "../../Contexts/Snackbar";
+import { HelpersContext } from "../../Contexts/Helpers";
 
 export default function () {
   const contactOptions = ["Phone", "Email", "Phone & Email"]; // must match values in addCalendarEvent of backend
   const [method, setMethod] = useState(contactOptions[0]);
   const [contactValue, setContactValue] = useState("");
   const [secondContactValue, setSecondContactValue] = useState("");
+
+  const { setSnackbarMessage } = useContext(SnackbarContext);
+  const { validPhone, validEmail } = useContext(HelpersContext);
 
   const {
     selectedStartTime,
@@ -95,6 +100,38 @@ export default function () {
               const tzOffset = new Date().getTimezoneOffset() * 60000; // offset in milliseconds
               let startTime = new Date(selectedStartTime - tzOffset).getTime();
               let endTime = new Date(selectedEndTime - tzOffset).getTime();
+
+              if (startTime < 0 || endTime < 0) {
+                setSnackbarMessage("No time selected");
+                return;
+              }
+
+              // Check if valid contact info
+              const cm = method.toLowerCase();
+
+              switch (cm) {
+                case "phone & email":
+                  if (
+                    !validPhone(contactValue) ||
+                    !validEmail(secondContactValue)
+                  ) {
+                    setSnackbarMessage("Invalid Phone Number or Email");
+                    return;
+                  }
+                  break;
+                case "phone":
+                  if (!validPhone(contactValue)) {
+                    setSnackbarMessage("Invalid Phone Number");
+                    return;
+                  }
+                  break;
+                case "email":
+                  if (!validEmail(contactValue)) {
+                    setSnackbarMessage("Invalid Email");
+                    return;
+                  }
+                  break;
+              }
 
               api
                 .addCalendarEvent(
