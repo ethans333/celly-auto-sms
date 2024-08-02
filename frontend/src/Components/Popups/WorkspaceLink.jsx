@@ -24,6 +24,8 @@ export default function () {
     for (let i = 0; i < componentsStack.length; i++) {
       const typename = componentsStack[i].typename;
 
+      console.log(typename);
+
       if (types.includes(typename)) {
         base = schedulingTypes[typename];
         break;
