@@ -3,9 +3,10 @@ import { WorkspaceContext } from "../../Contexts/Workspace";
 import { ContentCopy } from "@mui/icons-material";
 import { GenericLabeledSquareButton } from "../LabeledSquareButton";
 
+// type -> base
 const schedulingTypes = {
-  Calendar: "scheduling",
-  WindowScheduling: "window-scheduling",
+  calendar: "scheduling",
+  windowscheduling: "window-scheduling",
 };
 
 export default function () {
@@ -16,9 +17,12 @@ export default function () {
     let base;
     let types = Object.keys(schedulingTypes);
 
+    // Get base of url by finding scheduling type
     for (let i = 0; i < componentsStack.length; i++) {
-      if (types.includes(componentsStack[i].type.name)) {
-        base = schedulingTypes[componentsStack[i].type.name];
+      const typename = componentsStack[i].typename;
+
+      if (types.includes(typename)) {
+        base = schedulingTypes[typename];
         break;
       }
     }
