@@ -17,6 +17,9 @@ export default function () {
     let base;
     let types = Object.keys(schedulingTypes);
 
+    console.log(types);
+    console.log(schedulingTypes);
+
     // Get base of url by finding scheduling type
     for (let i = 0; i < componentsStack.length; i++) {
       const typename = componentsStack[i].typename;
