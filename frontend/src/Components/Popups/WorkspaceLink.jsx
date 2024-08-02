@@ -19,6 +19,7 @@ export default function () {
 
     console.log(types);
     console.log(schedulingTypes);
+    console.log(componentsStack);
 
     // Get base of url by finding scheduling type
     for (let i = 0; i < componentsStack.length; i++) {
